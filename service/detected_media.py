@@ -114,9 +114,9 @@ def delete_checked_detected_media():
                 )
             ).delete()
             session.commit()
-        except:
+        except Exception as e:
             session.rollback()
-            raise
+            raise SystemError(e)
 
 
 def _get_reviewed_detected_medium_indice() -> list[str]:

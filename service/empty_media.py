@@ -134,5 +134,6 @@ def empty_check(media: list[dict]):
             session.add_all(new_media)
             utils.post_delete_media_task(empty_paths)
             session.commit()
-        except:
+        except Exception as e:
             session.rollback()
+            raise SystemError(e)
