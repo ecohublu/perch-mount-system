@@ -132,7 +132,10 @@ def empty_check(media: list[dict]):
                 model.EmptyMedia.empty_medium_id.in_(all_indice)
             ).update({"checked": True})
             session.add_all(new_media)
-            utils.post_delete_media_task(empty_paths)
+
+            if empty_paths:
+                utils.post_delete_media_task(empty_paths)
+
             session.commit()
         except Exception as e:
             session.rollback()

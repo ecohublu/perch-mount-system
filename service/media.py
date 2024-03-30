@@ -218,7 +218,9 @@ def review(media: list[dict]):
             session.flush()
             session.add_all(new_individuals)
 
-            utils.post_delete_media_task(empty_paths)
+            if empty_paths:
+                utils.post_delete_media_task(empty_paths)
+
             session.commit()
 
         except:
