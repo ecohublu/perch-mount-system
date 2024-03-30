@@ -17,6 +17,10 @@ def get_section_indice_by_perch_mount_id(perch_mount_id: int) -> list[int]:
 
 def get_individauls_from_media(media: list[dict]) -> list[dict]:
     individuals = []
+
+    if not media:
+        return individuals
+
     id_field = "medium_id" if "medium_id" in media[0] else "detected_medium_id"
 
     for medium in media:

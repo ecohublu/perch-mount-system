@@ -201,14 +201,17 @@ def _get_taxon_orders_indice_by_taxon(
 
 
 def review(media: list[dict]):
+
+    empty_paths = [
+        utils.get_delete_medium(medium) for medium in media if not medium["individuals"]
+    ]
+
     media_with_individuals = query_utils.get_media_with_individuals_and_events(media)
+
     new_meida, new_individuals = query_utils.media_to_insert_format(
         media_with_individuals
     )
     media_indices = [medium["detected_medium_id"] for medium in media]
-    empty_paths = [
-        utils.get_detected_medium(medium) for medium in media if medium["individuals"]
-    ]
     with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(
