@@ -9,14 +9,14 @@ import service.perch_mounts
 import service.habitats
 import service.members
 import service.projects
-import resources
 import resources.utils
 from src import config
+from src import pm_resource
 
 TIMEOUT = config.get_data_cache_timeout()
 
 
-class PerchMounts(resources.PerchMountResource):
+class PerchMounts(pm_resource.PerchMountResource):
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     @flask_jwt_extended.jwt_required()
     def get(self):

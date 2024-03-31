@@ -6,9 +6,6 @@ import urllib.parse
 
 from src.model import (
     SectionOperators,
-    Individuals,
-    DetectedIndividuals,
-    DetectedMedia,
     Species,
 )
 

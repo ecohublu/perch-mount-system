@@ -13,11 +13,11 @@ import service.members
 import service.cameras
 import service.mount_types
 from src import config
-
+from src import pm_resource
 TIMEOUT = config.get_data_cache_timeout()
 
 
-class Sections(resources.PerchMountResource):
+class Sections(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):

@@ -6,13 +6,13 @@ import cache
 import cache.key
 import service.empty_media
 from src import config
-import resources
+from src import pm_resource
 import resources.utils
 
 TIMEOUT = config.get_data_cache_timeout()
 
 
-class EmptyMedia(resources.PerchMountResource):
+class EmptyMedia(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
     put_parser = flask_restful.reqparse.RequestParser()
@@ -39,7 +39,7 @@ class EmptyMedia(resources.PerchMountResource):
         service.empty_media.empty_check(args.media)
 
 
-class emptyMedium(resources.PerchMountResource):
+class emptyMedium(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     def get(self, empty_medium_id: str):
         medium = service.empty_media.get_empty_medium_by_id(empty_medium_id)
