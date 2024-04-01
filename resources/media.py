@@ -4,17 +4,17 @@ import flask_jwt_extended
 
 import cache
 import cache.key
-import resources
 from resources import utils
 import service.media
 import service.individuals
 import service.species
 from src import config
+from src import pm_resource
 
 TIMEOUT = config.get_data_cache_timeout()
 
 
-class Media(resources.PerchMountResource):
+class Media(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
     put_parser = flask_restful.reqparse.RequestParser()

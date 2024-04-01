@@ -4,18 +4,18 @@ import flask_jwt_extended
 
 import cache
 import cache.key
-import resources
 from resources import utils
 import service.detected_media
 import service.detected_individuals
 import service.species
 from src import config
 from src import model
+from src import pm_resource
 
 TIMEOUT = config.get_data_cache_timeout()
 
 
-class DetectedMedia(resources.PerchMountResource):
+class DetectedMedia(pm_resource.PerchMountResource):
     post_parser = reqparse.RequestParser()
     post_parser.add_argument(
         "detected_media", type=list[dict], required=True, location="json"
@@ -74,7 +74,7 @@ class DetectedMedia(resources.PerchMountResource):
         return [sp.taxon_order_by_ai for sp in individuals]
 
 
-class DetectedMedium(resources.PerchMountResource):
+class DetectedMedium(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     def get(self, detected_medium_id: str):
         medium = service.detected_media.get_detected_medium_by_id(detected_medium_id)

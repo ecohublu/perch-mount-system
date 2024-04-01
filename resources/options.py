@@ -3,7 +3,6 @@ import flask_jwt_extended
 
 import cache
 import cache.key
-import resources
 import service.behaviors
 import service.cameras
 import service.events
@@ -12,9 +11,9 @@ import service.layers
 import service.mount_types
 import service.projects
 import service.positions
+from src import pm_resource
 
-
-class Behaviors(resources.PerchMountResource):
+class Behaviors(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -22,7 +21,7 @@ class Behaviors(resources.PerchMountResource):
         return {"behaviors": [behavior.to_json() for behavior in behaviors]}
 
 
-class Behavior(resources.PerchMountResource):
+class Behavior(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("chinese_name", type=str, required=True)
 
@@ -35,7 +34,7 @@ class Behavior(resources.PerchMountResource):
         return behavior.to_json()
 
 
-class Cameras(resources.PerchMountResource):
+class Cameras(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -43,7 +42,7 @@ class Cameras(resources.PerchMountResource):
         return {"cameras": [camera.to_json() for camera in cameras]}
 
 
-class Camera(resources.PerchMountResource):
+class Camera(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("model_name", type=str, required=True)
 
@@ -56,7 +55,7 @@ class Camera(resources.PerchMountResource):
         return camera.to_json()
 
 
-class Events(resources.PerchMountResource):
+class Events(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -64,7 +63,7 @@ class Events(resources.PerchMountResource):
         return {"events": [event.to_json() for event in events]}
 
 
-class Event(resources.PerchMountResource):
+class Event(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("chinese_name", type=str, required=True)
     post_parser.add_argument("english_name", type=str)
@@ -78,7 +77,7 @@ class Event(resources.PerchMountResource):
         return event.to_json()
 
 
-class Habitats(resources.PerchMountResource):
+class Habitats(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -86,7 +85,7 @@ class Habitats(resources.PerchMountResource):
         return {"habitats": [habitat.to_json() for habitat in habitats]}
 
 
-class Habitat(resources.PerchMountResource):
+class Habitat(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument(
         "chinese_name",
@@ -111,7 +110,7 @@ class Habitat(resources.PerchMountResource):
         return habitat.to_json()
 
 
-class Layers(resources.PerchMountResource):
+class Layers(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -119,7 +118,7 @@ class Layers(resources.PerchMountResource):
         return {"layers": [layer.to_json() for layer in layers]}
 
 
-class Layer(resources.PerchMountResource):
+class Layer(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
@@ -138,7 +137,7 @@ class Layer(resources.PerchMountResource):
         return layer.to_json()
 
 
-class MountTypes(resources.PerchMountResource):
+class MountTypes(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -146,7 +145,7 @@ class MountTypes(resources.PerchMountResource):
         return {"mount_types": [mount_type.to_json() for mount_type in mount_types]}
 
 
-class MountType(resources.PerchMountResource):
+class MountType(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
@@ -165,7 +164,7 @@ class MountType(resources.PerchMountResource):
         return layer.to_json()
 
 
-class Projects(resources.PerchMountResource):
+class Projects(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -173,7 +172,7 @@ class Projects(resources.PerchMountResource):
         return {"projects": [project.to_json() for project in projects]}
 
 
-class Project(resources.PerchMountResource):
+class Project(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
@@ -192,7 +191,7 @@ class Project(resources.PerchMountResource):
         return project.to_json()
 
 
-class Positions(resources.PerchMountResource):
+class Positions(pm_resource.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
@@ -200,7 +199,7 @@ class Positions(resources.PerchMountResource):
         return {"positions": [position.to_json() for position in positions]}
 
 
-class Position(resources.PerchMountResource):
+class Position(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 

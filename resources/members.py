@@ -4,11 +4,11 @@ import flask_jwt_extended
 
 import cache
 import cache.key
-import resources
 import service.members
+from src import pm_resource
 
 
-class Members(resources.PerchMountResource):
+class Members(pm_resource.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("user_name", type=str, required=True)
     post_parser.add_argument("first_name", type=str, required=True)
@@ -32,7 +32,7 @@ class Members(resources.PerchMountResource):
         return member.to_json()
 
 
-class Member(resources.PerchMountResource):
+class Member(pm_resource.PerchMountResource):
     patch_parser = flask_restful.reqparse.RequestParser()
     patch_parser.add_argument("user_name", type=str)
     patch_parser.add_argument("first_name", type=str)

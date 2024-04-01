@@ -1,10 +1,6 @@
 import datetime
 import flask_restful
 
-from src import route_helper
-from resources.routes import routing
-
-api = route_helper.PerchMountApi(routes=routing.ROUTES)
 
 TRUES = {"true", "1", "yes", "y", "ya"}
 
@@ -32,6 +28,7 @@ TYPE_MAP = (
     ("perch_mount", int),
     ("check_date_from", datetime.datetime.fromisoformat),
     ("check_date_to", datetime.datetime.fromisoformat),
+    ("new_start_time", datetime.datetime.fromisoformat),
     ("operator", int),
 )
 
