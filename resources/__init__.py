@@ -1,9 +1,10 @@
 import datetime
 import flask_restful
 
-from resources.routes import route_helper
+from src import route_helper
+from resources.routes import routing
 
-api = route_helper.PerchMountApi()
+api = route_helper.PerchMountApi(routes=routing.ROUTES)
 
 TRUES = {"true", "1", "yes", "y", "ya"}
 

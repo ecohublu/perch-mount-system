@@ -5,8 +5,8 @@ import cache.key
 import login
 import login.apps
 import login.utils
+import tool_api
 import resources
-from resources.routes import routing
 import service
 import service.members
 import species_trie.apps
@@ -36,16 +36,18 @@ app.config["CACHE_REDIS_PORT"] = config.get_env(config.EnvKeys.CACHE_REDIS_PORT)
 
 flask_cors.CORS(
     app,
-    # resources={
-    #     r"/*": {"origins": config.get_env(config.EnvKeys.ACCESS_CONTROL_ALLOW_ORIGIN)}
-    # },
+    resources={
+        r"/*": {"origins": config.get_env(config.EnvKeys.ACCESS_CONTROL_ALLOW_ORIGIN)}
+    },
     supports_credentials=True,
     allow_headers="*",
 )
 
 
-resources.api.init_resources(routing.ROUTES)
+resources.api.init_resources()
 resources.api.init_app(app)
+tool_api.api.init_resources()
+tool_api.api.init_app(app)
 login.jwt.init_app(app)
 model.db.init_app(app)
 model.migrate.init_app(app, model.db)

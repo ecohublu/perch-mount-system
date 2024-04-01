@@ -5,9 +5,13 @@ import flask_restful
 class PerchMountApi(flask_restful.Api):
     _route_map = defaultdict(list)
 
-    def init_resources(self, routes: list[dict]):
+    def __init__(self, routes):
+        super().__init__()
+        self.routes = routes
+
+    def init_resources(self):
         self._route_map.clear()
-        self._find_route_map(routes)
+        self._find_route_map(self.routes)
         self._add_resources(self._route_map)
 
     def _find_route_map(self, routes: list[dict], parent: str = "/"):
