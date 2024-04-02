@@ -3,7 +3,6 @@ import sqlalchemy
 
 import service
 from service import sections
-from src import model
 
 
 _SHIFT_SECTION_TIME_EXPRESSION = """
@@ -28,7 +27,11 @@ WHERE
 
 def shift_datetimes(section_id: int = None, new_start_time: datetime.datetime = None):
     section = sections.get_section_by_id(section_id)
-    time_diff: datetime.timedelta = new_start_time - section.start_time
+    time_diff: datetime.timedelta = (
+        new_start_time.replace(tzinfo=None)
+        - section.start_time
+        + datetime.timedelta(hours=8)
+    )
     minutes = time_diff.total_seconds() // 60
 
     section_sql = _get_shift_section_time_expression(section_id, minutes)
@@ -56,8 +59,8 @@ def shift_datetimes(section_id: int = None, new_start_time: datetime.datetime = 
             session.execute(sqlalchemy.text(media_sql))
             session.commit()
         except Exception as e:
-            print(e)
             session.rollback()
+            raise ValueError(e)
 
 
 def _get_shift_section_time_expression(section_id: int, minutes: int) -> str:
