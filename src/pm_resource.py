@@ -9,6 +9,14 @@ def _query_bool(phase: str) -> bool:
     return phase.lower() in TRUES
 
 
+def _string_to_int_list(arg: str) -> list[int]:
+    return [int(a) for a in arg.split(",")]
+
+
+def _string_to_str_list(arg: str) -> list[int]:
+    return arg.split(",")
+
+
 TYPE_MAP = (
     ("section", int),
     ("perch_mount", int),
@@ -29,7 +37,16 @@ TYPE_MAP = (
     ("check_date_from", datetime.datetime.fromisoformat),
     ("check_date_to", datetime.datetime.fromisoformat),
     ("new_start_time", datetime.datetime.fromisoformat),
+    ("start_time", datetime.datetime.fromisoformat),
+    ("end_time", datetime.datetime.fromisoformat),
     ("operator", int),
+    ("project_ids", _string_to_int_list),
+    ("perch_mount_ids", _string_to_int_list),
+    ("section_ids", _string_to_int_list),
+    ("prey_names", _string_to_str_list),
+    ("taxon_orders_by_human", _string_to_int_list),
+    ("taxon_orders_by_ai", _string_to_int_list),
+    ("unreviewed_data", _query_bool),
 )
 
 

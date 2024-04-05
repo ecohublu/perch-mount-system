@@ -58,7 +58,7 @@ def get_export_data(
     start_time: datetime.datetime = None,
     end_time: datetime.datetime = None,
     prey: bool = None,
-    prey_name: list[str] = None,
+    prey_names: list[str] = None,
     taxon_orders_by_human: list[int] = [],
     taxon_orders_by_ai: list[int] = [],
     unreviewed_data: bool = False,
@@ -76,7 +76,7 @@ def get_export_data(
             start_time,
             end_time,
             prey,
-            prey_name,
+            prey_names,
             taxon_orders_by_human,
             taxon_orders_by_ai,
         )
@@ -93,7 +93,7 @@ def get_export_data(
                 start_time,
                 end_time,
                 prey,
-                prey_name,
+                prey_names,
                 taxon_orders_by_human,
                 taxon_orders_by_ai,
             )

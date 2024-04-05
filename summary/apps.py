@@ -24,10 +24,3 @@ def pending_perch_mounts():
         "perch_mounts": [result._asdict() for result in results],
         "members": resources.utils.field_as_key(members, "member_id"),
     }
-
-
-@blueprint.route("/data_export")
-def data_export():
-    args = flask.request.args
-    results = summary.service.data_export.get_export_data(**args)
-    return [result._asdict() for result in results]
