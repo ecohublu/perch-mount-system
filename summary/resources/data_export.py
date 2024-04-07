@@ -9,5 +9,7 @@ class ExportData(pm_resource.PerchMountResource):
         args = flask.request.args
         args = self._correct_types(args)
         results = summary.service.data_export.get_export_data(**args)
-        csv.query_result_to_csv(results)
+
+        data = csv.PerchMountCsvData(results)
+
         return {"message": "successed"}
