@@ -15,5 +15,12 @@ def get_export_histories_by_exportor(exportor: int) -> model.ExportHistory:
     return result
 
 
-def add_export_history():
-    return
+def add_export_history(
+    exportor: int,
+    file_name: str,
+):
+    new_export_history = model.ExportHistory(exportor=exportor, file_name=file_name)
+    with service.session.begin() as session:
+        session.add(new_export_history)
+        session.commit()
+    return new_export_history
