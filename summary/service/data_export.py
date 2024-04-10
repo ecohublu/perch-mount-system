@@ -89,7 +89,9 @@ def get_export_data(
         )
 
         if unreviewed_data:
-            detected_query = session.query(*_DETECTED_COLUMNS)
+            detected_query = session.query(*_DETECTED_COLUMNS).filter(
+                model.DetectedMedia.reviewed != True
+            )
             detected_query = _join_tables(
                 detected_query,
                 model.DetectedMedia,
@@ -137,6 +139,10 @@ def _join_tables(query: sqlalchemy.orm.Query, media, individuals):
     query = query.join(
         model.Cameras,
         model.Cameras.camera_id == model.Sections.camera,
+    )
+    query = query.join(
+        model.Projects,
+        model.Projects.project_id == model.PerchMounts.project,
     )
     query = query.join(
         _AI_SPECIES,
