@@ -10,6 +10,7 @@ import resources
 import service
 import service.members
 import species_trie.apps
+import summary
 import summary.apps
 from src import model
 from src import config
@@ -48,6 +49,8 @@ resources.api.init_resources()
 resources.api.init_app(app)
 tool_api.api.init_resources()
 tool_api.api.init_app(app)
+summary.api.init_resources()
+summary.api.init_app(app)
 login.jwt.init_app(app)
 model.db.init_app(app)
 model.migrate.init_app(app, model.db)

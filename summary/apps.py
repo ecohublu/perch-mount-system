@@ -2,7 +2,7 @@ import flask
 import service.perch_mounts
 import service.members
 import resources.utils
-
+import summary.service.data_export
 
 blueprint = flask.Blueprint("summary", __name__)
 

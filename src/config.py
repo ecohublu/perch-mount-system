@@ -24,6 +24,9 @@ class EnvKeys(enum.StrEnum):
 
     MINIO = enum.auto()
     MINIO_BUCKET = enum.auto()
+    MINIO_ACCESS_KEY = enum.auto()
+    MINIO_SECRET_KEY = enum.auto()
+    MINIO_DATA_EXPORT_BUCKET = enum.auto()
 
     MYSQL_PASSWORD = enum.auto()
     MYSQL_USER = enum.auto()
@@ -38,6 +41,8 @@ class EnvKeys(enum.StrEnum):
     REDIS_MAXMEMORY_POLICY = enum.auto()
 
     FLEET_BEACON_HOST = enum.auto()
+
+    EXPORT_DATA_RETAIN_DAYS = enum.auto()
 
 
 def get_env(key: EnvKeys) -> str:
