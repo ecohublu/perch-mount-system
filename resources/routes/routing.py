@@ -6,6 +6,7 @@ from resources import detected_media
 from resources import media
 from resources import options
 from resources import members
+from resources import export_histories
 
 ROUTES = [
     {
@@ -163,5 +164,11 @@ ROUTES = [
                 "children": [],
             }
         ],
+    },
+    {
+        # export histories
+        "route": "export_histories",
+        "resources": [export_histories.ExportHistories],
+        "children": [],
     },
 ]
