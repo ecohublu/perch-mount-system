@@ -199,7 +199,7 @@ class MountTypes(db.Model, JsonAbleModel):
 class Cameras(db.Model, JsonAbleModel):
     __tablename__ = "cameras"
     camera_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    model_name = db.Column(db.String(10))
+    model_name = db.Column(db.String(30))
 
 
 class Habitats(db.Model, JsonAbleModel):
