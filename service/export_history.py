@@ -1,7 +1,7 @@
 import datetime
 import service
-from service import query_utils
 from src import model
+from src import config
 
 
 def get_export_histories_by_exportor(exportor: int) -> model.ExportHistory:
@@ -19,7 +19,15 @@ def add_export_history(
     exportor: int,
     file_name: str,
 ):
-    new_export_history = model.ExportHistory(exportor=exportor, file_name=file_name)
+
+    now = datetime.datetime.now()
+    days = int(config.get_env(config.EnvKeys.EXPORT_DATA_RETAIN_DAYS))
+    retain = datetime.timedelta(days=days)
+    new_export_history = model.ExportHistory(
+        exportor=exportor,
+        file_name=file_name,
+        expire_time=now + retain,
+    )
     with service.session.begin() as session:
         session.add(new_export_history)
         session.commit()
