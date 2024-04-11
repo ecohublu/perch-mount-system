@@ -1,14 +1,13 @@
 import flask
-import flask_restful.reqparse
+
 import flask_jwt_extended
 
-import cache
-import cache.key
 import service.export_history
 from src import pm_resource
 
 
 class ExportHistories(pm_resource.PerchMountResource):
+    @flask_jwt_extended.jwt_required
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)

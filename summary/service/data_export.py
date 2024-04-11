@@ -69,6 +69,7 @@ def get_export_data(
     taxon_orders_by_human: list[int] = [],
     taxon_orders_by_ai: list[int] = [],
     unreviewed_data: bool = False,
+    preview: int = False,
 ):
     with service.session.begin() as session:
         media_query = session.query(*_MEDIA_COLUMNS)
@@ -87,6 +88,8 @@ def get_export_data(
             taxon_orders_by_human,
             taxon_orders_by_ai,
         )
+        if preview:
+            media_query = media_query.limit(10)
 
         if unreviewed_data:
             detected_query = session.query(*_DETECTED_COLUMNS).filter(
@@ -111,6 +114,8 @@ def get_export_data(
                 taxon_orders_by_human,
                 taxon_orders_by_ai,
             )
+            if preview:
+                detected_query = detected_query.limit(10)
             media_query = media_query.union(detected_query)
 
     results = media_query.all()

@@ -4,6 +4,7 @@ import io
 import summary.service.data_export
 import service.export_history
 import summary.filer.csv
+import resources.utils
 from src import s3
 from src import pm_resource
 from src import config
@@ -42,3 +43,11 @@ class ExportData(pm_resource.PerchMountResource):
             part_size=PART_SIZE,
         )
         return
+
+
+class PreviewDataExport(pm_resource.PerchMountResource):
+    def get(self):
+        args = dict(flask.request.args)
+        args = self._correct_types(args)
+        results = summary.service.data_export.get_export_data(**args, preview=True)
+        return {"data": [resources.utils.to_dict(result) for result in results]}
