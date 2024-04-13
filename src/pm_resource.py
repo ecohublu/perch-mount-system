@@ -10,6 +10,8 @@ def _query_bool(phase: str) -> bool:
 
 
 def _string_to_int_list(arg: str) -> list[int]:
+    if not arg:
+        return []
     return [int(a) for a in arg.split(",")]
 
 

@@ -26,7 +26,7 @@ class ExportData(pm_resource.PerchMountResource):
             exportor=claims["user_id"],
             file_name=data.file_name,
         )
-        return {"message": "successed"}
+        return {"filename": data.file_name}
 
     def _to_bytes_io(self, data: str) -> io.BytesIO:
         f = io.BytesIO()

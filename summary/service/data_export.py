@@ -10,12 +10,12 @@ _AI_SPECIES = sqlalchemy.alias(model.Species)
 _HUMAN_SPECIES = sqlalchemy.alias(model.Species)
 
 _MEDIA_COLUMNS = (
-    model.Projects.name,
+    model.Projects.name.label("project"),
     model.PerchMounts.perch_mount_name,
     model.Habitats.chinese_name.label("habitat"),
     model.PerchMounts.latitude,
     model.PerchMounts.longitude,
-    model.PerchMounts.layer,
+    model.MountTypes.name.label("mount_type"),
     model.Cameras.model_name.label("camera"),
     model.Media.medium_datetime,
     model.Individuals.prey,
@@ -34,12 +34,12 @@ _MEDIA_COLUMNS = (
 )
 
 _DETECTED_COLUMNS = (
-    model.Projects.name,
+    model.Projects.name.label("project"),
     model.PerchMounts.perch_mount_name,
     model.Habitats.chinese_name.label("habitat"),
     model.PerchMounts.latitude,
     model.PerchMounts.longitude,
-    model.PerchMounts.layer,
+    model.MountTypes.name.label("mount_type"),
     model.Cameras.model_name.label("camera"),
     model.DetectedMedia.medium_datetime,
     sqlalchemy.sql.expression.null().label("prey"),
@@ -61,11 +61,9 @@ _DETECTED_COLUMNS = (
 def get_export_data(
     project_ids: list[int] = [],
     perch_mount_ids: list[int] = [],
-    section_ids: list[int] = [],
     start_time: datetime.datetime = None,
     end_time: datetime.datetime = None,
     prey: bool = None,
-    prey_names: list[str] = None,
     taxon_orders_by_human: list[int] = [],
     taxon_orders_by_ai: list[int] = [],
     unreviewed_data: bool = False,
@@ -80,16 +78,14 @@ def get_export_data(
             model.Individuals,
             project_ids,
             perch_mount_ids,
-            section_ids,
             start_time,
             end_time,
             prey,
-            prey_names,
             taxon_orders_by_human,
             taxon_orders_by_ai,
         )
         if preview:
-            media_query = media_query.limit(10)
+            media_query = media_query.limit(50)
 
         if unreviewed_data:
             detected_query = session.query(*_DETECTED_COLUMNS).filter(
@@ -106,16 +102,14 @@ def get_export_data(
                 model.DetectedIndividuals,
                 project_ids,
                 perch_mount_ids,
-                section_ids,
                 start_time,
                 end_time,
                 prey,
-                prey_names,
                 taxon_orders_by_human,
                 taxon_orders_by_ai,
             )
             if preview:
-                detected_query = detected_query.limit(10)
+                detected_query = detected_query.limit(50)
             media_query = media_query.union(detected_query)
 
     results = media_query.all()
@@ -150,6 +144,10 @@ def _join_tables(query: sqlalchemy.orm.Query, media, individuals):
         model.Projects.project_id == model.PerchMounts.project,
     )
     query = query.join(
+        model.MountTypes,
+        model.MountTypes.mount_type_id == model.Sections.mount_type,
+    )
+    query = query.join(
         _AI_SPECIES,
         _AI_SPECIES.c.taxon_order == individuals.taxon_order_by_ai,
     )
@@ -168,11 +166,9 @@ def _find_by_conditions(
     individuals: model.Individuals | model.DetectedIndividuals,
     project_ids: list[int] = [],
     perch_mount_ids: list[int] = [],
-    section_ids: list[int] = [],
     start_time: datetime.datetime = None,
     end_time: datetime.datetime = None,
     prey: bool = None,
-    prey_names: list[str] = None,
     taxon_orders_by_human: list[int] = [],
     taxon_orders_by_ai: list[int] = [],
 ):
@@ -182,9 +178,6 @@ def _find_by_conditions(
     if perch_mount_ids:
         query = query.filter(model.PerchMounts.perch_mount_id.in_(perch_mount_ids))
 
-    if section_ids:
-        query = query.filter(model.Sections.section_id.in_(section_ids))
-
     if start_time:
         query = query.filter(media.medium_datetime >= start_time)
 
@@ -193,9 +186,6 @@ def _find_by_conditions(
 
     if prey is not None and individuals.__name__ == "Individuals":
         query = query.filter(individuals.prey == prey)
-
-    if prey_names and individuals.__name__ == "Individuals":
-        query = query.filter(individuals.prey_name.in_(prey_names))
 
     if taxon_orders_by_human and individuals.__name__ == "Individuals":
         query = query.filter(
