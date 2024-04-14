@@ -113,7 +113,7 @@ def add_medium_info(medium: dict) -> dict:
         )
     )
     medium["s3_path"] = urllib.parse.urljoin(
-        src.config.get_env(src.config.EnvKeys.MINIO), path
+        src.config.get_env(src.config.EnvKeys.MINIO_HTTPS_HOST), path
     )
     medium["base32_path"] = _base32_encode(medium["path"])
     return medium
