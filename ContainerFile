@@ -6,4 +6,6 @@ COPY . .
 
 RUN pip install -r requirements.txt && pip install gunicorn
 
+RUN flask db upgrade
+
 CMD gunicorn -w 2 -b 0.0.0.0:5000 app:app
