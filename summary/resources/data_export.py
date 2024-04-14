@@ -1,9 +1,10 @@
 import flask
 import flask_jwt_extended
 import io
-import summary.service.data_export
-import service.export_history
 import summary.filer.csv
+import summary.service.data_export
+import summary.resources.utils
+import service.export_history
 import resources.utils
 from src import s3
 from src import pm_resource
@@ -26,7 +27,7 @@ class ExportData(pm_resource.PerchMountResource):
             exportor=claims["user_id"],
             file_name=data.file_name,
         )
-        return {"filename": data.file_name}
+        return {"filename": summary.resources.utils.get_export_data_url(data.file_name)}
 
     def _to_bytes_io(self, data: str) -> io.BytesIO:
         f = io.BytesIO()

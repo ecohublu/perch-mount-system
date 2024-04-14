@@ -23,6 +23,7 @@ class EnvKeys(enum.StrEnum):
     JWT_SECRET = enum.auto()
 
     MINIO = enum.auto()
+    MINIO_HTTPS_HOST = enum.auto()
     MINIO_BUCKET = enum.auto()
     MINIO_ACCESS_KEY = enum.auto()
     MINIO_SECRET_KEY = enum.auto()

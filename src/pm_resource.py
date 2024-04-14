@@ -49,6 +49,7 @@ TYPE_MAP = (
     ("taxon_orders_by_human", _string_to_int_list),
     ("taxon_orders_by_ai", _string_to_int_list),
     ("unreviewed_data", _query_bool),
+    ("exportor", int),
 )
 
 
