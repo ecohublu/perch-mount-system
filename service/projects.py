@@ -33,4 +33,5 @@ def add_project(name: str) -> model.Projects:
     with service.session.begin() as session:
         session.add(new_project)
         session.commit()
-    return new_project
+        new_project_id = new_project.project_id
+    return new_project_id
