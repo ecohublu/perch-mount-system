@@ -99,19 +99,11 @@ def add_medium_info(medium: dict) -> dict:
     medium_id_col = _determin_medium_id(medium)
     medium["extension"] = pathlib.Path(medium["path"]).suffix
     medium["is_image"] = medium["extension"][1:].lower() in src.config.IMAGE_EXTENSIONS
-    path = str(
-        pathlib.PurePath(
-            src.config.get_env(src.config.EnvKeys.MINIO_BUCKET),
-            medium["project_name"],
-            medium["perch_mount_name"],
-            medium["check_date"],
-            (
-                medium[medium_id_col] + ".JPEG"
-                if medium["is_image"]
-                else medium["extension"]
-            ),
-        )
+    filename_s3 = (
+        medium[medium_id_col] + ".JPEG" if medium["is_image"] else medium["extension"]
     )
+    path = _get_s3_path(medium["path"], filename_s3)
+
     medium["s3_path"] = urllib.parse.urljoin(
         src.config.get_env(src.config.EnvKeys.MINIO_HTTPS_HOST), path
     )
@@ -142,3 +134,10 @@ def _determin_medium_id(medium: dict) -> str:
 
 def _base32_encode(s: str) -> str:
     return base64.b32encode(s.encode("UTF-8")).decode("UTF-8")
+
+
+def _get_s3_path(nas_path: str, filename: str) -> str:
+    # This is a workaround, for now I havent figured out a better way to deal the path issue
+    path = pathlib.Path(nas_path.replace("\\", "/"))
+    s3_parts = path.parts[3:6]
+    return str(pathlib.PurePath(*s3_parts, filename))
