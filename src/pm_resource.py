@@ -50,6 +50,9 @@ TYPE_MAP = (
     ("taxon_orders_by_ai", _string_to_int_list),
     ("unreviewed_data", _query_bool),
     ("exportor", int),
+    ("featured", _query_bool),
+    ("featured_by", int),
+    ("featured_behavior", int),
 )
 
 
