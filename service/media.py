@@ -16,6 +16,9 @@ def get_media(
     prey: bool = None,
     offset: int = 0,
     limit: int = 50,
+    featured: bool = None,
+    featured_behavior: str = None,
+    featured_by: int = None,
 ) -> list[model.Media]:
     with service.session.begin() as session:
         query = session.query(
@@ -43,6 +46,18 @@ def get_media(
                 perch_mount_id
             )
             query = query.filter(model.Media.section.in_(section_indices))
+
+        if featured is not None:
+            if featured:
+                query = query.filter(model.Media.featured_behavior != None)
+            else:
+                query = query.filter(model.Media.featured_behavior == None)
+
+        if featured_behavior:
+            query = query.filter(model.Media.featured_behavior == featured_behavior)
+
+        if featured_by:
+            query = query.filter(model.Media.featured_by == featured_by)
 
         query = _filter_media_query_by_individual_conditions(
             query,
