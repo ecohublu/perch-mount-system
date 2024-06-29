@@ -1,3 +1,4 @@
+import sqlalchemy
 from sqlalchemy.orm import Query
 
 import service
@@ -38,26 +39,14 @@ def get_media(
             model.Projects.name.label("project_name"),
         )
 
-        if section_id:
-            query = query.filter(model.Media.section == section_id)
-
-        if perch_mount_id:
-            section_indices = query_utils.get_section_indice_by_perch_mount_id(
-                perch_mount_id
-            )
-            query = query.filter(model.Media.section.in_(section_indices))
-
-        if featured is not None:
-            if featured:
-                query = query.filter(model.Media.featured_behavior != None)
-            else:
-                query = query.filter(model.Media.featured_behavior == None)
-
-        if featured_behavior:
-            query = query.filter(model.Media.featured_behavior == featured_behavior)
-
-        if featured_by:
-            query = query.filter(model.Media.featured_by == featured_by)
+        query = _filter_media_query_by_media_conditions(
+            query,
+            section_id,
+            perch_mount_id,
+            featured,
+            featured_behavior,
+            featured_by,
+        )
 
         query = _filter_media_query_by_individual_conditions(
             query,
@@ -86,6 +75,76 @@ def get_media(
         results = query.all()
 
     return results
+
+
+def get_media_count(
+    section_id: int = None,
+    perch_mount_id: int = None,
+    taxon_order: int = None,
+    category: str = None,
+    order: str = None,
+    family: str = None,
+    prey: bool = None,
+    offset: int = 0,
+    limit: int = 50,
+    featured: bool = None,
+    featured_behavior: str = None,
+    featured_by: int = None,
+) -> int:
+    with service.session.begin() as session:
+        query = session.query(
+            sqlalchemy.func.count(model.Media.medium_id).label("count")
+        )
+        query = _filter_media_query_by_media_conditions(
+            query,
+            section_id,
+            perch_mount_id,
+            featured,
+            featured_behavior,
+            featured_by,
+        )
+
+        query = _filter_media_query_by_individual_conditions(
+            query,
+            taxon_order=taxon_order,
+            category=category,
+            order=order,
+            family=family,
+            prey=prey,
+        )
+    result = query.one()
+    return result.count
+
+
+def _filter_media_query_by_media_conditions(
+    query: Query[model.Media],
+    section_id: int = None,
+    perch_mount_id: int = None,
+    featured: bool = None,
+    featured_behavior: str = None,
+    featured_by: int = None,
+) -> Query[model.Media]:
+    if section_id:
+        query = query.filter(model.Media.section == section_id)
+
+    if perch_mount_id:
+        section_indices = query_utils.get_section_indice_by_perch_mount_id(
+            perch_mount_id
+        )
+        query = query.filter(model.Media.section.in_(section_indices))
+
+    if featured is not None:
+        if featured:
+            query = query.filter(model.Media.featured_behavior != None)
+        else:
+            query = query.filter(model.Media.featured_behavior == None)
+
+    if featured_behavior:
+        query = query.filter(model.Media.featured_behavior == featured_behavior)
+
+    if featured_by:
+        query = query.filter(model.Media.featured_by == featured_by)
+    return query
 
 
 def _filter_media_query_by_individual_conditions(
