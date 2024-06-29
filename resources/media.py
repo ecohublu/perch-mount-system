@@ -26,6 +26,7 @@ class Media(pm_resource.PerchMountResource):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         media = service.media.get_media(**args)
+        media_count = service.media.get_media_count(**args)
 
         media_indice = [medium.medium_id for medium in media]
         individuals = service.individuals.get_individauls_by_medium_indice(media_indice)
@@ -43,6 +44,7 @@ class Media(pm_resource.PerchMountResource):
         return {
             "media": media_with_individuals,
             "species": species,
+            "total": media_count,
         }
 
     @flask_jwt_extended.jwt_required()
