@@ -1,3 +1,4 @@
+import datetime
 import sqlalchemy
 from sqlalchemy.orm import Query
 
@@ -15,6 +16,8 @@ def get_media(
     order: str = None,
     family: str = None,
     prey: bool = None,
+    start_time: datetime.datetime = None,
+    end_time: datetime.datetime = None,
     offset: int = 0,
     limit: int = 50,
     featured: bool = None,
@@ -41,11 +44,13 @@ def get_media(
 
         query = _filter_media_query_by_media_conditions(
             query,
-            section_id,
-            perch_mount_id,
-            featured,
-            featured_behavior,
-            featured_by,
+            section_id=section_id,
+            perch_mount_id=perch_mount_id,
+            featured=featured,
+            featured_behavior=featured_behavior,
+            featured_by=featured_by,
+            start_time=start_time,
+            end_time=end_time,
         )
 
         query = _filter_media_query_by_individual_conditions(
@@ -85,6 +90,8 @@ def get_media_count(
     order: str = None,
     family: str = None,
     prey: bool = None,
+    start_time: datetime.datetime = None,
+    end_time: datetime.datetime = None,
     offset: int = 0,
     limit: int = 50,
     featured: bool = None,
@@ -97,11 +104,13 @@ def get_media_count(
         )
         query = _filter_media_query_by_media_conditions(
             query,
-            section_id,
-            perch_mount_id,
-            featured,
-            featured_behavior,
-            featured_by,
+            section_id=section_id,
+            perch_mount_id=perch_mount_id,
+            featured=featured,
+            featured_behavior=featured_behavior,
+            featured_by=featured_by,
+            start_time=start_time,
+            end_time=end_time,
         )
 
         query = _filter_media_query_by_individual_conditions(
@@ -123,6 +132,8 @@ def _filter_media_query_by_media_conditions(
     featured: bool = None,
     featured_behavior: str = None,
     featured_by: int = None,
+    start_time: datetime.datetime = None,
+    end_time: datetime.datetime = None,
 ) -> Query[model.Media]:
     if section_id:
         query = query.filter(model.Media.section == section_id)
@@ -144,6 +155,13 @@ def _filter_media_query_by_media_conditions(
 
     if featured_by:
         query = query.filter(model.Media.featured_by == featured_by)
+
+    if start_time:
+        query = query.filter(model.Media.medium_datetime >= start_time)
+
+    if end_time:
+        query = query.filter(model.Media.medium_datetime < end_time)
+
     return query
 
 
