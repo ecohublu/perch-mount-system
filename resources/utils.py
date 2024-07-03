@@ -99,11 +99,11 @@ def add_medium_info(medium: dict) -> dict:
     medium_id_col = _determin_medium_id(medium)
     medium["extension"] = pathlib.Path(medium["path"]).suffix
     medium["is_image"] = medium["extension"][1:].lower() in src.config.IMAGE_EXTENSIONS
-    filename_s3 = (
-        medium[medium_id_col] + ".JPEG" if medium["is_image"] else medium["extension"]
-    )
-    path = _get_s3_path(medium["path"], filename_s3)
 
+    ext = ".JPEG" if medium["is_image"] else medium["extension"]
+    filename_s3 = medium[medium_id_col] + ext
+
+    path = _get_s3_path(medium["path"], filename_s3)
     medium["s3_path"] = urllib.parse.urljoin(
         src.config.get_env(src.config.EnvKeys.MINIO_HTTPS_HOST), path
     )
