@@ -11,6 +11,8 @@ from src.model import (
 
 import src.config
 
+BUCKET = src.config.get_env(src.config.EnvKeys.MINIO_BUCKET)
+
 
 def get_habitat_indice(resources: list) -> list[int]:
     return list(set(row.habitat for row in resources))
