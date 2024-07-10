@@ -105,7 +105,7 @@ def add_medium_info(medium: dict) -> dict:
     ext = ".JPEG" if medium["is_image"] else medium["extension"]
     filename_s3 = medium[medium_id_col] + ext
 
-    path = _get_s3_path(medium["path"], filename_s3)
+    path = _get_s3_path(medium, filename_s3)
     medium["s3_path"] = urllib.parse.urljoin(
         src.config.get_env(src.config.EnvKeys.MINIO_HTTPS_HOST), path
     )
@@ -138,8 +138,8 @@ def _base32_encode(s: str) -> str:
     return base64.b32encode(s.encode("UTF-8")).decode("UTF-8")
 
 
-def _get_s3_path(nas_path: str, filename: str) -> str:
+def _get_s3_path(medium: str, filename: str) -> str:
     # This is a workaround, for now I havent figured out a better way to deal the path issue
-    path = pathlib.Path(nas_path.replace("\\", "/"))
-    s3_parts = path.parts[2:5]
-    return str(pathlib.PurePath(*s3_parts, filename))
+    path = pathlib.Path(medium["path"].replace("\\", "/"))
+    s3_parts = path.parts[2:4]
+    return str(pathlib.PurePath(BUCKET, *s3_parts, medium["check_date"], filename))
