@@ -141,5 +141,5 @@ def _base32_encode(s: str) -> str:
 def _get_s3_path(nas_path: str, filename: str) -> str:
     # This is a workaround, for now I havent figured out a better way to deal the path issue
     path = pathlib.Path(nas_path.replace("\\", "/"))
-    s3_parts = path.parts[3:6]
+    s3_parts = path.parts[2:5]
     return str(pathlib.PurePath(*s3_parts, filename))
