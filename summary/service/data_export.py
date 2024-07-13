@@ -3,11 +3,19 @@ import service
 import sqlalchemy
 import sqlalchemy.orm
 import sqlalchemy.sql.expression
-from src import model
 
+from src import config
+from src import model
 
 _AI_SPECIES = sqlalchemy.alias(model.Species)
 _HUMAN_SPECIES = sqlalchemy.alias(model.Species)
+
+
+def _select_is_image(path):
+    return sqlalchemy.func.lower(sqlalchemy.func.substring_index(path, ".", -1)).in_(
+        config.IMAGE_EXTENSIONS
+    )
+
 
 _MEDIA_COLUMNS = (
     model.Projects.name.label("project"),
@@ -31,6 +39,7 @@ _MEDIA_COLUMNS = (
     _HUMAN_SPECIES.c.chinese_common_name.label("chinese_common_name_by_human"),
     _HUMAN_SPECIES.c.scientific_name.label("scientific_name_by_human"),
     _HUMAN_SPECIES.c.taxon_order.label("taxon_order_by_human"),
+    _select_is_image(model.Media.path).label("is_image"),
 )
 
 _DETECTED_COLUMNS = (
@@ -55,6 +64,7 @@ _DETECTED_COLUMNS = (
     sqlalchemy.sql.expression.null().label("chinese_common_name_by_human"),
     sqlalchemy.sql.expression.null().label("scientific_name_by_human"),
     sqlalchemy.sql.expression.null().label("taxon_order_by_human"),
+    _select_is_image(model.DetectedMedia.path).label("is_image"),
 )
 
 
