@@ -17,7 +17,13 @@ ROUTES = [
             {
                 "route": "<int:perch_mount_id>",
                 "resources": [perch_mounts.PerchMount],
-                "children": [],
+                "children": [
+                    {
+                        "route": "pending_counts",
+                        "resources": [perch_mounts.PendingMonthlyCounts],
+                        "children": [],
+                    }
+                ],
             }
         ],
     },
