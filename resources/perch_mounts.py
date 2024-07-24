@@ -99,3 +99,10 @@ class PerchMount(flask_restful.Resource):
         perch_mount = service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
         cache.key.evict_same_path_keys()
         return perch_mount.to_json()
+
+
+class PendingMonthlyCounts(pm_resource.PerchMountResource):
+    @flask_jwt_extended.jwt_required()
+    def get(self, perch_mount_id: int):
+        counts = service.perch_mounts.get_pending_media_monthly_count(perch_mount_id)
+        return counts

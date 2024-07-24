@@ -192,3 +192,51 @@ def perch_mounts_pending_media_count():
         )
 
     return results
+
+
+def get_pending_media_monthly_count(
+    perch_mount_id: int,
+):
+    with service.session.begin() as session:
+        empty_counts = (
+            session.query(
+                sqlalchemy.func.count(model.EmptyMedia.empty_medium_id).label("count"),
+                sqlalchemy.func.month(model.EmptyMedia.medium_datetime).label("month"),
+                sqlalchemy.func.year(model.EmptyMedia.medium_datetime).label("year"),
+            )
+            .join(model.Sections, model.Sections.section_id == model.EmptyMedia.section)
+            .filter(model.Sections.perch_mount == perch_mount_id)
+            .filter(model.EmptyMedia.checked == 0)
+            .group_by(
+                sqlalchemy.func.month(model.EmptyMedia.medium_datetime),
+                sqlalchemy.func.year(model.EmptyMedia.medium_datetime),
+            )
+            .all()
+        )
+
+        detected_counts = (
+            session.query(
+                sqlalchemy.func.count(model.DetectedMedia.detected_medium_id).label(
+                    "count"
+                ),
+                sqlalchemy.func.month(model.DetectedMedia.medium_datetime).label(
+                    "month"
+                ),
+                sqlalchemy.func.year(model.DetectedMedia.medium_datetime).label("year"),
+            )
+            .join(
+                model.Sections, model.Sections.section_id == model.DetectedMedia.section
+            )
+            .filter(model.Sections.perch_mount == perch_mount_id)
+            .filter(model.DetectedMedia.reviewed == 0)
+            .group_by(
+                sqlalchemy.func.month(model.DetectedMedia.medium_datetime),
+                sqlalchemy.func.year(model.DetectedMedia.medium_datetime),
+            )
+            .all()
+        )
+
+    return {
+        "empty_counts": [row._asdict() for row in empty_counts],
+        "detected_counts": [row._asdict() for row in detected_counts],
+    }
