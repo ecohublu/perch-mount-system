@@ -33,6 +33,8 @@ TYPE_MAP = (
     ("check_date_from", datetime.datetime.fromisoformat),
     ("check_date_to", datetime.datetime.fromisoformat),
     ("operator", int),
+    ("datetime_from", datetime.datetime.fromisoformat),
+    ("datetime_to", datetime.datetime.fromisoformat),
 )
 
 

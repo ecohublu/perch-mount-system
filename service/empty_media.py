@@ -1,3 +1,4 @@
+import datetime
 import service
 from service import utils
 from src import model
@@ -6,6 +7,8 @@ from src import model
 def get_empty_media(
     section_id: int = None,
     perch_mount_id: int = None,
+    datetime_from: datetime.datetime = None,
+    datetime_to: datetime.datetime = None,
     offset: int = 0,
     limit: int = 100,
     order_by_datetime: bool = True,
@@ -29,6 +32,12 @@ def get_empty_media(
 
         if perch_mount_id:
             query = query.filter(model.Sections.perch_mount == perch_mount_id)
+
+        if datetime_from:
+            query = query.filter(model.EmptyMedia.medium_datetime >= datetime_from)
+
+        if datetime_to:
+            query = query.filter(model.EmptyMedia.medium_datetime < datetime_to)
 
         if order_by_datetime:
             query = query.order_by(model.EmptyMedia.medium_datetime)

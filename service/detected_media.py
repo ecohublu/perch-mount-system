@@ -1,12 +1,16 @@
+import datetime
 import service
 
 from src import model
 from service import query_utils
 from service import utils
 
+
 def get_detected_media(
     section_id: int = None,
     perch_mount_id: int = None,
+    datetime_from: datetime.datetime = None,
+    datetime_to: datetime.datetime = None,
     offset: int = 0,
     limit: int = 100,
 ) -> list[model.DetectedMedia]:
@@ -29,6 +33,12 @@ def get_detected_media(
 
         if perch_mount_id:
             query = query.filter(model.Sections.perch_mount == perch_mount_id)
+
+        if datetime_from:
+            query = query.filter(model.EmptyMedia.medium_datetime >= datetime_from)
+
+        if datetime_to:
+            query = query.filter(model.EmptyMedia.medium_datetime < datetime_to)
 
         query = query.join(
             model.Sections,
