@@ -211,6 +211,10 @@ def get_pending_media_monthly_count(
                 sqlalchemy.func.month(model.EmptyMedia.medium_datetime),
                 sqlalchemy.func.year(model.EmptyMedia.medium_datetime),
             )
+            .order_by(
+                sqlalchemy.func.month(model.EmptyMedia.medium_datetime),
+                sqlalchemy.func.year(model.EmptyMedia.medium_datetime),
+            )
             .all()
         )
 
@@ -230,6 +234,10 @@ def get_pending_media_monthly_count(
             .filter(model.Sections.perch_mount == perch_mount_id)
             .filter(model.DetectedMedia.reviewed == 0)
             .group_by(
+                sqlalchemy.func.month(model.DetectedMedia.medium_datetime),
+                sqlalchemy.func.year(model.DetectedMedia.medium_datetime),
+            )
+            .order_by(
                 sqlalchemy.func.month(model.DetectedMedia.medium_datetime),
                 sqlalchemy.func.year(model.DetectedMedia.medium_datetime),
             )
