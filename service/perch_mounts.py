@@ -244,7 +244,27 @@ def get_pending_media_monthly_count(
             .all()
         )
 
+        completed_counts = (
+            session.query(
+                sqlalchemy.func.count(model.Media.medium_id).label("count"),
+                sqlalchemy.func.month(model.Media.medium_datetime).label("month"),
+                sqlalchemy.func.year(model.Media.medium_datetime).label("year"),
+            )
+            .join(model.Sections, model.Sections.section_id == model.Media.section)
+            .filter(model.Sections.perch_mount == perch_mount_id)
+            .group_by(
+                sqlalchemy.func.month(model.Media.medium_datetime),
+                sqlalchemy.func.year(model.Media.medium_datetime),
+            )
+            .order_by(
+                sqlalchemy.func.year(model.Media.medium_datetime),
+                sqlalchemy.func.month(model.Media.medium_datetime),
+            )
+            .all()
+        )
+
     return {
         "empty_counts": [row._asdict() for row in empty_counts],
         "detected_counts": [row._asdict() for row in detected_counts],
+        "completed_counts": [row._asdict() for row in completed_counts],
     }
