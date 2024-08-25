@@ -35,10 +35,10 @@ def get_detected_media(
             query = query.filter(model.Sections.perch_mount == perch_mount_id)
 
         if datetime_from:
-            query = query.filter(model.EmptyMedia.medium_datetime >= datetime_from)
+            query = query.filter(model.DetectedMedia.medium_datetime >= datetime_from)
 
         if datetime_to:
-            query = query.filter(model.EmptyMedia.medium_datetime < datetime_to)
+            query = query.filter(model.DetectedMedia.medium_datetime < datetime_to)
 
         query = query.join(
             model.Sections,
