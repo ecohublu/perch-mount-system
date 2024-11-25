@@ -292,7 +292,7 @@ def _get_taxon_orders_indice_by_taxon(
     return [row.taxon_order for row in results]
 
 
-def review(media: list[dict]):
+def review(media: list[dict], reviewer_id: int):
 
     empty_paths = [
         utils.get_delete_medium(medium) for medium in media if not medium["individuals"]
@@ -304,6 +304,13 @@ def review(media: list[dict]):
         media_with_individuals
     )
     media_indices = [medium["detected_medium_id"] for medium in media]
+
+    contribution = model.Contributions(
+        contributor=reviewer_id,
+        num_files=len(media),
+        action=2,
+    )
+
     with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(
@@ -316,6 +323,7 @@ def review(media: list[dict]):
             if empty_paths:
                 utils.post_delete_media_task(empty_paths)
 
+            session.add(contribution)
             session.commit()
 
         except:

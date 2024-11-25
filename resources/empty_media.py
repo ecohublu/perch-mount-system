@@ -17,6 +17,7 @@ class EmptyMedia(pm_resource.PerchMountResource):
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
     put_parser = flask_restful.reqparse.RequestParser()
     put_parser.add_argument("media", type=list[dict], required=True, location="json")
+    put_parser.add_argument("empty_checker_id", type=int, required=True)
 
     @flask_jwt_extended.jwt_required()
     def get(self):
@@ -36,7 +37,7 @@ class EmptyMedia(pm_resource.PerchMountResource):
 
     def put(self):
         args = self.put_parser.parse_args(strict=True)
-        service.empty_media.empty_check(args.media)
+        service.empty_media.empty_check(args.media, args.empty_checker_id)
 
 
 class emptyMedium(pm_resource.PerchMountResource):
