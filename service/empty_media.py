@@ -116,7 +116,7 @@ def delete_checked_empty_media():
         session.commit()
 
 
-def empty_check(media: list[dict]):
+def empty_check(media: list[dict], empty_checker_id: int):
     all_indice = [medium["empty_medium_id"] for medium in media]
     new_media = []
     empty_paths = []
@@ -135,6 +135,12 @@ def empty_check(media: list[dict]):
             )
         )
 
+    contribution = model.Contributions(
+        contributor=empty_checker_id,
+        num_files=len(media),
+        action=1,
+    )
+
     with service.session.begin() as session:
         try:
             session.query(model.EmptyMedia).filter(
@@ -145,6 +151,7 @@ def empty_check(media: list[dict]):
             if empty_paths:
                 utils.post_delete_media_task(empty_paths)
 
+            session.add(contribution)
             session.commit()
         except Exception as e:
             session.rollback()
