@@ -19,6 +19,7 @@ class Media(pm_resource.PerchMountResource):
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
     put_parser = flask_restful.reqparse.RequestParser()
     put_parser.add_argument("media", type=list[dict], required=True, location="json")
+    put_parser.add_argument("reviewer_id", type=int, required=True)
 
     @flask_jwt_extended.jwt_required()
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
@@ -55,7 +56,7 @@ class Media(pm_resource.PerchMountResource):
 
     def put(self):
         args = self.put_parser.parse_args(strict=True)
-        service.media.review(args["media"])
+        service.media.review(args["media"], args["reviewer_id"])
         cache.key.evict_same_path_keys()
 
 
