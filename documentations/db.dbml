@@ -1,0 +1,153 @@
+Project project_name {
+  database_type: 'PostgreSQL'
+  Note: 'Perch Mount System DB'
+}
+
+Ref: media.id > individuals.medium_id
+Ref: sections.id > media.section_id
+Ref: perch_mounts.id > sections.perch_mount_id
+Ref: projects.id > perch_mounts.project_id
+Ref: members.id > media.reviewer
+Ref: members.id > sections.retriever
+Ref: members.id > section_retrievers.retriever
+Ref: members.id > perch_mounts.claim_by
+Ref: members.id > media.featured_by
+Ref: members.id > media.empty_checker
+Ref: members.id > media.reviewer
+Ref: section_retrievers.section_id > sections.id
+Ref: cameras.id > sections.camera_id
+Ref: behaviours.id > individuals.behaviour_id
+Ref: events.id > media.event_id
+Ref: mount_types.id > sections.mount_type_id
+
+Table members {
+    id uuid [ pk, unique ]
+    gmail email [ not null ]
+    username string [ not null ]
+    first_name string [ not null ]
+    last_name string [ not null ]
+    position positions [ not null ]
+    super_admin boolean [ not null, default: false ]
+    admin boolean [ not null, default: false]
+}
+
+Table projects {
+    id uuid [ pk, unique ]
+    name string
+}
+
+Table perch_mounts {
+    id uuid [ pk, unique ]
+    perch_mount_name string [ not null ]
+    longitude float
+    latitude float
+    habitat habitats
+    project_id uuid
+    claim_by uuid
+    layer layers
+    is_priority boolean
+    terminated boolean [ not null, default: false ]
+    note text
+}
+
+Table sections {
+    id uuid [ pk, unique ]
+    perch_mount_id uuid
+    mount_type_id uuid
+    camera_id uuid
+    retriever uuid
+    retrieved_date date [ not null ]
+    ground_camera boolean [ not null ]
+    valid boolean [ default: true ]
+    note text
+}
+
+Table section_retrievers {
+    retriever uuid
+    section_id uuid
+}
+
+Table media {
+    id uuid [ pk, unique ]
+    section_id uuid [ not null ]
+    medium_time datetime [ not null ]
+    created_time datetime [ default: now ]
+    empty_checked_time datetime
+    detected_time datetime
+    reviewd_time datetime
+    deleted_time datetime
+    status media_status
+    reviewer uuid
+    featured boolean [ not null, default: false ]
+    featured_by uuid [ not null ]
+    event_id uuid
+    nas_path string
+    empty_checker uuid
+    reviewer uuid
+}
+
+Table individuals {
+    id uuid [ pk, unique ]
+    medium_id uuid [ not null ]
+    taxon_order_by_ai integer
+    taxon_order_by_human integer
+    tagged boolean [ default: false ]
+    prey string
+    behaviour_id uuid
+    xmin float
+    xmax float
+    ymin float
+    ymax float
+}
+
+Table cameras {
+    id uuid [ pk, unique ]
+    model_name string
+}
+
+Table events {
+    id uuid [ pk, unique ]
+    chinese_name string
+    english_name string
+}
+
+Table behaviours {
+    id uuid [ pk, unique ]
+    chinese_name string
+    english_name string
+}
+
+Table mount_types {
+    id uuid [ pk, unique ]
+    chinese_name string
+}
+
+Enum media_status {
+    undetected
+    detected
+    reviewed
+    accidental_by_ai
+    deleted
+}
+
+Enum habitats {
+    natural
+    artificial
+    solar_panel
+}
+
+Enum positions {
+    professor
+    postdoc
+    doctor
+    master
+    undergrad
+    assistant
+    part_time
+}
+
+Enum layers {
+    high
+    middle
+    low
+}
