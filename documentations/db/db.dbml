@@ -3,22 +3,6 @@ Project project_name {
   Note: 'Perch Mount System DB'
 }
 
-Ref: media.id > individuals.medium_id
-Ref: sections.id > media.section_id
-Ref: perch_mounts.id > sections.perch_mount_id
-Ref: projects.id > perch_mounts.project_id
-Ref: members.id > media.reviewer_id
-Ref: members.id > section_swappers.swapper_id
-Ref: members.id > perch_mounts.claim_by
-Ref: members.id > media.featured_by
-Ref: members.id > media.empty_checker_id
-Ref: sections.id > section_swappers.section_id
-Ref: cameras.id > sections.camera_id
-Ref: behaviours.id > individuals.behaviour_id
-Ref: events.id > media.event_id
-Ref: mount_types.id > sections.mount_type_id
-Ref: species.taxon_order > individuals.taxon_order_by_ai
-Ref: species.taxon_order > individuals.taxon_order_by_human
 
 Table members {
     id uuid [ pk, unique ]
@@ -42,19 +26,19 @@ Table perch_mounts {
     longitude float [ not null ]
     latitude float [ not null ]
     habitat habitats [ not null ]
-    project_id uuid [ not null ]
-    claim_by uuid
-    layer layers
+    project_id uuid  [ ref: > projects.id ]
+    claim_by uuid [ ref: > members.id ]
     is_priority boolean
     terminated boolean [ default: false ]
+    layer layers
     note text
 }
 
 Table sections {
     id uuid [ pk, unique ]
-    perch_mount_id uuid
-    mount_type_id uuid
-    camera_id uuid
+    perch_mount_id uuid [ ref: > perch_mounts.id ]
+    mount_type_id uuid [ ref: > mount_types.id ]
+    camera_id uuid [ ref: > cameras.id ]
     swapped_date date [ not null ]
     ground_camera boolean [ not null ]
     valid boolean [ default: true ]
@@ -62,45 +46,72 @@ Table sections {
 }
 
 Table section_swappers {
-    swapper_id uuid
-    section_id uuid
+    swapper_id uuid [ ref: > members.id ]
+    section_id uuid [ ref: > sections.id ]
 }
 
 Table media {
     id uuid [ pk, unique ]
-    section_id uuid [ not null ]
+    section_id uuid [ ref: > sections.id ]
     medium_time datetime [ not null ]
     created_time datetime [ not null ]
-    empty_checked_time datetime
-    detected_time datetime
-    reviewd_time datetime
     deleted_time datetime
     status media_status
-    empty_checker_id uuid
-    reviewer_id uuid
-    featured_by uuid
-    event_id uuid
+    empty_checker_id uuid [ ref: > members.id ]
     nas_path varchar
+}
+
+
+Table detected_media_contents {
+    medium_id uuid [ ref: - media.id ]
+    detected_time datetime [ not null ]
+    model varchar
+}
+
+Table accidental_media_contents {
+    medium_id uuid [ ref: - media.id ]
+    empty_checked_time datetime
+    empty_checker_id uuid [ ref: > members.id ]
+}
+
+Table reviewed_media_contents {
+    medium_id uuid [ ref: - media.id ]
+    reviewd_time datetime
+    reviewer_id uuid [ ref: > members.id ]
+    featured_by uuid [ ref: > members.id ]
+    event_id uuid [ ref: > events.id ]
+    behaviour_id uuid [ ref: > behaviours.id ]
 }
 
 Table individuals {
     id uuid [ pk, unique ]
-    medium_id uuid [ not null ]
-    taxon_order_by_ai integer
-    taxon_order_by_human integer
-    tagged boolean
+    medium_id uuid  [ ref: > media.id ]
+    taxon_order_by_human integer [ ref: > species.taxon_order ]
+    prey_status prey_status
+    tagging tagging
+    note text
+}
+
+Table prey_individuals_contents {
+    individual_id uuid [ ref: - individuals.id ]
     prey boolean
     prey_name boolean
+}
+
+Table tagged_individuals_contents {
+    individual_id uuid [ ref: - individuals.id ]
     tagged boolean
     ring_number varchar
     tag_number varchar
-    behaviour_id uuid
-    prey_status prey_status
+}
+
+Table detected_individuals_contents {
+    individual_id uuid [ ref: - individuals.id ]
+    taxon_order_by_ai integer [ ref: > species.taxon_order ]
     xmin float
     xmax float
     ymin float
     ymax float
-    note text
 }
 
 Table cameras {
