@@ -65,7 +65,7 @@ Table media {
 Table detected_media_contents {
     medium_id uuid [ ref: - media.id ]
     detected_time datetime [ not null ]
-    model varchar
+    empty_checker_id uuid [ ref: > members.id ]
 }
 
 Table accidental_media_contents {
@@ -88,7 +88,7 @@ Table individuals {
     medium_id uuid  [ ref: > media.id ]
     taxon_order_by_human integer [ ref: > species.taxon_order ]
     prey_status prey_status
-    tagging tagging
+    tag_status tag_status
     note text
 }
 
@@ -96,6 +96,7 @@ Table prey_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
     prey boolean
     prey_name boolean
+    identified_by uuid [ ref: > members.id ]
 }
 
 Table tagged_individuals_contents {
@@ -167,7 +168,7 @@ Enum prey_status {
     identified
 }
 
-Enum tagging {
+Enum tag_status {
     unchecked
     ring
     tagged
