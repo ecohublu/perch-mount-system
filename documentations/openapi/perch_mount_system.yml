@@ -236,7 +236,60 @@ components:
             type: string
             format: uuid
 
-    detected_individuals:
+    ReviewMedium:
+      properties:
+        id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+        medium_time:
+          type: string
+          format: date-time
+        create_time:
+          type: string
+          format: date-time
+        detected_time:
+          type: string
+          format: date-time
+        reviewed_time:
+          type: string
+          format: date-time
+        reviewer_id:
+          type: string
+          format: uuid
+        empty_checked_time:
+          type: string
+          format: date-time
+        empty_checker_id:
+          type: string
+          format: uuid
+        fetured_by_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+        behaviour_id:
+          type: string
+          format: uuid
+        type:
+          $ref: "#/components/schemas/MediaType"
+        nas_path:
+          type: string
+        individual_ids_by_ai:
+          type: array
+          items:
+            type: string
+            format: uuid
+        individual_ids_by_human:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    DetectedIndividuals:
       type: object
       properties:
         id:
@@ -246,6 +299,39 @@ components:
           type: string
           format: uuid
         taxon_order_by_ai:
+          type: integer
+        xmin:
+          type: number
+          format: float
+          maximum: 1
+          minimum: 0
+        ymin:
+          type: number
+          format: float
+          maximum: 1
+          minimum: 0
+        xmax:
+          type: number
+          format: float
+          maximum: 1
+          minimum: 0
+        ymax:
+          type: number
+          format: float
+          maximum: 1
+          minimum: 0
+
+    # Should rethink the prey status design
+    ReviewIndividuals:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        medium_id:
+          type: string
+          format: uuid
+        taxon_order_by_human:
           type: integer
         xmin:
           type: number

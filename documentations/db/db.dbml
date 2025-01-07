@@ -92,6 +92,9 @@ Table reviewed_media_contents {
 Table individuals {
     id uuid [ pk, unique ]
     medium_id uuid  [ ref: > media.id ]
+    
+    prey_status prey_status
+    tag_status tag_status
     note text
 }
 
@@ -102,8 +105,6 @@ Table reviewed_individuals_contents {
     xmax float
     ymin float
     ymax float
-    prey_status prey_status
-    tag_status tag_status
 }
 
 Table prey_individuals_contents {
