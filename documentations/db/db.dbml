@@ -13,6 +13,7 @@ Table members {
     position positions [ not null ]
     super_admin boolean [ not null, default: false ]
     admin boolean [ not null, default: false]
+    blocked boolean [ not null, default: false]
 }
 
 Table projects {
@@ -57,14 +58,19 @@ Table media {
     created_time datetime [ not null ]
     deleted_time datetime
     status media_status
-    empty_checker_id uuid [ ref: > members.id ]
+    type media_type
     nas_path varchar
 }
 
+Table empty_media_contents {
+    medium_id uuid [ ref: - media.id ]
+    detected_time datetime [ not null ]
+}
 
 Table detected_media_contents {
     medium_id uuid [ ref: - media.id ]
     detected_time datetime [ not null ]
+    empty_checked_time datetime
     empty_checker_id uuid [ ref: > members.id ]
 }
 
@@ -86,10 +92,18 @@ Table reviewed_media_contents {
 Table individuals {
     id uuid [ pk, unique ]
     medium_id uuid  [ ref: > media.id ]
+    note text
+}
+
+Table reviewed_individuals_contents {
+    individual_id uuid [ ref: - individuals.id ]
     taxon_order_by_human integer [ ref: > species.taxon_order ]
+    xmin float
+    xmax float
+    ymin float
+    ymax float
     prey_status prey_status
     tag_status tag_status
-    note text
 }
 
 Table prey_individuals_contents {
@@ -150,7 +164,7 @@ Table species {
     kinmen_status varchar
     pratas_status varchar
     endemism varchar
-    conservation_status varchar
+    conservation_status conservation_status
 }
 
 Enum media_status {
@@ -159,6 +173,11 @@ Enum media_status {
     reviewed
     accidental_by_ai
     deleted
+}
+
+Enum media_type {
+    image
+    video
 }
 
 Enum prey_status {
@@ -195,4 +214,10 @@ Enum layers {
     high
     middle
     low
+}
+
+Enum conservation_status {
+    I
+    II
+    III
 }
