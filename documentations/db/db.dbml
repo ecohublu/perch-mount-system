@@ -65,6 +65,7 @@ Table media {
 Table empty_media_contents {
     medium_id uuid [ ref: - media.id ]
     detected_time datetime [ not null ]
+    empty_checked boolean [ deafualt false ]
 }
 
 Table detected_media_contents {
@@ -72,6 +73,7 @@ Table detected_media_contents {
     detected_time datetime [ not null ]
     empty_checked_time datetime
     empty_checker_id uuid [ ref: > members.id ]
+    reviewed boolean [ default false ]
 }
 
 Table accidental_media_contents {
@@ -92,7 +94,6 @@ Table reviewed_media_contents {
 Table individuals {
     id uuid [ pk, unique ]
     medium_id uuid  [ ref: > media.id ]
-    
     prey_status prey_status
     tag_status tag_status
     note text
@@ -107,9 +108,14 @@ Table reviewed_individuals_contents {
     ymax float
 }
 
-Table prey_individuals_contents {
+Table with_prey_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
     prey boolean
+    marked_by_id uudis [ ref: > members.id ]
+}
+
+Table prey_identified_individuals_contents {
+    individual_id uuid [ ref: - individuals.id ]
     prey_name boolean
     identified_by uuid [ ref: > members.id ]
 }
