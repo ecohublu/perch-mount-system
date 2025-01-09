@@ -13,10 +13,40 @@ paths:
           description: OK
   /perch_mounts:
     get:
+      parameters:
+        - $ref: "#/components/parameters/QueryPerchMountIDs"
       responses:
         "200":
           description: OK
+  /perch_mounts/{PerchMountIdPathParam}:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIdPathParam"
+      responses:
+        "200":
+          description: OK
+
 components:
+  parameters:
+    QueryPerchMountIDs:
+      name: PerchMountID
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+
+    PerchMountIdPathParam:
+      name: PerchMountID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
   schemas:
     PerchMountHabitats:
       type: string
