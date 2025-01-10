@@ -62,10 +62,14 @@ Table media {
     nas_path varchar
 }
 
-Table empty_media_contents {
+Table undetected_meida_contents {
     medium_id uuid [ ref: - media.id ]
     detected_time datetime [ not null ]
-    empty_checked boolean [ deafualt false ]
+}
+
+Table unchecked_media_contents {
+    medium_id uuid [ ref: - media.id ]
+    detected_time datetime [ not null ]
 }
 
 Table detected_media_contents {
@@ -73,7 +77,6 @@ Table detected_media_contents {
     detected_time datetime [ not null ]
     empty_checked_time datetime
     empty_checker_id uuid [ ref: > members.id ]
-    reviewed boolean [ default false ]
 }
 
 Table accidental_media_contents {
@@ -84,9 +87,9 @@ Table accidental_media_contents {
 
 Table reviewed_media_contents {
     medium_id uuid [ ref: - media.id ]
-    reviewd_time datetime
+    reviewed_time datetime
     reviewer_id uuid [ ref: > members.id ]
-    featured_by uuid [ ref: > members.id ]
+    featured_by_id uuid [ ref: > members.id ]
     event_id uuid [ ref: > events.id ]
     behaviour_id uuid [ ref: > behaviours.id ]
 }

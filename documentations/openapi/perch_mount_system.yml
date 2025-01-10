@@ -6,19 +6,38 @@ servers:
   - url: https://api.server.test/v1
 
 paths:
-  /test:
+  /members:
     get:
+      tags:
+        - Member
+      parameters:
+        - $ref: "#/components/parameters/MemberPositionIDsQuery"
       responses:
         "200":
           description: OK
+
+  /members/{MemberID}:
+    get:
+      tags:
+        - Member
+      parameters:
+        - $ref: "#/components/parameters/MemberIDPathParam"
+      responses:
+        "200":
+          description: OK
+
   /projects:
     get:
+      tags:
+        - Project
       responses:
         "200":
           description: OK
 
   /perch_mounts:
     get:
+      tags:
+        - Perch Mount
       parameters:
         - $ref: "#/components/parameters/ProjectIDsQuery"
         - $ref: "#/components/parameters/ClaimByIDsQuery"
@@ -27,18 +46,70 @@ paths:
       responses:
         "200":
           description: OK
+    post:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          description: OK
+
   /perch_mounts/{PerchMountIdPathParam}:
     get:
+      tags:
+        - Perch Mount
       parameters:
-        - $ref: "#/components/parameters/PerchMountIdPathParam"
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+  /sections:
+    get:
+      tags:
+        - Section
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDsQuery"
+        - $ref: "#/components/parameters/SectionSwappedDateFromQuery"
+        - $ref: "#/components/parameters/SectionSwappedDateToQuery"
+        - $ref: "#/components/parameters/SectionSwapperIDsQuery"
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Section
+      responses:
+        "200":
+          description: OK
+
+  /sections/{SectionIDPathParam}:
+    get:
+      tags:
+        - Section
+      parameters:
+        - $ref: "#/components/parameters/SectionIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+  /media:
+    get:
+      tags:
+        - Media
+      parameters:
+        - $ref: "#/components/parameters/MediaStatusQuery"
+        - $ref: "#/components/parameters/SectionIDsQuery"
+        - $ref: "#/components/parameters/OffsetQuery"
+        - $ref: "#/components/parameters/LimitQuery"
+
       responses:
         "200":
           description: OK
 
 components:
   parameters:
-    PerchMountIDsQuery:
-      name: perch_mount_ids
+    MemberPositionIDsQuery:
+      name: position_ids
       in: query
       required: false
       style: form
@@ -48,6 +119,7 @@ components:
         items:
           type: string
           format: uuid
+
     ClaimByIDsQuery:
       name: claim_by_ids
       in: query
@@ -81,6 +153,45 @@ components:
         items:
           type: string
           format: uuid
+
+    PerchMountIDsQuery:
+      name: perch_mount_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+
+    SectionSwappedDateFromQuery:
+      name: swapped_date_from
+      in: query
+      schema:
+        type: string
+        format: date-time
+
+    SectionSwappedDateToQuery:
+      name: swapped_date_to
+      in: query
+      schema:
+        type: string
+        format: date-time
+
+    SectionSwapperIDsQuery:
+      name: swapper_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+
     PerchMountTerminatedQuery:
       name: terminated
       in: query
@@ -88,8 +199,58 @@ components:
       schema:
         type: boolean
 
-    PerchMountIdPathParam:
+    MediaStatusQuery:
+      name: media_status
+      in: query
+      required: true
+      schema:
+        type: string
+        enum: [undetected, detected, unchecked, reviewed, accidental]
+
+    SectionIDsQuery:
+      name: section_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+
+    OffsetQuery:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+
+    LimitQuery:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+
+    PerchMountIDPathParam:
       name: PerchMountID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    SectionIDPathParam:
+      name: SectionID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    MemberIDPathParam:
+      name: MemberID
       in: path
       required: true
       schema:
