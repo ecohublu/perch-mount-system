@@ -11,10 +11,19 @@ paths:
       responses:
         "200":
           description: OK
+  /projects:
+    get:
+      responses:
+        "200":
+          description: OK
+
   /perch_mounts:
     get:
       parameters:
-        - $ref: "#/components/parameters/QueryPerchMountIDs"
+        - $ref: "#/components/parameters/ProjectIDsQuery"
+        - $ref: "#/components/parameters/ClaimByIDsQuery"
+        - $ref: "#/components/parameters/HabitatIDsQuery"
+        - $ref: "#/components/parameters/PerchMountTerminatedQuery"
       responses:
         "200":
           description: OK
@@ -28,8 +37,8 @@ paths:
 
 components:
   parameters:
-    QueryPerchMountIDs:
-      name: PerchMountID
+    PerchMountIDsQuery:
+      name: perch_mount_ids
       in: query
       required: false
       style: form
@@ -38,6 +47,46 @@ components:
         type: array
         items:
           type: string
+          format: uuid
+    ClaimByIDsQuery:
+      name: claim_by_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+    ProjectIDsQuery:
+      name: project_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+    HabitatIDsQuery:
+      name: habitat_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+    PerchMountTerminatedQuery:
+      name: terminated
+      in: query
+      required: false
+      schema:
+        type: boolean
 
     PerchMountIdPathParam:
       name: PerchMountID
@@ -151,6 +200,8 @@ components:
         id:
           type: string
           format: uuid
+        name:
+          type: string
 
     PerchMount:
       type: object
@@ -177,6 +228,8 @@ components:
         project_id:
           type: string
           format: uuid
+        project_name:
+          type: string
         claim_by:
           type: string
           format: uuid
