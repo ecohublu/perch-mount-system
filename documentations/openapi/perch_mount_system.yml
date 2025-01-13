@@ -15,6 +15,12 @@ paths:
       responses:
         "200":
           description: OK
+    post:
+      tags:
+        - Member
+      responses:
+        "200":
+          description: OK
 
   /members/{MemberID}:
     get:
@@ -53,7 +59,7 @@ paths:
         "200":
           description: OK
 
-  /perch_mounts/{PerchMountIdPathParam}:
+  /perch_mounts/{PerchMountID}:
     get:
       tags:
         - Perch Mount
@@ -82,7 +88,7 @@ paths:
         "200":
           description: OK
 
-  /sections/{SectionIDPathParam}:
+  /sections/{SectionID}:
     get:
       tags:
         - Section
@@ -102,6 +108,178 @@ paths:
         - $ref: "#/components/parameters/OffsetQuery"
         - $ref: "#/components/parameters/LimitQuery"
 
+      responses:
+        "200":
+          description: OK
+
+  /media/{MediumID}:
+    get:
+      tags:
+        - Media
+      parameters:
+        - $ref: "#/components/parameters/MediumIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+  /unchecked_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OK
+
+  /detected_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OK
+
+  /reviewed_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OKxx
+
+  /accidental_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OK
+
+  /individuals:
+    get:
+      tags:
+        - Individuals
+      parameters:
+        - $ref: "#/components/parameters/IndividualsPreyStatusQuery"
+      responses:
+        "200":
+          description: OK
+
+  /individuals/identified_preys:
+    post:
+      tags:
+        - Individuals
+      responses:
+        "200":
+          description: OK
+
+  /behaviors:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /positions:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /habitats:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /cameras:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /events:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /mount_types:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /mount_layers:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /species:
+    get:
+      tags:
+        - species
+      parameters:
+        - $ref: "#/components/parameters/SpeciesChineseNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesEndemismQuery"
+        - $ref: "#/components/parameters/SpeciesEnglishNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesFamilyQuery"
+        - $ref: "#/components/parameters/SpeciesNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesOrderQuery"
+        - $ref: "#/components/parameters/SpeciesScientificNameSearchQuery"
+      responses:
+        "200":
+          description: OK
+
+  /species/{TaxonOrder}:
+    get:
+      tags:
+        - species
+      parameters:
+        - $ref: "#/components/parameters/SpeciesTaxonOrderPathParam"
       responses:
         "200":
           description: OK
@@ -207,6 +385,14 @@ components:
         type: string
         enum: [undetected, detected, unchecked, reviewed, accidental]
 
+    IndividualsPreyStatusQuery:
+      name: prey_status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [unchecked, has_prey, no_prey, identified]
+
     SectionIDsQuery:
       name: section_ids
       in: query
@@ -233,6 +419,74 @@ components:
       schema:
         type: integer
 
+    SpeciesConservationStatusQuery:
+      name: conservation_status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [i, ii, iii]
+
+    SpeciesEndemismQuery:
+      name: endemism
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [not_endemic, endemic_species, iendemic_subspecies]
+
+    SpeciesNameSearchQuery:
+      name: name_search
+      in: query
+      required: false
+      schema:
+        type: string
+
+    SpeciesChineseNameSearchQuery:
+      name: chinese_name_search
+      in: query
+      required: false
+      schema:
+        type: string
+
+    SpeciesEnglishNameSearchQuery:
+      name: english_name_search
+      in: query
+      required: false
+      schema:
+        type: string
+
+    SpeciesScientificNameSearchQuery:
+      name: scientific_name_search
+      in: query
+      required: false
+      schema:
+        type: string
+
+    SpeciesOrderQuery:
+      name: swapper_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+
+    SpeciesFamilyQuery:
+      name: swapper_ids
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+
     PerchMountIDPathParam:
       name: PerchMountID
       in: path
@@ -251,6 +505,22 @@ components:
 
     MemberIDPathParam:
       name: MemberID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    MediumIDPathParam:
+      name: MediumID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    SpeciesTaxonOrderPathParam:
+      name: TaxonOrder
       in: path
       required: true
       schema:

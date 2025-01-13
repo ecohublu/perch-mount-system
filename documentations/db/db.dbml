@@ -31,7 +31,7 @@ Table perch_mounts {
     claim_by uuid [ ref: > members.id ]
     is_priority boolean
     terminated boolean [ default: false ]
-    layer layers
+    layer mount_layers
     note text
 }
 
@@ -220,7 +220,7 @@ Enum positions {
     part_time
 }
 
-Enum layers {
+Enum mount_layers {
     high
     middle
     low
