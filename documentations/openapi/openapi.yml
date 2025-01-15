@@ -1,0 +1,352 @@
+openapi: "3.0.0"
+info:
+  title: Perch Mount API
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+
+paths:
+  /members:
+    get:
+      tags:
+        - Member
+      parameters:
+        - $ref: "#/components/parameters/MemberPositionIDsQuery"
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Member
+      responses:
+        "200":
+          description: OK
+
+  /members/{MemberID}:
+    get:
+      tags:
+        - Member
+      parameters:
+        - $ref: "#/components/parameters/MemberIDPathParam"
+      responses:
+        "200":
+          description: OK
+    patch:
+      tags:
+        - Member
+      responses:
+        "200":
+          description: OK
+
+  /projects:
+    get:
+      tags:
+        - Project
+      responses:
+        "200":
+          description: OK
+
+  /perch_mounts:
+    get:
+      tags:
+        - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/ProjectIDsQuery"
+        - $ref: "#/components/parameters/ClaimByIDsQuery"
+        - $ref: "#/components/parameters/HabitatIDsQuery"
+        - $ref: "#/components/parameters/PerchMountTerminatedQuery"
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountsGetResponse"
+    post:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          description: OK
+
+  /perch_mounts/{PerchMountID}:
+    get:
+      tags:
+        - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
+      responses:
+        "200":
+          description: OK
+    patch:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          description: OK
+
+  /sections:
+    get:
+      tags:
+        - Section
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDsQuery"
+        - $ref: "#/components/parameters/SectionSwappedDateFromQuery"
+        - $ref: "#/components/parameters/SectionSwappedDateToQuery"
+        - $ref: "#/components/parameters/SectionSwapperIDsQuery"
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Section
+      responses:
+        "200":
+          description: OK
+
+  /sections/{SectionID}:
+    get:
+      tags:
+        - Section
+      parameters:
+        - $ref: "#/components/parameters/SectionIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+    patch:
+      tags:
+        - Section
+      responses:
+        "200":
+          description: OK
+
+  /media:
+    get:
+      tags:
+        - Media
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDsQuery"
+        - $ref: "#/components/parameters/SectionIDsQuery"
+        - $ref: "#/components/parameters/MediaStatusQuery"
+        - $ref: "#/components/parameters/OffsetQuery"
+        - $ref: "#/components/parameters/LimitQuery"
+
+      responses:
+        "200":
+          description: OK
+
+  /media/{MediumID}:
+    get:
+      tags:
+        - Media
+      parameters:
+        - $ref: "#/components/parameters/MediumIDPathParam"
+      responses:
+        "200":
+          description: OK
+    patch:
+      tags:
+        - Media
+      parameters:
+        - $ref: "#/components/parameters/MediumIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+  /unchecked_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OK
+
+  /detected_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OK
+
+  /reviewed_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OKxx
+
+  /accidental_media:
+    post:
+      tags:
+        - Media
+      responses:
+        "200":
+          description: OK
+
+  /individuals:
+    get:
+      tags:
+        - Individuals
+      parameters:
+        - $ref: "#/components/parameters/IndividualsPreyStatusQuery"
+      responses:
+        "200":
+          description: OK
+
+  /individuals/{IndividualID}:
+    get:
+      tags:
+        - Individuals
+      parameters:
+        - $ref: "#/components/parameters/IndividualIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+    patch:
+      tags:
+        - Individuals
+      parameters:
+        - $ref: "#/components/parameters/IndividualIDPathParam"
+      responses:
+        "200":
+          description: OK
+
+  /individuals/identified_preys:
+    post:
+      tags:
+        - Individuals
+      responses:
+        "200":
+          description: OK
+
+  /behaviors:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /positions:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /habitats:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /cameras:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /events:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /mount_types:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /mount_layers:
+    get:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+        - Options
+      responses:
+        "200":
+          description: OK
+
+  /species:
+    get:
+      tags:
+        - species
+      parameters:
+        - $ref: "#/components/parameters/SpeciesChineseNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesEndemismQuery"
+        - $ref: "#/components/parameters/SpeciesEnglishNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesFamilyQuery"
+        - $ref: "#/components/parameters/SpeciesNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesOrderQuery"
+        - $ref: "#/components/parameters/SpeciesScientificNameSearchQuery"
+      responses:
+        "200":
+          description: OK
+
+  /species/{TaxonOrder}:
+    get:
+      tags:
+        - species
+      parameters:
+        - $ref: "#/components/parameters/SpeciesTaxonOrderPathParam"
+      responses:
+        "200":
+          description: OK
+
+components:
+  responses:
+    PerchMountsGetResponse:
+      description: get perch mount list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              perch_mounts:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerchMount"
+
+  parameters:
+    $ref: "./parameters.yml"
+
+  schemas:
+    $ref: "./schemas.yml"

@@ -111,7 +111,7 @@ Table reviewed_individuals_contents {
     ymax float
 }
 
-Table with_prey_individuals_contents {
+Table with_prey_individuals_contents { mm,
     individual_id uuid [ ref: - individuals.id ]
     prey boolean
     marked_by_id uudis [ ref: > members.id ]

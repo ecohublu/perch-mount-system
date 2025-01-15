@@ -1,0 +1,408 @@
+PerchMountHabitats:
+  type: string
+  enum:
+    - natural
+    - artificial
+    - solar_panel
+PerchMountLayers:
+  type: string
+  enum:
+    - high
+    - middle
+    - low
+MemberPositions:
+  type: string
+  enum:
+    - professor
+    - postdoc
+    - doctor
+    - master
+    - undergrad
+    - assistant
+    - part_time
+PreyStatus:
+  type: string
+  enum:
+    - unchecked
+    - has_prey
+    - no_prey
+    - identified
+TagStatus:
+  type: string
+  enum:
+    - unchecked
+    - ring
+    - tagged
+    - number_assigned
+ConservationStatus:
+  type: string
+  enum:
+    - I
+    - II
+    - III
+
+MediaType:
+  type: string
+  enum:
+    - image
+    - video
+
+Member:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    username:
+      type: string
+    gmail:
+      type: string
+      format: email
+    first_name:
+      type: string
+    last_name:
+      type: string
+    position:
+      $ref: "#/MemberPositions"
+
+Section:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    perch_mount_id:
+      type: string
+      format: uuid
+    mount_type_id:
+      type: string
+      format: uuid
+    swapped_date:
+      type: string
+      format: date
+    camera_id:
+      type: string
+      format: uuid
+    swapper_ids:
+      type: array
+      items:
+        type: string
+        format: uuid
+    ground_camera:
+      type: boolean
+    valid:
+      type: boolean
+    note:
+      type: string
+
+Project:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    name:
+      type: string
+
+PerchMount:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    perch_mount_name:
+      type: string
+    latitude:
+      type: number
+      format: float
+      minimum: -90
+      maximum: 90
+      example: 37.7749
+    longitude:
+      type: number
+      format: float
+      minimum: -180
+      maximum: 180
+      example: -122.4194
+    mount_type:
+      type: string
+    project_id:
+      type: string
+      format: uuid
+    project_name:
+      type: string
+    claim_by:
+      type: string
+      format: uuid
+    is_priority:
+      type: boolean
+    terminated:
+      type: boolean
+    layer:
+      $ref: "#/PerchMountLayers"
+    habitat:
+      $ref: "#/PerchMountHabitats"
+    note:
+      type: string
+
+UndetectedMedium:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    section_id:
+      type: string
+      format: uuid
+    medium_time:
+      type: string
+      format: date-time
+    create_time:
+      type: string
+      format: date-time
+    type:
+      $ref: "#/MediaType"
+    nas_path:
+      type: string
+
+EmtpyMedium:
+  properties:
+    id:
+      type: string
+      format: uuid
+    section_id:
+      type: string
+      format: uuid
+    medium_time:
+      type: string
+      format: date-time
+    create_time:
+      type: string
+      format: date-time
+    detected_time:
+      type: string
+      format: date-time
+    type:
+      $ref: "#/MediaType"
+    nas_path:
+      type: string
+
+DetectedMedium:
+  properties:
+    id:
+      type: string
+      format: uuid
+    section_id:
+      type: string
+      format: uuid
+    medium_time:
+      type: string
+      format: date-time
+    create_time:
+      type: string
+      format: date-time
+    detected_time:
+      type: string
+      format: date-time
+    empty_checked_time:
+      type: string
+      format: date-time
+    empty_checker_id:
+      type: string
+      format: uuid
+    type:
+      $ref: "#/MediaType"
+    nas_path:
+      type: string
+    individual_ids:
+      type: array
+      items:
+        type: string
+        format: uuid
+
+ReviewedMedium:
+  properties:
+    id:
+      type: string
+      format: uuid
+    section_id:
+      type: string
+      format: uuid
+    medium_time:
+      type: string
+      format: date-time
+    create_time:
+      type: string
+      format: date-time
+    detected_time:
+      type: string
+      format: date-time
+    reviewed_time:
+      type: string
+      format: date-time
+    reviewer_id:
+      type: string
+      format: uuid
+    empty_checked_time:
+      type: string
+      format: date-time
+    empty_checker_id:
+      type: string
+      format: uuid
+    fetured_by_id:
+      type: string
+      format: uuid
+    event_id:
+      type: string
+      format: uuid
+    behaviour_id:
+      type: string
+      format: uuid
+    type:
+      $ref: "#/MediaType"
+    nas_path:
+      type: string
+    individual_ids_by_ai:
+      type: array
+      items:
+        type: string
+        format: uuid
+    individual_ids_by_human:
+      type: array
+      items:
+        type: string
+        format: uuid
+
+DetectedIndividuals:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    medium_id:
+      type: string
+      format: uuid
+    taxon_order_by_ai:
+      type: integer
+    xmin:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    ymin:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    xmax:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    ymax:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+
+ReviewedIndividuals:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    medium_id:
+      type: string
+      format: uuid
+    taxon_order_by_human:
+      type: integer
+    xmin:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    ymin:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    xmax:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    ymax:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+
+Camera:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    model_name:
+      type: string
+
+Event:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    chinese_name:
+      type: string
+    english_name:
+      type: string
+
+Behavior:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    chinese_name:
+      type: string
+    english_name:
+      type: string
+
+MountType:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    chinese_name:
+      type: string
+
+Species:
+  type: object
+  properties:
+    taxon_order:
+      type: integer
+    scientific_name:
+      type: string
+    english_common_name:
+      type: string
+    chinese_common_name:
+      type: string
+    order:
+      type: string
+    family_name:
+      type: string
+    family_latin_name:
+      type: string
+    taiwan_status:
+      type: string
+    matzu_status:
+      type: string
+    kinmen_status:
+      type: string
+    pratas_status:
+      type: string
+    endemism:
+      type: string
+    conservation_status:
+      $ref: "#/ConservationStatus"
