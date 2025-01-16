@@ -165,7 +165,7 @@ UndetectedMedium:
     nas_path:
       type: string
 
-EmtpyMedium:
+EmptyMedium:
   properties:
     id:
       type: string
@@ -217,8 +217,7 @@ DetectedMedium:
     individual_ids:
       type: array
       items:
-        type: string
-        format: uuid
+        $ref: "#/DetectedIndividual"
 
 ReviewedMedium:
   properties:
@@ -262,18 +261,12 @@ ReviewedMedium:
       $ref: "#/MediaType"
     nas_path:
       type: string
-    individual_ids_by_ai:
+    individuals:
       type: array
       items:
-        type: string
-        format: uuid
-    individual_ids_by_human:
-      type: array
-      items:
-        type: string
-        format: uuid
+        $ref: "#/ReviewedIndividuals"
 
-DetectedIndividuals:
+DetectedIndividual:
   type: object
   properties:
     id:
@@ -315,6 +308,8 @@ ReviewedIndividuals:
       type: string
       format: uuid
     taxon_order_by_human:
+      type: integer
+    taxon_order_by_ai:
       type: integer
     xmin:
       type: number

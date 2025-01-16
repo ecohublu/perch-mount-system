@@ -14,13 +14,13 @@ paths:
         - $ref: "#/components/parameters/MemberPositionIDsQuery"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MembersResponse"
     post:
       tags:
         - Member
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MemberResponse"
 
   /members/{MemberID}:
     get:
@@ -30,13 +30,13 @@ paths:
         - $ref: "#/components/parameters/MemberIDPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MemberResponse"
     patch:
       tags:
         - Member
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MemberResponse"
 
   /projects:
     get:
@@ -44,7 +44,7 @@ paths:
         - Project
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/ProjectsResponse"
 
   /perch_mounts:
     get:
@@ -57,13 +57,14 @@ paths:
         - $ref: "#/components/parameters/PerchMountTerminatedQuery"
       responses:
         "200":
-          $ref: "#/components/responses/PerchMountsGetResponse"
+          $ref: "#/components/responses/PerchMountsResponse"
+
     post:
       tags:
         - Perch Mount
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/PerchMountResponse"
 
   /perch_mounts/{PerchMountID}:
     get:
@@ -73,13 +74,13 @@ paths:
         - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/PerchMountResponse"
     patch:
       tags:
         - Perch Mount
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/PerchMountResponse"
 
   /sections:
     get:
@@ -92,13 +93,13 @@ paths:
         - $ref: "#/components/parameters/SectionSwapperIDsQuery"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/SectionsResponse"
     post:
       tags:
         - Section
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/SectionResponse"
 
   /sections/{SectionID}:
     get:
@@ -108,14 +109,14 @@ paths:
         - $ref: "#/components/parameters/SectionIDPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/SectionResponse"
 
     patch:
       tags:
         - Section
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/SectionResponse"
 
   /media:
     get:
@@ -130,7 +131,7 @@ paths:
 
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MediaResponse"
 
   /media/{MediumID}:
     get:
@@ -140,7 +141,8 @@ paths:
         - $ref: "#/components/parameters/MediumIDPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MediumResponse"
+
     patch:
       tags:
         - Media
@@ -148,7 +150,7 @@ paths:
         - $ref: "#/components/parameters/MediumIDPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MediumResponse"
 
   /unchecked_media:
     post:
@@ -333,7 +335,26 @@ paths:
 
 components:
   responses:
-    PerchMountsGetResponse:
+    MemberResponse:
+      description: get a member
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Member"
+
+    MembersResponse:
+      description: get member list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              members:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+
+    PerchMountsResponse:
       description: get perch mount list
       content:
         application/json:
@@ -344,6 +365,71 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/PerchMount"
+
+    PerchMountResponse:
+      description: get a perch mount
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PerchMount"
+
+    ProjectsResponse:
+      description: get project list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              projects:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+
+    SectionsResponse:
+      description: get section list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              projects:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Section"
+
+    SectionResponse:
+      description: get section list
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Section"
+
+    MediaResponse:
+      description: get media list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              media:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: "#/components/schemas/UndetectedMedium"
+                    - $ref: "#/components/schemas/EmptyMedium"
+                    - $ref: "#/components/schemas/DetectedMedium"
+                    - $ref: "#/components/schemas/ReviewedMedium"
+
+    MediumResponse:
+      description: get a medium
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/UndetectedMedium"
+              - $ref: "#/components/schemas/EmptyMedium"
+              - $ref: "#/components/schemas/DetectedMedium"
+              - $ref: "#/components/schemas/ReviewedMedium"
 
   parameters:
     $ref: "./parameters.yml"
