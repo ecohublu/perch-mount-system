@@ -48,6 +48,13 @@ ProjectsResponse:
             items:
               $ref: "./schemas.yml#/Project"
 
+ProjectResponse:
+  description: get a project
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Project"
+
 SectionsResponse:
   description: get section list
   content:
@@ -104,13 +111,22 @@ MeidumPostResponse:
             type: string
             example: successed
 
-ReviewedIndividuals:
+IndividualResponse:
   description: get a reviewed individual
   content:
     application/json:
       schema:
+        $ref: "./schemas.yml#/Individual"
+
+PostNewDataResponse:
+  description: new data
+  content:
+    application/json:
+      schema:
+        type: object
         properties:
-          individuals:
-            type: array
-            items:
-              $ref: "./schemas.yml#/ReviewedIndividual"
+          section:
+            $ref: "./schemas.yml#/Section"
+          number_of_media:
+            type: integer
+            minimum: 0

@@ -13,6 +13,7 @@ Table members {
     position positions [ not null ]
     super_admin boolean [ not null, default: false ]
     admin boolean [ not null, default: false]
+    actived boolean [ not null, default: false]
     blocked boolean [ not null, default: false]
 }
 
@@ -28,7 +29,7 @@ Table perch_mounts {
     latitude float [ not null ]
     habitat habitats [ not null ]
     project_id uuid  [ ref: > projects.id ]
-    claim_by uuid [ ref: > members.id ]
+    claim_by_id uuid [ ref: > members.id ]
     is_priority boolean
     terminated boolean [ default: false ]
     layer mount_layers
@@ -190,9 +191,9 @@ Enum media_type {
     video
 }
 
-Enum prey_status {
+Enum prey_identified_status {
     unchecked
-    inidentified
+    unidentified
     identified
 }
 

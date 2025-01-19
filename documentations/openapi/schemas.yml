@@ -20,12 +20,11 @@ MemberPositions:
     - undergrad
     - assistant
     - part_time
-PreyStatus:
+PreyIdentifiedStatus:
   type: string
   enum:
     - unchecked
-    - has_prey
-    - no_prey
+    - inidentified
     - identified
 TagStatus:
   type: string
@@ -64,6 +63,12 @@ Member:
       type: string
     position:
       $ref: "#/MemberPositions"
+    activated:
+      type: boolean
+    admin:
+      type: boolean
+    super_admin:
+      type: boolean
 
 Section:
   type: object
@@ -131,7 +136,7 @@ PerchMount:
       format: uuid
     project_name:
       type: string
-    claim_by:
+    claim_by_id:
       type: string
       format: uuid
     is_priority:
@@ -217,7 +222,7 @@ DetectedMedium:
     individual_ids:
       type: array
       items:
-        $ref: "#/DetectedIndividual"
+        $ref: "#/Individual"
 
 ReviewedMedium:
   properties:
@@ -264,49 +269,16 @@ ReviewedMedium:
     individuals:
       type: array
       items:
-        $ref: "#/ReviewedIndividual"
+        $ref: "#/Individual"
 
-DetectedIndividual:
+Individual:
   type: object
   properties:
     id:
       type: string
       format: uuid
-    medium_id:
-      type: string
-      format: uuid
-    taxon_order_by_ai:
-      type: integer
-    xmin:
-      type: number
-      format: float
-      maximum: 1
-      minimum: 0
-    ymin:
-      type: number
-      format: float
-      maximum: 1
-      minimum: 0
-    xmax:
-      type: number
-      format: float
-      maximum: 1
-      minimum: 0
-    ymax:
-      type: number
-      format: float
-      maximum: 1
-      minimum: 0
-
-ReviewedIndividual:
-  type: object
-  properties:
-    id:
-      type: string
-      format: uuid
-    medium_id:
-      type: string
-      format: uuid
+    prey_identified_status:
+      $ref: "#/PreyIdentifiedStatus"
     taxon_order_by_human:
       type: integer
     taxon_order_by_ai:
@@ -411,3 +383,159 @@ Species:
       type: string
     conservation_status:
       $ref: "#/ConservationStatus"
+
+PostMemberRequestBody:
+  type: object
+  properties:
+    username:
+      type: string
+    gmail:
+      type: string
+      format: email
+    first_name:
+      type: string
+    last_name:
+      type: string
+    position:
+      $ref: "#/MemberPositions"
+  required:
+    - username
+    - gmail
+    - first_name
+    - last_name
+    - position
+
+PatchMemberRequestBody:
+  type: object
+  properties:
+    first_name:
+      type: string
+    last_name:
+      type: string
+    position:
+      $ref: "#/MemberPositions"
+
+PostProjectRequestBody:
+  type: object
+  properties:
+    name:
+      type: string
+  required:
+    - name
+
+PostPerchMountRequestBody:
+  type: object
+  properties:
+    perch_mount_name:
+      type: string
+    latitude:
+      type: number
+      format: float
+      minimum: -90
+      maximum: 90
+      example: 37.7749
+    longitude:
+      type: number
+      format: float
+      minimum: -180
+      maximum: 180
+      example: -122.4194
+    mount_type_id:
+      type: string
+      format: uuid
+    project_id:
+      type: string
+      format: uuid
+    layer:
+      $ref: "#/PerchMountLayers"
+    habitat_id:
+      type: string
+      format: uuid
+    note:
+      type: string
+  required:
+    - perch_mount_name
+    - latitude
+    - longitude
+    - mount_type_id
+    - project_id
+    - layer
+    - habitat_id
+
+PatchPerchMountRequestBody:
+  type: object
+  properties:
+    perch_mount_name:
+      type: string
+    latitude:
+      type: number
+      format: float
+      minimum: -90
+      maximum: 90
+      example: 37.7749
+    longitude:
+      type: number
+      format: float
+      minimum: -180
+      maximum: 180
+      example: -122.4194
+    project_id:
+      type: string
+      format: uuid
+    habitat_id:
+      type: string
+      format: uuid
+    claim_by:
+      type: string
+      format: uuid
+    is_priority:
+      type: boolean
+    terminated:
+      type: boolean
+    note:
+      type: string
+
+PutPerchMountClaimerRequestBody:
+  type: object
+  properties:
+    claim_by_id:
+      type: string
+      format: uuid
+
+PostNewDataRequestBody:
+  type: object
+  properties:
+    section:
+      type: object
+      properties:
+        perch_mount_id:
+          type: string
+          format: uuid
+        mount_type_id:
+          type: string
+          format: uuid
+        camera_id:
+          type: string
+          format: uuid
+        swapper_date:
+          type: string
+          format: date-time
+        ground_camera:
+          type: boolean
+        valid:
+          type: boolean
+    media:
+      type: array
+      items:
+        type: object
+        properties:
+          medium_time:
+            type: string
+            format: date-time
+          detected_time:
+            type: string
+            format: date-time
+          type:
+            $ref: "#/MediaType"
+          nas_path:
+            type: string

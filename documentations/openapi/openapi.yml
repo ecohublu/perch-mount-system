@@ -18,6 +18,12 @@ paths:
     post:
       tags:
         - Member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostMemberRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/MemberResponse"
@@ -34,6 +40,12 @@ paths:
     patch:
       tags:
         - Member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchMemberRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/MemberResponse"
@@ -45,6 +57,18 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ProjectsResponse"
+    post:
+      tags:
+        - Project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostProjectRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/ProjectResponse"
 
   /perch_mounts:
     get:
@@ -62,6 +86,12 @@ paths:
     post:
       tags:
         - Perch Mount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostPerchMountRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
@@ -76,6 +106,54 @@ paths:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
     patch:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+
+  /perch_mounts/{PerchMountID}/claimer:
+    put:
+      tags:
+        - Perch Mount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutPerchMountClaimerRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+    delete:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+
+  /perch_mounts/{PerchMountID}/termination:
+    put:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+    delete:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+
+  /perch_mounts/{PerchMountID}/priority:
+    put:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+    delete:
       tags:
         - Perch Mount
       responses:
@@ -127,6 +205,13 @@ paths:
         - $ref: "#/components/parameters/PerchMountIDsQuery"
         - $ref: "#/components/parameters/SectionIDsQuery"
         - $ref: "#/components/parameters/MediaStatusQuery"
+        - $ref: "#/components/parameters/IndividualsIsTaggedQuery"
+        - $ref: "#/components/parameters/IndividualsRingNumberSearchQuery"
+        - $ref: "#/components/parameters/IndividualsPreyIdentifiedStatusQuery"
+        - $ref: "#/components/parameters/IndividualsHasPreyQuery"
+        - $ref: "#/components/parameters/IndividualsPreyNameSearchQuery"
+        - $ref: "#/components/parameters/TaxonOrderByHumanQuery"
+        - $ref: "#/components/parameters/TaxonOrderByAIQuery"
         - $ref: "#/components/parameters/OffsetQuery"
         - $ref: "#/components/parameters/LimitQuery"
 
@@ -185,27 +270,19 @@ paths:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
 
-  /individuals:
-    get:
+  /new_data:
+    post:
       tags:
-        - Individuals
-      parameters:
-        - $ref: "#/components/parameters/IndividualsIsTaggedQuery"
-        - $ref: "#/components/parameters/IndividualsRingNumberSearchQuery"
-        - $ref: "#/components/parameters/IndividualsPreyIdentifiedStatusQuery"
-        - $ref: "#/components/parameters/IndividualsHasPreyQuery"
-        - $ref: "#/components/parameters/IndividualsPreyNameSearchQuery"
-        - $ref: "#/components/parameters/ProjectIDsQuery"
-        - $ref: "#/components/parameters/PerchMountIDsQuery"
-        - $ref: "#/components/parameters/SectionIDsQuery"
-        - $ref: "#/components/parameters/TaxonOrderByHumanQuery"
-        - $ref: "#/components/parameters/TaxonOrderByAIQuery"
-        - $ref: "#/components/parameters/OffsetQuery"
-        - $ref: "#/components/parameters/LimitQuery"
-
+        - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostNewDataRequestBody"
       responses:
         "200":
-          $ref: "#/components/responses/ReviewedIndividuals"
+          $ref: "#/components/responses/PostNewDataResponse"
 
   /individuals/{IndividualID}:
     get:
@@ -215,7 +292,7 @@ paths:
         - $ref: "#/components/parameters/IndividualIDPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/IndividualResponse"
 
     patch:
       tags:
@@ -224,15 +301,7 @@ paths:
         - $ref: "#/components/parameters/IndividualIDPathParam"
       responses:
         "200":
-          description: OK
-
-  /individuals/identified_preys:
-    post:
-      tags:
-        - Individuals
-      responses:
-        "200":
-          description: OK
+          $ref: "#/components/responses/IndividualResponse"
 
   /behaviors:
     get:
