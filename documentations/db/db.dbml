@@ -97,7 +97,8 @@ Table reviewed_media_contents {
 Table individuals {
     id uuid [ pk, unique ]
     medium_id uuid  [ ref: > media.id ]
-    prey_status prey_status
+    prey_identified_status prey_identified_status
+    has_prey boolean
     tag_status tag_status
     note text
 }
@@ -111,13 +112,13 @@ Table reviewed_individuals_contents {
     ymax float
 }
 
-Table with_prey_individuals_contents { mm,
+Table unidentified_prey_individuals_contents { mm,
     individual_id uuid [ ref: - individuals.id ]
     prey boolean
     marked_by_id uudis [ ref: > members.id ]
 }
 
-Table prey_identified_individuals_contents {
+Table identified_prey_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
     prey_name boolean
     identified_by uuid [ ref: > members.id ]
@@ -125,9 +126,8 @@ Table prey_identified_individuals_contents {
 
 Table tagged_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
-    tagged boolean
+    is_tagged boolean
     ring_number varchar
-    tag_number varchar
 }
 
 Table detected_individuals_contents {
@@ -192,8 +192,7 @@ Enum media_type {
 
 Enum prey_status {
     unchecked
-    has_prey
-    no_prey
+    inidentified
     identified
 }
 

@@ -1,0 +1,116 @@
+MemberResponse:
+  description: get a member
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Member"
+
+MembersResponse:
+  description: get member list
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          members:
+            type: array
+            items:
+              $ref: "./schemas.yml#/Member"
+
+PerchMountsResponse:
+  description: get perch mount list
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          perch_mounts:
+            type: array
+            items:
+              $ref: "./schemas.yml#/PerchMount"
+
+PerchMountResponse:
+  description: get a perch mount
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/PerchMount"
+
+ProjectsResponse:
+  description: get project list
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          projects:
+            type: array
+            items:
+              $ref: "./schemas.yml#/Project"
+
+SectionsResponse:
+  description: get section list
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          projects:
+            type: array
+            items:
+              $ref: "./schemas.yml#/Section"
+
+SectionResponse:
+  description: get section list
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Section"
+
+MediaResponse:
+  description: get media list
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          media:
+            type: array
+            items:
+              oneOf:
+                - $ref: "./schemas.yml#/UndetectedMedium"
+                - $ref: "./schemas.yml#/EmptyMedium"
+                - $ref: "./schemas.yml#/DetectedMedium"
+                - $ref: "./schemas.yml#/ReviewedMedium"
+
+MediumResponse:
+  description: get a medium
+  content:
+    application/json:
+      schema:
+        oneOf:
+          - $ref: "./schemas.yml#/UndetectedMedium"
+          - $ref: "./schemas.yml#/EmptyMedium"
+          - $ref: "./schemas.yml#/DetectedMedium"
+          - $ref: "./schemas.yml#/ReviewedMedium"
+
+MeidumPostResponse:
+  description: message response
+  content:
+    application/json:
+      schema:
+        properties:
+          message:
+            type: string
+            example: successed
+
+ReviewedIndividuals:
+  description: get a reviewed individual
+  content:
+    application/json:
+      schema:
+        properties:
+          individuals:
+            type: array
+            items:
+              $ref: "./schemas.yml#/ReviewedIndividual"

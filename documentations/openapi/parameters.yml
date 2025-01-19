@@ -97,13 +97,65 @@ MediaStatusQuery:
     type: string
     enum: [undetected, detected, unchecked, reviewed, accidental]
 
-IndividualsPreyStatusQuery:
-  name: prey_status
+IndividualsPreyIdentifiedStatusQuery:
+  name: prey_identified_status
   in: query
   required: false
   schema:
     type: string
-    enum: [unchecked, has_prey, no_prey, identified]
+    enum: [unchecked, unidentified, identified]
+
+IndividualsHasPreyQuery:
+  name: has_prey
+  in: query
+  required: false
+  schema:
+    type: boolean
+
+IndividualsPreyNameSearchQuery:
+  name: prey_name
+  in: query
+  required: false
+  schema:
+    type: string
+
+IndividualsIsTaggedQuery:
+  name: is_tagged
+  in: query
+  required: false
+  schema:
+    type: boolean
+
+IndividualsRingNumberSearchQuery:
+  name: ring_number
+  in: query
+  required: false
+  schema:
+    type: string
+
+TaxonOrderByAIQuery:
+  name: taxon_order_by_ai
+  in: query
+  required: false
+  schema:
+    style: form
+    explode: false
+    schema:
+      type: array
+      items:
+        type: integer
+
+TaxonOrderByHumanQuery:
+  name: taxon_order_by_human
+  in: query
+  required: false
+  schema:
+    style: form
+    explode: false
+    schema:
+      type: array
+      items:
+        type: integer
 
 SectionIDsQuery:
   name: section_ids
@@ -125,7 +177,7 @@ OffsetQuery:
     type: integer
 
 LimitQuery:
-  name: offset
+  name: Limit
   in: query
   required: false
   schema:

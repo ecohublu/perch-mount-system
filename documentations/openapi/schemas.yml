@@ -264,7 +264,7 @@ ReviewedMedium:
     individuals:
       type: array
       items:
-        $ref: "#/ReviewedIndividuals"
+        $ref: "#/ReviewedIndividual"
 
 DetectedIndividual:
   type: object
@@ -298,7 +298,7 @@ DetectedIndividual:
       maximum: 1
       minimum: 0
 
-ReviewedIndividuals:
+ReviewedIndividual:
   type: object
   properties:
     id:
@@ -331,6 +331,16 @@ ReviewedIndividuals:
       format: float
       maximum: 1
       minimum: 0
+    has_prey:
+      type: boolean
+    prey_name:
+      type: string
+      example: grosshopper
+    is_tagged:
+      type: boolean
+    ring_number:
+      type: string
+      example: ABC123
 
 Camera:
   type: object
