@@ -502,6 +502,86 @@ PutPerchMountClaimerRequestBody:
       type: string
       format: uuid
 
+PostUnreviewedMediaByDetectedRequestBody:
+  type: object
+  properties:
+    media:
+      type: array
+      items:
+        type: object
+        properties:
+          medium_id:
+            type: string
+            format: uuid
+          detected_time:
+            type: string
+            format: uuid
+          individuals:
+            type: array
+            items:
+              type: object
+              properties:
+                taxon_order_by_ai:
+                  type: integer
+                xmin:
+                  type: number
+                  format: float
+                  maximum: 1
+                  minimum: 0
+                xmax:
+                  type: number
+                  format: float
+                  maximum: 1
+                  minimum: 0
+                ymin:
+                  type: number
+                  format: float
+                  maximum: 1
+                  minimum: 0
+                ymax:
+                  type: number
+                  format: float
+                  maximum: 1
+                  minimum: 0
+              required:
+                - taxon_order_by_ai
+                - xmin
+                - xmax
+                - ymin
+                - ymax
+        required:
+          - medium_id
+          - detected_time
+          - individuals
+  required:
+    - media
+
+PostUnreviewedMediaByEmptyCheckedRequestBody:
+  type: object
+  properties:
+    media:
+      type: array
+      items:
+        type: object
+        properties:
+          medium_id:
+            type: string
+            format: uuid
+          detected_time:
+            type: string
+            format: uuid
+          empty_checked_time:
+            type: string
+            format: uuid
+          empty_checker_id:
+            type: string
+            format: uuid
+        required:
+          - medium_id
+          - detected_time
+  required:
+    - media
+
 PostNewDataRequestBody:
   type: object
   properties:

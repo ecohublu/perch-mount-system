@@ -229,15 +229,6 @@ paths:
         "200":
           $ref: "#/components/responses/MediumResponse"
 
-    patch:
-      tags:
-        - Media
-      parameters:
-        - $ref: "#/components/parameters/MediumIDPathParam"
-      responses:
-        "200":
-          $ref: "#/components/responses/MediumResponse"
-
   /unchecked_media:
     post:
       tags:
@@ -246,10 +237,30 @@ paths:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
 
-  /detected_media:
+  /unreviewed_media/detected:
     post:
       tags:
         - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUnreviewedMediaByDetectedRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/MeidumPostResponse"
+
+  /unreviewed_media/empty_checked:
+    post:
+      tags:
+        - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUnreviewedMediaByEmptyCheckedRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
