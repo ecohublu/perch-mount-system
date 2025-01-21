@@ -269,6 +269,12 @@ paths:
     post:
       tags:
         - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostReviewMediaRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
@@ -277,6 +283,12 @@ paths:
     post:
       tags:
         - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostAccidentalMediaRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
