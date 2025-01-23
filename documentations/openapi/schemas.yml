@@ -305,9 +305,9 @@ Individual:
       minimum: 0
     has_prey:
       type: boolean
-    inaturalist_taxa_id:
+    prey_inat_taxa_id:
       type: integer
-    inidentified_by_id:
+    prey_inidentified_by_id:
       type: string
       format: uuid
     is_tagged:
@@ -322,9 +322,9 @@ IndividualPrey:
     individual_id:
       type: string
       format: uuid
-    inaturalist_taxa_id:
+    prey_inat_taxa_id:
       type: integer
-    inidentified_by_id:
+    prey_inidentified_by_id:
       type: string
       format: uuid
 
