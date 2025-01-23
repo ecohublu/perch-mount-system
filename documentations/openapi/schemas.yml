@@ -259,7 +259,7 @@ ReviewedMedium:
     event_id:
       type: string
       format: uuid
-    behaviour_id:
+    behavior_id:
       type: string
       format: uuid
     type:
@@ -502,6 +502,68 @@ PutPerchMountClaimerRequestBody:
       type: string
       format: uuid
 
+PostSectionRequestBody:
+  type: object
+  properties:
+    perch_mount_id:
+      type: string
+      format: uuid
+    mount_type_id:
+      type: string
+      format: uuid
+    swapped_date:
+      type: string
+      format: date-time
+    camera_id:
+      type: string
+      format: uuid
+    swapper_ids:
+      type: array
+      items:
+        type: string
+        format: uuid
+    ground_camera:
+      type: boolean
+    valid:
+      type: boolean
+    note:
+      type: string
+  required:
+    - perch_mount_id
+    - mount_type_id
+    - swapped_date
+    - camera_id
+    - swapper_ids
+    - ground_camera
+    - valid
+
+PatchSectionRequestBody:
+  type: object
+  properties:
+    perch_mount_id:
+      type: string
+      format: uuid
+    mount_type_id:
+      type: string
+      format: uuid
+    swapped_date:
+      type: string
+      format: date-time
+    camera_id:
+      type: string
+      format: uuid
+    swapper_ids:
+      type: array
+      items:
+        type: string
+        format: uuid
+    ground_camera:
+      type: boolean
+    valid:
+      type: boolean
+    note:
+      type: string
+
 PostUnreviewedMediaByDetectedRequestBody:
   type: object
   properties:
@@ -605,7 +667,7 @@ PostReviewMediaRequestBody:
           event_id:
             type: string
             format: uuid
-          behaviour_id:
+          behavior_id:
             type: string
             format: uuid
           individuals:

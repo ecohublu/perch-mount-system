@@ -175,6 +175,12 @@ paths:
     post:
       tags:
         - Section
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostSectionRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/SectionResponse"
@@ -192,6 +198,12 @@ paths:
     patch:
       tags:
         - Section
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchSectionRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/SectionResponse"
@@ -228,14 +240,6 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/MediumResponse"
-
-  /unchecked_media:
-    post:
-      tags:
-        - Media
-      responses:
-        "200":
-          $ref: "#/components/responses/MeidumPostResponse"
 
   /unreviewed_media/detected:
     post:
@@ -332,13 +336,14 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/BehaviorsResponse"
+
     post:
       tags:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/BehaviorResponse"
 
   /positions:
     get:
@@ -346,7 +351,7 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/PositionsResponse"
 
   /habitats:
     get:
@@ -354,7 +359,7 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/PositionsResponse"
 
   /cameras:
     get:
@@ -362,13 +367,13 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/CamerasResponse"
     post:
       tags:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/CameraResponse"
 
   /events:
     get:
@@ -376,13 +381,13 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/EventsResponse"
     post:
       tags:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/EventResponse"
 
   /mount_types:
     get:
@@ -390,13 +395,13 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MountTypeResponse"
     post:
       tags:
         - Options
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/MountTypesResponse"
 
   /mount_layers:
     get:
@@ -404,13 +409,7 @@ paths:
         - Options
       responses:
         "200":
-          description: OK
-    post:
-      tags:
-        - Options
-      responses:
-        "200":
-          description: OK
+          $ref: "#/components/responses/MountLayersResponse"
 
   /species:
     get:
@@ -426,7 +425,7 @@ paths:
         - $ref: "#/components/parameters/SpeciesScientificNameSearchQuery"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/SpeciesListResponse"
 
   /species/{TaxonOrder}:
     get:
@@ -436,7 +435,7 @@ paths:
         - $ref: "#/components/parameters/SpeciesTaxonOrderPathParam"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/SpeciesResponse"
 
 components:
   responses:

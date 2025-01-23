@@ -62,7 +62,7 @@ SectionsResponse:
       schema:
         type: object
         properties:
-          projects:
+          sections:
             type: array
             items:
               $ref: "./schemas.yml#/Section"
@@ -130,3 +130,110 @@ PostNewDataResponse:
           number_of_media:
             type: integer
             minimum: 0
+
+BehaviorResponse:
+  description: get a behavior
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Behavior"
+
+BehaviorsResponse:
+  description: get behavior list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/Behavior"
+
+CameraResponse:
+  description: get a camera
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Camera"
+
+CamerasResponse:
+  description: get camera list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/Camera"
+
+EventResponse:
+  description: get a event
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Event"
+
+EventsResponse:
+  description: get event list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/Event"
+
+MountTypeResponse:
+  description: get a mount type
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/MountType"
+
+MountTypesResponse:
+  description: get mount type list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/MountType"
+
+PositionsResponse:
+  description: get position list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: string
+
+HabitatsResponse:
+  description: get habitat list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: string
+
+MountLayersResponse:
+  description: get mount type list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: string
+
+SpeciesResponse:
+  description: get a species
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/Species"
+
+SpeciesListResponse:
+  description: get species list
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/Species"

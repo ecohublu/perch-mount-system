@@ -92,7 +92,7 @@ Table reviewed_media_contents {
     reviewer_id uuid [ ref: > members.id ]
     featured_by_id uuid [ ref: > members.id ]
     event_id uuid [ ref: > events.id ]
-    behaviour_id uuid [ ref: > behaviours.id ]
+    behavior_id uuid [ ref: > behaviors.id ]
 }
 
 Table individuals {
@@ -150,7 +150,7 @@ Table events {
     english_name varchar
 }
 
-Table behaviours {
+Table behaviors {
     id uuid [ pk, unique ]
     chinese_name varchar
     english_name varchar
