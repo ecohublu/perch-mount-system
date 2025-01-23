@@ -119,8 +119,8 @@ Table unidentified_prey_individuals_contents {
 
 Table identified_prey_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
-    prey_name boolean
-    identified_by uuid [ ref: > members.id ]
+    inaturalist_taxa_id integer [ not null ]
+    identified_by_id uuid [ ref: > members.id ]
 }
 
 Table tagged_individuals_contents {

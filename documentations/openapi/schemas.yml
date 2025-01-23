@@ -305,14 +305,28 @@ Individual:
       minimum: 0
     has_prey:
       type: boolean
-    prey_name:
+    inaturalist_taxa_id:
+      type: integer
+    inidentified_by_id:
       type: string
-      example: grosshopper
+      format: uuid
     is_tagged:
       type: boolean
     ring_number:
       type: string
       example: ABC123
+
+IndividualPrey:
+  type: object
+  properties:
+    individual_id:
+      type: string
+      format: uuid
+    inaturalist_taxa_id:
+      type: integer
+    inidentified_by_id:
+      type: string
+      format: uuid
 
 Camera:
   type: object
@@ -787,3 +801,11 @@ PostNewDataRequestBody:
             $ref: "#/MediaType"
           nas_path:
             type: string
+
+PostIdentifiedPreyIndividualsRequestBody:
+  type: object
+  properties:
+    individuals:
+      type: array
+      items:
+        $ref: "#/IndividualPrey"

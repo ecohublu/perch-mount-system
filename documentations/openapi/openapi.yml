@@ -221,7 +221,7 @@ paths:
         - $ref: "#/components/parameters/IndividualsRingNumberSearchQuery"
         - $ref: "#/components/parameters/IndividualsPreyIdentifiedStatusQuery"
         - $ref: "#/components/parameters/IndividualsHasPreyQuery"
-        - $ref: "#/components/parameters/IndividualsPreyNameSearchQuery"
+        - $ref: "#/components/parameters/IndividualsPreyInaturalistTaxaIDSearchQuery"
         - $ref: "#/components/parameters/TaxonOrderByHumanQuery"
         - $ref: "#/components/parameters/TaxonOrderByAIQuery"
         - $ref: "#/components/parameters/OffsetQuery"
@@ -326,6 +326,20 @@ paths:
         - Individuals
       parameters:
         - $ref: "#/components/parameters/IndividualIDPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/IndividualResponse"
+
+  /individuals/preys:
+    post:
+      tags:
+        - Individuals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostIdentifiedPreyIndividualsRequestBody"
       responses:
         "200":
           $ref: "#/components/responses/IndividualResponse"

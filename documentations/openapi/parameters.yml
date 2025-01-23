@@ -112,12 +112,12 @@ IndividualsHasPreyQuery:
   schema:
     type: boolean
 
-IndividualsPreyNameSearchQuery:
-  name: prey_name
+IndividualsPreyInaturalistTaxaIDSearchQuery:
+  name: inaturalist_taxa_id
   in: query
   required: false
   schema:
-    type: string
+    type: integer
 
 IndividualsIsTaggedQuery:
   name: is_tagged
