@@ -65,25 +65,30 @@ Table media {
 
 Table undetected_meida_contents {
     medium_id uuid [ ref: - media.id ]
+
+}
+
+Table detected_media_contents {
+    medium_id uuid [ ref: - media.id ]
     detected_time datetime [ not null ]
+}
+
+Table checked_media_content {
+    medium_id uuid [ ref: - media.id ]
+    empty_checked_time datetime
+    empty_checker_id uuid [ ref: > members.id ]
 }
 
 Table unchecked_accidental_media_contents {
     medium_id uuid [ ref: - media.id ]
-    detected_time datetime [ not null ]
 }
 
 Table unreviewed_media_contents {
     medium_id uuid [ ref: - media.id ]
-    detected_time datetime [ not null ]
-    empty_checked_time datetime
-    empty_checker_id uuid [ ref: > members.id ]
 }
 
 Table accidental_media_contents {
     medium_id uuid [ ref: - media.id ]
-    empty_checked_time datetime
-    empty_checker_id uuid [ ref: > members.id ]
 }
 
 Table reviewed_media_contents {
@@ -103,6 +108,15 @@ Table individuals {
     note text
 }
 
+Table detected_individuals_contents {
+    individual_id uuid [ ref: - individuals.id ]
+    taxon_order_by_ai integer [ ref: > species.taxon_order ]
+    xmin float
+    xmax float
+    ymin float
+    ymax float
+}
+
 Table reviewed_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
     taxon_order_by_human integer [ ref: > species.taxon_order ]
@@ -112,7 +126,7 @@ Table reviewed_individuals_contents {
     ymax float
 }
 
-Table unidentified_prey_individuals_contents {
+Table marked_prey_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
     prey boolean
 }
@@ -130,14 +144,6 @@ Table tagged_individuals_contents {
     ring_number varchar
 }
 
-Table detected_individuals_contents {
-    individual_id uuid [ ref: - individuals.id ]
-    taxon_order_by_ai integer [ ref: > species.taxon_order ]
-    xmin float
-    xmax float
-    ymin float
-    ymax float
-}
 
 Table cameras {
     id uuid [ pk, unique ]
