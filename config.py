@@ -2,7 +2,7 @@ import app.env
 
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = "postgresql://%s:%s@%s:%s/%s" % (
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg://%s:%s@%s:%s/%s" % (
         app.env.get_env(app.env.EnvKeys.POSTGRESQL_USER),
         app.env.get_env(app.env.EnvKeys.POSTGRESQL_PASSWORD),
         app.env.get_env(app.env.EnvKeys.POSTGRESQL_HOST),
