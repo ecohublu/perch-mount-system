@@ -55,9 +55,9 @@ Table section_swappers {
 Table media {
     id uuid [ pk, unique ]
     section_id uuid [ ref: > sections.id ]
-    medium_time datetime [ not null ]
-    created_time datetime [ not null ]
-    deleted_time datetime
+    medium_datetime datetime [ not null ]
+    created_datetime datetime [ not null ]
+    deleted_datetime datetime
     status media_status
     type media_type
     nas_path varchar
@@ -181,7 +181,7 @@ Enum media_status {
     undetected
     detected
     reviewed
-    accidental_by_ai
+    unchecked
     deleted
 }
 
