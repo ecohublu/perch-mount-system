@@ -9,9 +9,10 @@ from app.model import enums
 from app.model import utils
 
 
-USER_NAME_MAX_LENGTH = 50
-FIRST_NAME_MAX_LENGTH = 50
-LAST_NAME_MAX_LENGTH = 50
+class ColumnSize:
+    USER_NAME = 50
+    FIRST_NAME = 50
+    LAST_NAME = 50
 
 
 class Members(extensions.db.Model, utils.JsonAbleModel):
@@ -25,16 +26,16 @@ class Members(extensions.db.Model, utils.JsonAbleModel):
     )
     gmail = sqlalchemy.Column(postgresql.CITEXT, nullable=False, unique=True)
     user_name = sqlalchemy.Column(
-        sqlalchemy.String(USER_NAME_MAX_LENGTH),
+        sqlalchemy.String(ColumnSize.USER_NAME),
         unique=True,
         nullable=False,
     )
     first_name = sqlalchemy.Column(
-        sqlalchemy.String(FIRST_NAME_MAX_LENGTH),
+        sqlalchemy.String(ColumnSize.FIRST_NAME),
         nullable=False,
     )
     last_name = sqlalchemy.Column(
-        sqlalchemy.String(LAST_NAME_MAX_LENGTH),
+        sqlalchemy.String(ColumnSize.LAST_NAME),
         nullable=False,
     )
     position = sqlalchemy.Column(

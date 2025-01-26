@@ -7,7 +7,9 @@ from app.model import enums
 from app.model import utils
 from app.model import fk_names
 
-PERCH_MOUNT_NAME_MAX_LENGTH = 15
+
+class ColumnSize:
+    PERCH_MOUNT_NAME = 15
 
 
 class PerchMounts(extensions.db.Model, utils.JsonAbleModel):
@@ -20,7 +22,7 @@ class PerchMounts(extensions.db.Model, utils.JsonAbleModel):
         nullable=False,
     )
     perch_mount_name = sqlalchemy.Column(
-        sqlalchemy.String(PERCH_MOUNT_NAME_MAX_LENGTH),
+        sqlalchemy.String(ColumnSize.PERCH_MOUNT_NAME),
         unique=True,
         nullable=False,
     )
