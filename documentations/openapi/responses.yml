@@ -86,8 +86,8 @@ MediaResponse:
             items:
               oneOf:
                 - $ref: "./schemas.yml#/UndetectedMedium"
-                - $ref: "./schemas.yml#/EmptyMedium"
-                - $ref: "./schemas.yml#/DetectedMedium"
+                - $ref: "./schemas.yml#/UnckechedMedium"
+                - $ref: "./schemas.yml#/UnreviewedMedium"
                 - $ref: "./schemas.yml#/ReviewedMedium"
 
 MediumResponse:
@@ -97,8 +97,8 @@ MediumResponse:
       schema:
         oneOf:
           - $ref: "./schemas.yml#/UndetectedMedium"
-          - $ref: "./schemas.yml#/EmptyMedium"
-          - $ref: "./schemas.yml#/DetectedMedium"
+          - $ref: "./schemas.yml#/UnckechedMedium"
+          - $ref: "./schemas.yml#/UnreviewedMedium"
           - $ref: "./schemas.yml#/ReviewedMedium"
 
 MeidumPostResponse:

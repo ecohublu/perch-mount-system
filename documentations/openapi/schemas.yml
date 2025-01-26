@@ -65,9 +65,9 @@ Member:
       $ref: "#/MemberPositions"
     activated:
       type: boolean
-    admin:
+    is_admin:
       type: boolean
-    super_admin:
+    is_super_admin:
       type: boolean
 
 Section:
@@ -162,7 +162,7 @@ UndetectedMedium:
     medium_time:
       type: string
       format: date-time
-    create_time:
+    created_at:
       type: string
       format: date-time
     type:
@@ -170,7 +170,7 @@ UndetectedMedium:
     nas_path:
       type: string
 
-EmptyMedium:
+UncheckedMedium:
   properties:
     id:
       type: string
@@ -181,10 +181,10 @@ EmptyMedium:
     medium_time:
       type: string
       format: date-time
-    create_time:
+    created_at:
       type: string
       format: date-time
-    detected_time:
+    detected_at:
       type: string
       format: date-time
     type:
@@ -192,7 +192,7 @@ EmptyMedium:
     nas_path:
       type: string
 
-DetectedMedium:
+UnreviewedMedium:
   properties:
     id:
       type: string
@@ -222,7 +222,7 @@ DetectedMedium:
     individual_ids:
       type: array
       items:
-        $ref: "#/Individual"
+        $ref: "#/UnreviewedIndividual"
 
 ReviewedMedium:
   properties:
@@ -269,9 +269,38 @@ ReviewedMedium:
     individuals:
       type: array
       items:
-        $ref: "#/Individual"
+        $ref: "#/ReviewedIndividual"
 
-Individual:
+UnreviewedIndividual:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    taxon_order_by_ai:
+      type: integer
+    xmin:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    ymin:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    xmax:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+    ymax:
+      type: number
+      format: float
+      maximum: 1
+      minimum: 0
+
+ReviewedIndividual:
   type: object
   properties:
     id:
