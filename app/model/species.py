@@ -19,23 +19,44 @@ class ColumnSizes:
     KINMEN_STATUS = 50
     PRATAS_STATUS = 50
     ENDEMISM = 50
+    CODES = 10
 
 
 class Species(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "species"
-    taxon_order = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    scientific_name = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.SCIENTIFIC_NAME))
+    taxon_order = sqlalchemy.Column(
+        sqlalchemy.Integer,
+        primary_key=True,
+        nullable=False,
+        unique=True,
+    )
+    scientific_name = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSizes.SCIENTIFIC_NAME),
+        nullable=False,
+        unique=True,
+    )
     english_common_name = sqlalchemy.Column(
-        sqlalchemy.String(ColumnSizes.ENGLISH_COMMON_NAME)
+        sqlalchemy.String(ColumnSizes.ENGLISH_COMMON_NAME),
+        nullable=False,
+        unique=True,
     )
     chinese_common_name = sqlalchemy.Column(
-        sqlalchemy.String(ColumnSizes.CHINESE_COMMON_NAME)
+        sqlalchemy.String(ColumnSizes.CHINESE_COMMON_NAME),
+        nullable=False,
+        unique=True,
     )
     category = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.CATEGORY))
-    order = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.ORDER))
-    family_name = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.FAMILY_NAME))
+    order = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSizes.ORDER),
+        nullable=False,
+    )
+    family_name = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSizes.FAMILY_NAME),
+        nullable=False,
+    )
     family_latin_name = sqlalchemy.Column(
-        sqlalchemy.String(ColumnSizes.FAMILY_LATIN_NAME)
+        sqlalchemy.String(ColumnSizes.FAMILY_LATIN_NAME),
+        nullable=False,
     )
     taiwan_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.TAIWAN_STATUS))
     matzu_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.MATZU_STATUS))
@@ -43,4 +64,4 @@ class Species(extensions.db.Model, utils.JsonAbleModel):
     pratas_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.PRATAS_STATUS))
     endemism = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.ENDEMISM))
     conservation_status = sqlalchemy.Column(sqlalchemy.Enum(enums.ConservationStatus))
-    codes = sqlalchemy.Column(postgresql.ARRAY(sqlalchemy.String(10)))
+    codes = sqlalchemy.Column(postgresql.ARRAY(sqlalchemy.String(ColumnSizes.CODES)))

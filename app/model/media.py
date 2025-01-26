@@ -28,9 +28,9 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
         default=sqlalchemy.sql.func.now(),
         nullable=False,
     )
-    medium_type = sqlalchemy.Column(sqlalchemy.Enum(enums.MediaType))
+    medium_type = sqlalchemy.Column(sqlalchemy.Enum(enums.MediaType), nullable=False)
     nas_path = sqlalchemy.Column(sqlalchemy.String(255))
-    # status create by migration sql.
+    # status implmeneted in migrations. It recorded in the view table: media_status
 
 
 class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
@@ -49,7 +49,7 @@ class DetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
     )
-    detected_at = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    detected_at = sqlalchemy.Column(sqlalchemy.DateTime)
 
 
 class CheckedMediaContents(extensions.db.Model, utils.JsonAbleModel):
@@ -64,7 +64,6 @@ class CheckedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     empty_checker_id = sqlalchemy.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
-        nullable=False,
     )
 
 

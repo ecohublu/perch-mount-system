@@ -42,6 +42,13 @@ class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     ymin = sqlalchemy.Column(sqlalchemy.Float)
     ymax = sqlalchemy.Column(sqlalchemy.Float)
 
+    __table_arg__ = sqlalchemy.CheckConstraint(
+        "xmin >= 0 AND xmin <= 1",
+        "xmax >= 0 AND xmax <= 1",
+        "ymin >= 0 AND ymin <= 1",
+        "ymax >= 0 AND ymax <= 1",
+    )
+
 
 class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     __table__ = "reviewed_individuals_contents"
@@ -57,6 +64,13 @@ class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     xmax = sqlalchemy.Column(sqlalchemy.Float)
     ymin = sqlalchemy.Column(sqlalchemy.Float)
     ymax = sqlalchemy.Column(sqlalchemy.Float)
+
+    __table_arg__ = sqlalchemy.CheckConstraint(
+        "xmin >= 0 AND xmin <= 1",
+        "xmax >= 0 AND xmax <= 1",
+        "ymin >= 0 AND ymin <= 1",
+        "ymax >= 0 AND ymax <= 1",
+    )
 
 
 class MarkedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):

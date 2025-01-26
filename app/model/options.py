@@ -22,7 +22,11 @@ class Projects(extensions.db.Model, utils.JsonAbleModel):
         unique=True,
         nullable=False,
     )
-    name = sqlalchemy.Column(sqlalchemy.String(ColumnSize.PROJECT_NAME))
+    name = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSize.PROJECT_NAME),
+        nullable=False,
+        unique=True,
+    )
 
 
 class Cameras(extensions.db.Model, utils.JsonAbleModel):
@@ -34,7 +38,11 @@ class Cameras(extensions.db.Model, utils.JsonAbleModel):
         unique=True,
         nullable=False,
     )
-    model_name = sqlalchemy.Column(sqlalchemy.String(ColumnSize.MODEL_NAME))
+    model_name = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSize.MODEL_NAME),
+        nullable=False,
+        unique=True,
+    )
 
 
 class Events(extensions.db.Model, utils.JsonAbleModel):
@@ -46,7 +54,11 @@ class Events(extensions.db.Model, utils.JsonAbleModel):
         unique=True,
         nullable=False,
     )
-    name = sqlalchemy.Column(sqlalchemy.String(ColumnSize.EVENT_NAME))
+    name = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSize.EVENT_NAME),
+        nullable=False,
+        unique=True,
+    )
 
 
 class MountTypes(extensions.db.Model, utils.JsonAbleModel):
@@ -58,4 +70,8 @@ class MountTypes(extensions.db.Model, utils.JsonAbleModel):
         unique=True,
         nullable=False,
     )
-    name = sqlalchemy.Column(sqlalchemy.String(ColumnSize.MOUNT_TYPE_NAME))
+    name = sqlalchemy.Column(
+        sqlalchemy.String(ColumnSize.MOUNT_TYPE_NAME),
+        nullable=False,
+        unique=True,
+    )
