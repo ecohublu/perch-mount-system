@@ -42,8 +42,8 @@ class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class DetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
-    __tablename__ = "detected_media_contents"
+class MediaDetectedContents(extensions.db.Model, utils.JsonAbleModel):
+    __tablename__ = "media_detected_contents"
     medium_id = sqlalchemy.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
@@ -52,8 +52,8 @@ class DetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     detected_at = sqlalchemy.Column(sqlalchemy.DateTime)
 
 
-class CheckedMediaContents(extensions.db.Model, utils.JsonAbleModel):
-    __tablename__ = "checked_media_contents"
+class MediaCheckedontents(extensions.db.Model, utils.JsonAbleModel):
+    __tablename__ = "media_checked_contents"
     medium_id = sqlalchemy.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
