@@ -145,3 +145,4 @@ perch_mount_data-ca-certificate.crt
 
 .DS_Store
 .flaskenv
+postgres_data
