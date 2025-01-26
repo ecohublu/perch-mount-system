@@ -38,10 +38,7 @@ class Members(extensions.db.Model, utils.JsonAbleModel):
         sqlalchemy.String(ColumnSize.LAST_NAME),
         nullable=False,
     )
-    position = sqlalchemy.Column(
-        sqlalchemy.Enum(enums.Positions),
-        nullable=False,
-    )
+    position = sqlalchemy.Column(sqlalchemy.Enum(enums.Positions))
     is_admin = sqlalchemy.Column(
         sqlalchemy.Boolean,
         default=False,
