@@ -4,7 +4,7 @@ import sqlalchemy
 from sqlalchemy.dialects import postgresql
 
 
-import extensions
+import app.extensions as extensions
 from app.model import enums
 from app.model import utils
 
@@ -17,44 +17,44 @@ class ColumnSize:
 
 class Members(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "members"
-    id = sqlalchemy.Column(
+    id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
         nullable=False,
     )
-    gmail = sqlalchemy.Column(postgresql.CITEXT, nullable=False, unique=True)
-    user_name = sqlalchemy.Column(
+    gmail = extensions.db.Column(postgresql.CITEXT, nullable=False, unique=True)
+    user_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.USER_NAME),
         unique=True,
         nullable=False,
     )
-    first_name = sqlalchemy.Column(
+    first_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.FIRST_NAME),
         nullable=False,
     )
-    last_name = sqlalchemy.Column(
+    last_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.LAST_NAME),
         nullable=False,
     )
-    position = sqlalchemy.Column(sqlalchemy.Enum(enums.Positions))
-    is_admin = sqlalchemy.Column(
+    position = extensions.db.Column(sqlalchemy.Enum(enums.Positions))
+    is_admin = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
         nullable=False,
     )
-    is_super_admin = sqlalchemy.Column(
+    is_super_admin = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
         nullable=False,
     )
-    blocked = sqlalchemy.Column(
+    blocked = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
         nullable=False,
     )
-    activated = sqlalchemy.Column(
+    activated = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
         nullable=False,

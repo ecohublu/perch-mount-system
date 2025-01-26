@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 
-import extensions
+import app.extensions as extensions
 from app.model import enums
 from app.model import utils
 
@@ -24,44 +24,46 @@ class ColumnSizes:
 
 class Species(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "species"
-    taxon_order = sqlalchemy.Column(
+    taxon_order = extensions.db.Column(
         sqlalchemy.Integer,
         primary_key=True,
         nullable=False,
         unique=True,
     )
-    scientific_name = sqlalchemy.Column(
+    scientific_name = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.SCIENTIFIC_NAME),
         nullable=False,
         unique=True,
     )
-    english_common_name = sqlalchemy.Column(
+    english_common_name = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.ENGLISH_COMMON_NAME),
         nullable=False,
         unique=True,
     )
-    chinese_common_name = sqlalchemy.Column(
+    chinese_common_name = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.CHINESE_COMMON_NAME),
         nullable=False,
         unique=True,
     )
-    category = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.CATEGORY))
-    order = sqlalchemy.Column(
+    category = extensions.db.Column(sqlalchemy.String(ColumnSizes.CATEGORY))
+    order = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.ORDER),
         nullable=False,
     )
-    family_name = sqlalchemy.Column(
+    family_name = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.FAMILY_NAME),
         nullable=False,
     )
-    family_latin_name = sqlalchemy.Column(
+    family_latin_name = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.FAMILY_LATIN_NAME),
         nullable=False,
     )
-    taiwan_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.TAIWAN_STATUS))
-    matzu_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.MATZU_STATUS))
-    kinmen_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.KINMEN_STATUS))
-    pratas_status = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.PRATAS_STATUS))
-    endemism = sqlalchemy.Column(sqlalchemy.String(ColumnSizes.ENDEMISM))
-    conservation_status = sqlalchemy.Column(sqlalchemy.Enum(enums.ConservationStatus))
-    codes = sqlalchemy.Column(postgresql.ARRAY(sqlalchemy.String(ColumnSizes.CODES)))
+    taiwan_status = extensions.db.Column(sqlalchemy.String(ColumnSizes.TAIWAN_STATUS))
+    matzu_status = extensions.db.Column(sqlalchemy.String(ColumnSizes.MATZU_STATUS))
+    kinmen_status = extensions.db.Column(sqlalchemy.String(ColumnSizes.KINMEN_STATUS))
+    pratas_status = extensions.db.Column(sqlalchemy.String(ColumnSizes.PRATAS_STATUS))
+    endemism = extensions.db.Column(sqlalchemy.String(ColumnSizes.ENDEMISM))
+    conservation_status = extensions.db.Column(
+        sqlalchemy.Enum(enums.ConservationStatus)
+    )
+    codes = extensions.db.Column(postgresql.ARRAY(sqlalchemy.String(ColumnSizes.CODES)))

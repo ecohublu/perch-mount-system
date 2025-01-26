@@ -2,45 +2,45 @@ import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 
-import extensions
+import app.extensions as extensions
 from app.model import utils
 from app.model import fk_names
 
 
 class Individuals(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "individuals"
-    id = sqlalchemy.Column(
+    id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
         nullable=False,
     )
-    medium_id = sqlalchemy.Column(
+    medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
         nullable=False,
     )
-    note = sqlalchemy.Column(sqlalchemy.Text)
+    note = extensions.db.Column(sqlalchemy.Text)
     # prey_identified_status and tag_status will be defined in the migration file.
 
 
 class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     __table__ = "unreviewed_individuals_contents"
-    individual_id = sqlalchemy.Column(
+    individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
         nullable=False,
     )
-    taxon_order_by_ai = sqlalchemy.Column(
+    taxon_order_by_ai = extensions.db.Column(
         sqlalchemy.Integer,
         sqlalchemy.ForeignKey(fk_names.SPECIES_TAXON_ORDER),
         nullable=False,
     )
-    xmin = sqlalchemy.Column(sqlalchemy.Float)
-    xmax = sqlalchemy.Column(sqlalchemy.Float)
-    ymin = sqlalchemy.Column(sqlalchemy.Float)
-    ymax = sqlalchemy.Column(sqlalchemy.Float)
+    xmin = extensions.db.Column(sqlalchemy.Float)
+    xmax = extensions.db.Column(sqlalchemy.Float)
+    ymin = extensions.db.Column(sqlalchemy.Float)
+    ymax = extensions.db.Column(sqlalchemy.Float)
 
     __table_arg__ = sqlalchemy.CheckConstraint(
         "xmin >= 0 AND xmin <= 1",
@@ -52,18 +52,18 @@ class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
 
 class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     __table__ = "reviewed_individuals_contents"
-    individual_id = sqlalchemy.Column(
+    individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
         nullable=False,
     )
-    taxon_order_by_human = sqlalchemy.Column(
+    taxon_order_by_human = extensions.db.Column(
         sqlalchemy.Integer, sqlalchemy.ForeignKey(fk_names.SPECIES_TAXON_ORDER)
     )
-    xmin = sqlalchemy.Column(sqlalchemy.Float)
-    xmax = sqlalchemy.Column(sqlalchemy.Float)
-    ymin = sqlalchemy.Column(sqlalchemy.Float)
-    ymax = sqlalchemy.Column(sqlalchemy.Float)
+    xmin = extensions.db.Column(sqlalchemy.Float)
+    xmax = extensions.db.Column(sqlalchemy.Float)
+    ymin = extensions.db.Column(sqlalchemy.Float)
+    ymax = extensions.db.Column(sqlalchemy.Float)
 
     __table_arg__ = sqlalchemy.CheckConstraint(
         "xmin >= 0 AND xmin <= 1",
@@ -75,23 +75,23 @@ class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
 
 class MarkedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     __table__ = "marded_prey_individuals_contents"
-    individual_id = sqlalchemy.Column(
+    individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
         nullable=False,
     )
-    has_prey = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
+    has_prey = extensions.db.Column(sqlalchemy.Boolean, nullable=False)
 
 
 class IdentifiedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     __table__ = "identified_prey_individuals_contents"
-    individual_id = sqlalchemy.Column(
+    individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
         nullable=False,
     )
-    inaturalist_taxa_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    identifier_id = sqlalchemy.Column(
+    inaturalist_taxa_id = extensions.db.Column(sqlalchemy.Integer, nullable=False)
+    identifier_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
         nullable=False,
@@ -100,11 +100,11 @@ class IdentifiedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel
 
 class TaggedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     __table__ = "Tagged_individuals_contents"
-    individual_id = sqlalchemy.Column(
+    individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
         nullable=False,
     )
-    is_tagged = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
-    has_ring = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
-    ring_number = sqlalchemy.Column(sqlalchemy.String(20))
+    is_tagged = extensions.db.Column(sqlalchemy.Boolean, nullable=False)
+    has_ring = extensions.db.Column(sqlalchemy.Boolean, nullable=False)
+    ring_number = extensions.db.Column(sqlalchemy.String(20))

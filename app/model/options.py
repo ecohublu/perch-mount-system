@@ -2,7 +2,7 @@ import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 
-import extensions
+import app.extensions as extensions
 from app.model import utils
 
 
@@ -15,14 +15,14 @@ class ColumnSize:
 
 class Projects(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "projects"
-    id = sqlalchemy.Column(
+    id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
         nullable=False,
     )
-    name = sqlalchemy.Column(
+    name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.PROJECT_NAME),
         nullable=False,
         unique=True,
@@ -31,14 +31,14 @@ class Projects(extensions.db.Model, utils.JsonAbleModel):
 
 class Cameras(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "cameras"
-    id = sqlalchemy.Column(
+    id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
         nullable=False,
     )
-    model_name = sqlalchemy.Column(
+    model_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.MODEL_NAME),
         nullable=False,
         unique=True,
@@ -47,14 +47,14 @@ class Cameras(extensions.db.Model, utils.JsonAbleModel):
 
 class Events(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "events"
-    id = sqlalchemy.Column(
+    id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
         nullable=False,
     )
-    name = sqlalchemy.Column(
+    name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.EVENT_NAME),
         nullable=False,
         unique=True,
@@ -63,14 +63,14 @@ class Events(extensions.db.Model, utils.JsonAbleModel):
 
 class MountTypes(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "mount_types"
-    id = sqlalchemy.Column(
+    id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
         nullable=False,
     )
-    name = sqlalchemy.Column(
+    name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.MOUNT_TYPE_NAME),
         nullable=False,
         unique=True,
