@@ -38,6 +38,7 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     valid = extensions.db.Column(
         sqlalchemy.Boolean,
         default=True,
+        server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
     note = extensions.db.Column(sqlalchemy.Text)

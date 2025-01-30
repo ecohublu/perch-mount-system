@@ -41,8 +41,16 @@ class PerchMounts(extensions.db.Model, utils.JsonAbleModel):
     mount_layer = extensions.db.Column(
         sqlalchemy.Enum(enums.MountLayers), nullable=False
     )
-    terminated = extensions.db.Column(sqlalchemy.Boolean, default=False, nullable=False)
+    terminated = extensions.db.Column(
+        sqlalchemy.Boolean,
+        default=False,
+        server_default=sqlalchemy.text("FALSE"),
+        nullable=False,
+    )
     is_priority = extensions.db.Column(
-        sqlalchemy.Boolean, default=False, nullable=False
+        sqlalchemy.Boolean,
+        default=False,
+        server_default=sqlalchemy.text("FALSE"),
+        nullable=False,
     )
     note = extensions.db.Column(sqlalchemy.Text)

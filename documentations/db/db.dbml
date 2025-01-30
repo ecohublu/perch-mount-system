@@ -63,11 +63,6 @@ Table media {
     nas_path varchar
 }
 
-Table undetected_meida_contents {
-    medium_id uuid [ ref: - media.id ]
-
-}
-
 Table detected_media_contents {
     medium_id uuid [ ref: - media.id ]
     detected_time datetime [ not null ]
@@ -126,7 +121,7 @@ Table reviewed_individuals_contents {
     ymax float
 }
 
-Table marked_prey_individuals_contents {
+Table unidentified_prey_individuals_contents {
     individual_id uuid [ ref: - individuals.id ]
     prey boolean
 }
@@ -185,10 +180,10 @@ Table species {
 
 Enum media_status {
     undetected
-    detected
-    reviewed
     unchecked
-    deleted
+    ubreviewed
+    unchecked
+    accidental
 }
 
 Enum media_type {

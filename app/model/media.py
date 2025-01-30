@@ -26,11 +26,16 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
     created_at = extensions.db.Column(
         sqlalchemy.DateTime,
         default=sqlalchemy.sql.func.now(),
+        server_default=sqlalchemy.func.now(),
         nullable=False,
     )
     medium_type = extensions.db.Column(sqlalchemy.Enum(enums.MediaType), nullable=False)
     nas_path = extensions.db.Column(sqlalchemy.String(255))
-    # status implmeneted in migrations. It recorded in the view table: media_status
+    status = extensions.db.Column(
+        sqlalchemy.Enum(enums.MediaStatus),
+        default="UNDETECTED",
+        server_default="UNDETECTED",
+    )
 
 
 class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
@@ -39,6 +44,7 @@ class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
+        primary_key=True,
     )
 
 
@@ -48,6 +54,7 @@ class MediaDetectedContents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
+        primary_key=True,
     )
     detected_at = extensions.db.Column(sqlalchemy.DateTime)
 
@@ -58,6 +65,7 @@ class MediaCheckedontents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
+        primary_key=True,
     )
 
     empty_checked_at = extensions.db.Column(sqlalchemy.DateTime)
@@ -73,6 +81,7 @@ class UncheckedMediaContents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
+        primary_key=True,
     )
 
 
@@ -82,6 +91,7 @@ class UnreviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
+        primary_key=True,
     )
 
 
@@ -91,6 +101,7 @@ class ReviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
+        primary_key=True,
     )
     reviewed_at = extensions.db.Column(
         sqlalchemy.DateTime,
@@ -113,4 +124,14 @@ class ReviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     behavior_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.BEHAVIORS_ID),
+    )
+
+
+class AccidentalMediaContents(extensions.db.Model, utils.JsonAbleModel):
+    __tablename__ = "accidental_media_contents"
+    medium_id = extensions.db.Column(
+        postgresql.UUID(as_uuid=True),
+        sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
+        nullable=False,
+        primary_key=True,
     )

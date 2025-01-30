@@ -42,21 +42,25 @@ class Members(extensions.db.Model, utils.JsonAbleModel):
     is_admin = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
+        server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
     is_super_admin = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
+        server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
     blocked = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
+        server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
     activated = extensions.db.Column(
         sqlalchemy.Boolean,
         default=False,
+        server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
 

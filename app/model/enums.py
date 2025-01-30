@@ -13,6 +13,14 @@ class MountLayers(enum.Enum):
     HIGH = "high"
 
 
+class MediaStatus(enum.Enum):
+    UNDETECTED = "undetected"
+    UNCHECKED = "unchecked"
+    UNREVIEWED = "unreviewed"
+    REVIEWED = "reviewed"
+    ACCIDENTAL = "accidental"
+
+
 class MediaType(enum.Enum):
     IMAGE = "image"
     VIDEO = "video"
