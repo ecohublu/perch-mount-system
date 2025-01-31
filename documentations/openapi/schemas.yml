@@ -170,7 +170,7 @@ UndetectedMedium:
     nas_path:
       type: string
 
-UncheckedMedium:
+UnckechedMedium:
   properties:
     id:
       type: string

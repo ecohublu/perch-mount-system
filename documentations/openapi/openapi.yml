@@ -6,6 +6,17 @@ servers:
   - url: https://api.server.test/v1
 
 paths:
+  /ping:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+
   /members:
     get:
       tags:
@@ -40,6 +51,8 @@ paths:
     patch:
       tags:
         - Member
+      parameters:
+        - $ref: "#/components/parameters/MemberIDPathParam"
       requestBody:
         required: true
         content:
@@ -108,6 +121,8 @@ paths:
     patch:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
@@ -116,6 +131,8 @@ paths:
     put:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       requestBody:
         required: true
         content:
@@ -128,6 +145,8 @@ paths:
     delete:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
@@ -136,12 +155,16 @@ paths:
     put:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
     delete:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
@@ -150,12 +173,16 @@ paths:
     put:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
     delete:
       tags:
         - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
@@ -198,6 +225,8 @@ paths:
     patch:
       tags:
         - Section
+      parameters:
+        - $ref: "#/components/parameters/SectionIDPathParam"
       requestBody:
         required: true
         content:
@@ -452,11 +481,161 @@ paths:
           $ref: "#/components/responses/SpeciesResponse"
 
 components:
-  responses:
-    $ref: "./responses.yml"
+  schemas:
+    PostMemberRequestBody:
+      $ref: "./schemas.yml#/PostMemberRequestBody"
+    PatchMemberRequestBody:
+      $ref: "./schemas.yml#/PatchMemberRequestBody"
+    PostProjectRequestBody:
+      $ref: "./schemas.yml#/PostProjectRequestBody"
+    PostPerchMountRequestBody:
+      $ref: "./schemas.yml#/PostPerchMountRequestBody"
+    PatchPerchMountRequestBody:
+      $ref: "./schemas.yml#/PatchPerchMountRequestBody"
+    PutPerchMountClaimerRequestBody:
+      $ref: "./schemas.yml#/PutPerchMountClaimerRequestBody"
+    PostSectionRequestBody:
+      $ref: "./schemas.yml#/PostSectionRequestBody"
+    PatchSectionRequestBody:
+      $ref: "./schemas.yml#/PatchSectionRequestBody"
+    PostUnreviewedMediaByDetectedRequestBody:
+      $ref: "./schemas.yml#/PostUnreviewedMediaByDetectedRequestBody"
+    PostUnreviewedMediaByEmptyCheckedRequestBody:
+      $ref: "./schemas.yml#/PostUnreviewedMediaByEmptyCheckedRequestBody"
+    PostReviewMediaRequestBody:
+      $ref: "./schemas.yml#/PostReviewMediaRequestBody"
+    PostAccidentalMediaRequestBody:
+      $ref: "./schemas.yml#/PostAccidentalMediaRequestBody"
+    PostNewDataRequestBody:
+      $ref: "./schemas.yml#/PostNewDataRequestBody"
+    PostIdentifiedPreyIndividualsRequestBody:
+      $ref: "./schemas.yml#/PostIdentifiedPreyIndividualsRequestBody"
 
   parameters:
-    $ref: "./parameters.yml"
+    MemberPositionIDsQuery:
+      $ref: "./parameters.yml#/MemberPositionIDsQuery"
+    ClaimByIDsQuery:
+      $ref: "./parameters.yml#/ClaimByIDsQuery"
+    ProjectIDsQuery:
+      $ref: "./parameters.yml#/ProjectIDsQuery"
+    HabitatIDsQuery:
+      $ref: "./parameters.yml#/HabitatIDsQuery"
+    PerchMountIDsQuery:
+      $ref: "./parameters.yml#/PerchMountIDsQuery"
+    SectionSwappedDateFromQuery:
+      $ref: "./parameters.yml#/SectionSwappedDateFromQuery"
+    SectionSwappedDateToQuery:
+      $ref: "./parameters.yml#/SectionSwappedDateToQuery"
+    SectionSwapperIDsQuery:
+      $ref: "./parameters.yml#/SectionSwapperIDsQuery"
+    PerchMountTerminatedQuery:
+      $ref: "./parameters.yml#/PerchMountTerminatedQuery"
+    MediaStatusQuery:
+      $ref: "./parameters.yml#/MediaStatusQuery"
+    IndividualsPreyIdentifiedStatusQuery:
+      $ref: "./parameters.yml#/IndividualsPreyIdentifiedStatusQuery"
+    IndividualsHasPreyQuery:
+      $ref: "./parameters.yml#/IndividualsHasPreyQuery"
+    IndividualsPreyInaturalistTaxaIDSearchQuery:
+      $ref: "./parameters.yml#/IndividualsPreyInaturalistTaxaIDSearchQuery"
+    IndividualsIsTaggedQuery:
+      $ref: "./parameters.yml#/IndividualsIsTaggedQuery"
+    IndividualsRingNumberSearchQuery:
+      $ref: "./parameters.yml#/IndividualsRingNumberSearchQuery"
+    TaxonOrderByAIQuery:
+      $ref: "./parameters.yml#/TaxonOrderByAIQuery"
+    TaxonOrderByHumanQuery:
+      $ref: "./parameters.yml#/TaxonOrderByHumanQuery"
+    SectionIDsQuery:
+      $ref: "./parameters.yml#/SectionIDsQuery"
+    OffsetQuery:
+      $ref: "./parameters.yml#/OffsetQuery"
+    LimitQuery:
+      $ref: "./parameters.yml#/LimitQuery"
+    SpeciesConservationStatusQuery:
+      $ref: "./parameters.yml#/SpeciesConservationStatusQuery"
+    SpeciesEndemismQuery:
+      $ref: "./parameters.yml#/SpeciesEndemismQuery"
+    SpeciesNameSearchQuery:
+      $ref: "./parameters.yml#/SpeciesNameSearchQuery"
+    SpeciesChineseNameSearchQuery:
+      $ref: "./parameters.yml#/SpeciesChineseNameSearchQuery"
+    SpeciesEnglishNameSearchQuery:
+      $ref: "./parameters.yml#/SpeciesEnglishNameSearchQuery"
+    SpeciesScientificNameSearchQuery:
+      $ref: "./parameters.yml#/SpeciesScientificNameSearchQuery"
+    SpeciesOrderQuery:
+      $ref: "./parameters.yml#/SpeciesOrderQuery"
+    SpeciesFamilyQuery:
+      $ref: "./parameters.yml#/SpeciesFamilyQuery"
+    PerchMountIDPathParam:
+      $ref: "./parameters.yml#/PerchMountIDPathParam"
+    SectionIDPathParam:
+      $ref: "./parameters.yml#/SectionIDPathParam"
+    MemberIDPathParam:
+      name: MemberID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    MediumIDPathParam:
+      $ref: "./parameters.yml#/MediumIDPathParam"
+    IndividualIDPathParam:
+      $ref: "./parameters.yml#/IndividualIDPathParam"
+    SpeciesTaxonOrderPathParam:
+      $ref: "./parameters.yml#/SpeciesTaxonOrderPathParam"
 
-  schemas:
-    $ref: "./schemas.yml"
+  responses:
+    MemberResponse:
+      $ref: "./responses.yml#/MemberResponse"
+    MembersResponse:
+      $ref: "./responses.yml#/MembersResponse"
+    PerchMountsResponse:
+      $ref: "./responses.yml#/PerchMountsResponse"
+    PerchMountResponse:
+      $ref: "./responses.yml#/PerchMountResponse"
+    ProjectsResponse:
+      $ref: "./responses.yml#/ProjectsResponse"
+    ProjectResponse:
+      $ref: "./responses.yml#/ProjectResponse"
+    SectionsResponse:
+      $ref: "./responses.yml#/SectionsResponse"
+    SectionResponse:
+      $ref: "./responses.yml#/SectionResponse"
+    MediaResponse:
+      $ref: "./responses.yml#/MediaResponse"
+    MediumResponse:
+      $ref: "./responses.yml#/MediumResponse"
+    MeidumPostResponse:
+      $ref: "./responses.yml#/MeidumPostResponse"
+    IndividualResponse:
+      $ref: "./responses.yml#/IndividualResponse"
+    PostNewDataResponse:
+      $ref: "./responses.yml#/PostNewDataResponse"
+    BehaviorResponse:
+      $ref: "./responses.yml#/BehaviorResponse"
+    BehaviorsResponse:
+      $ref: "./responses.yml#/BehaviorsResponse"
+    CameraResponse:
+      $ref: "./responses.yml#/CameraResponse"
+    CamerasResponse:
+      $ref: "./responses.yml#/CamerasResponse"
+    EventResponse:
+      $ref: "./responses.yml#/EventResponse"
+    EventsResponse:
+      $ref: "./responses.yml#/EventsResponse"
+    MountTypeResponse:
+      $ref: "./responses.yml#/MountTypeResponse"
+    MountTypesResponse:
+      $ref: "./responses.yml#/MountTypesResponse"
+    PositionsResponse:
+      $ref: "./responses.yml#/PositionsResponse"
+    HabitatsResponse:
+      $ref: "./responses.yml#/HabitatsResponse"
+    MountLayersResponse:
+      $ref: "./responses.yml#/MountLayersResponse"
+    SpeciesResponse:
+      $ref: "./responses.yml#/SpeciesResponse"
+    SpeciesListResponse:
+      $ref: "./responses.yml#/SpeciesListResponse"

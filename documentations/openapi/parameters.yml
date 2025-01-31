@@ -95,7 +95,7 @@ MediaStatusQuery:
   required: true
   schema:
     type: string
-    enum: [undetected, detected, unchecked, reviewed, accidental]
+    enum: [undetected, unreviewed, unchecked, reviewed, accidental]
 
 IndividualsPreyIdentifiedStatusQuery:
   name: prey_identified_status

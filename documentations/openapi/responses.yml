@@ -116,7 +116,9 @@ IndividualResponse:
   content:
     application/json:
       schema:
-        $ref: "./schemas.yml#/Individual"
+        oneOf:
+          - $ref: "./schemas.yml#/UnreviewedIndividual"
+          - $ref: "./schemas.yml#/ReviewedIndividual"
 
 PostNewDataResponse:
   description: new data
