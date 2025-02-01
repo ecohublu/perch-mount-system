@@ -183,6 +183,15 @@ LimitQuery:
   schema:
     type: integer
 
+SpeciesTaxonOrdersQuery:
+  name: taxon_orders
+  in: query
+  required: false
+  schema:
+    type: array
+    items:
+      type: integer
+
 SpeciesConservationStatusQuery:
   name: conservation_status
   in: query
@@ -227,8 +236,8 @@ SpeciesScientificNameSearchQuery:
   schema:
     type: string
 
-SpeciesOrderQuery:
-  name: swapper_ids
+SpeciesOrdersQuery:
+  name: orders
   in: query
   required: false
   style: form
@@ -239,8 +248,8 @@ SpeciesOrderQuery:
       type: string
       format: uuid
 
-SpeciesFamilyQuery:
-  name: swapper_ids
+SpeciesFamiliesQuery:
+  name: families
   in: query
   required: false
   style: form
@@ -250,6 +259,17 @@ SpeciesFamilyQuery:
     items:
       type: string
       format: uuid
+
+SpeciesCodesQuery:
+  name: code
+  in: query
+  required: false
+  style: form
+  explode: false
+  schema:
+    type: array
+    items:
+      type: string
 
 PerchMountIDPathParam:
   name: PerchMountID

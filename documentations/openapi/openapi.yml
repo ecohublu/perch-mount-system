@@ -459,13 +459,16 @@ paths:
       tags:
         - species
       parameters:
-        - $ref: "#/components/parameters/SpeciesChineseNameSearchQuery"
-        - $ref: "#/components/parameters/SpeciesEndemismQuery"
-        - $ref: "#/components/parameters/SpeciesEnglishNameSearchQuery"
-        - $ref: "#/components/parameters/SpeciesFamilyQuery"
+        - $ref: "#/components/parameters/SpeciesTaxonOrdersQuery"
         - $ref: "#/components/parameters/SpeciesNameSearchQuery"
-        - $ref: "#/components/parameters/SpeciesOrderQuery"
+        - $ref: "#/components/parameters/SpeciesChineseNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesEnglishNameSearchQuery"
         - $ref: "#/components/parameters/SpeciesScientificNameSearchQuery"
+        - $ref: "#/components/parameters/SpeciesEndemismQuery"
+        - $ref: "#/components/parameters/SpeciesFamiliesQuery"
+        - $ref: "#/components/parameters/SpeciesOrdersQuery"
+        - $ref: "#/components/parameters/SpeciesConservationStatusQuery"
+        - $ref: "#/components/parameters/SpeciesCodesQuery"
       responses:
         "200":
           $ref: "#/components/responses/SpeciesListResponse"
@@ -552,6 +555,8 @@ components:
       $ref: "./parameters.yml#/OffsetQuery"
     LimitQuery:
       $ref: "./parameters.yml#/LimitQuery"
+    SpeciesTaxonOrdersQuery:
+      $ref: "./parameters.yml#/SpeciesTaxonOrdersQuery"
     SpeciesConservationStatusQuery:
       $ref: "./parameters.yml#/SpeciesConservationStatusQuery"
     SpeciesEndemismQuery:
@@ -564,10 +569,12 @@ components:
       $ref: "./parameters.yml#/SpeciesEnglishNameSearchQuery"
     SpeciesScientificNameSearchQuery:
       $ref: "./parameters.yml#/SpeciesScientificNameSearchQuery"
-    SpeciesOrderQuery:
-      $ref: "./parameters.yml#/SpeciesOrderQuery"
-    SpeciesFamilyQuery:
-      $ref: "./parameters.yml#/SpeciesFamilyQuery"
+    SpeciesOrdersQuery:
+      $ref: "./parameters.yml#/SpeciesOrdersQuery"
+    SpeciesFamiliesQuery:
+      $ref: "./parameters.yml#/SpeciesFamiliesQuery"
+    SpeciesCodesQuery:
+      $ref: "./parameters.yml#/SpeciesCodesQuery"
     PerchMountIDPathParam:
       $ref: "./parameters.yml#/PerchMountIDPathParam"
     SectionIDPathParam:
