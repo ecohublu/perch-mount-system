@@ -104,6 +104,28 @@ class SectionFilter(PerchAIFilter):
         return query
 
 
+class MediaFilter(PerchAIFilter):
+    def __init__(
+        self,
+        status: enums.MediaStatus,
+        project_ids: list[str] = None,
+        perch_mount_ids: list[str] = None,
+        section_ids: list[str] = None,
+        is_tagged: bool = None,
+        ring_number_search: str = None,
+        prey_identified_status: str = None,
+        has_prey: bool = None,
+        prey_inaturalist_taxa_ids: list[int] = None,
+        taxon_orders_by_human: list[int] = None,
+        taxon_orders_by_ai: list[int] = None,
+        offset: int = 0,
+        limit: int = 50,
+    ):
+        super().__init__()
+
+    pass
+
+
 class SpeciesFilter(PerchAIFilter):
     def __init__(
         self,

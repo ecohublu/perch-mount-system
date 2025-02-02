@@ -250,9 +250,9 @@ paths:
         - $ref: "#/components/parameters/IndividualsRingNumberSearchQuery"
         - $ref: "#/components/parameters/IndividualsPreyIdentifiedStatusQuery"
         - $ref: "#/components/parameters/IndividualsHasPreyQuery"
-        - $ref: "#/components/parameters/IndividualsPreyInaturalistTaxaIDSearchQuery"
-        - $ref: "#/components/parameters/TaxonOrderByHumanQuery"
-        - $ref: "#/components/parameters/TaxonOrderByAIQuery"
+        - $ref: "#/components/parameters/IndividualsPreyInaturalistTaxaIDsSearchQuery"
+        - $ref: "#/components/parameters/TaxonOrdersByHumanQuery"
+        - $ref: "#/components/parameters/TaxonOrdersByAIQuery"
         - $ref: "#/components/parameters/OffsetQuery"
         - $ref: "#/components/parameters/LimitQuery"
 
@@ -539,16 +539,16 @@ components:
       $ref: "./parameters.yml#/IndividualsPreyIdentifiedStatusQuery"
     IndividualsHasPreyQuery:
       $ref: "./parameters.yml#/IndividualsHasPreyQuery"
-    IndividualsPreyInaturalistTaxaIDSearchQuery:
-      $ref: "./parameters.yml#/IndividualsPreyInaturalistTaxaIDSearchQuery"
+    IndividualsPreyInaturalistTaxaIDsSearchQuery:
+      $ref: "./parameters.yml#/IndividualsPreyInaturalistTaxaIDsSearchQuery"
     IndividualsIsTaggedQuery:
       $ref: "./parameters.yml#/IndividualsIsTaggedQuery"
     IndividualsRingNumberSearchQuery:
       $ref: "./parameters.yml#/IndividualsRingNumberSearchQuery"
-    TaxonOrderByAIQuery:
-      $ref: "./parameters.yml#/TaxonOrderByAIQuery"
-    TaxonOrderByHumanQuery:
-      $ref: "./parameters.yml#/TaxonOrderByHumanQuery"
+    TaxonOrdersByAIQuery:
+      $ref: "./parameters.yml#/TaxonOrdersByAIQuery"
+    TaxonOrdersByHumanQuery:
+      $ref: "./parameters.yml#/TaxonOrdersByHumanQuery"
     SectionIDsQuery:
       $ref: "./parameters.yml#/SectionIDsQuery"
     OffsetQuery:

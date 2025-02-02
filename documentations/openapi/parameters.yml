@@ -111,12 +111,17 @@ IndividualsHasPreyQuery:
   schema:
     type: boolean
 
-IndividualsPreyInaturalistTaxaIDSearchQuery:
-  name: inaturalist_taxa_id
+IndividualsPreyInaturalistTaxaIDsSearchQuery:
+  name: prey_inaturalist_taxa_ids
   in: query
   required: false
   schema:
-    type: integer
+    style: form
+    explode: false
+    schema:
+      type: array
+      items:
+        type: integer
 
 IndividualsIsTaggedQuery:
   name: is_tagged
@@ -132,8 +137,8 @@ IndividualsRingNumberSearchQuery:
   schema:
     type: string
 
-TaxonOrderByAIQuery:
-  name: taxon_order_by_ai
+TaxonOrdersByAIQuery:
+  name: taxon_orders_by_ai
   in: query
   required: false
   schema:
@@ -144,8 +149,8 @@ TaxonOrderByAIQuery:
       items:
         type: integer
 
-TaxonOrderByHumanQuery:
-  name: taxon_order_by_human
+TaxonOrdersByHumanQuery:
+  name: taxon_orders_by_human
   in: query
   required: false
   schema:
