@@ -1,10 +1,9 @@
-import enum
 import sqlalchemy
 import sqlalchemy.orm
 import uuid
-import typing
 
 from app import model
+from app.model import enums
 from app.services import utils
 
 
@@ -31,32 +30,6 @@ class PerchAIFilter:
     def _strs_to_uuids(self, ids: list[str]) -> list[uuid.UUID]:
         return list(map(uuid.UUID, ids))
 
-    def _validate_enums(
-        self,
-        values: typing.List[str | enum.Enum],
-        enum_type: typing.Type[enum.Enum] = None,
-    ):
-        not_in_enum = []
-        for v in values:
-            if not isinstance(v, enum_type):
-                not_in_enum.append(v)
-        if not_in_enum:
-            raise ValueError(
-                f"Invalid status: {",".join(not_in_enum)}. Must be one of {[e.value for e in enum_type]}"
-            )
-
-    def _validate_enum(
-        self,
-        value: typing.Union[str | enum.Enum],
-        enum_type: typing.Type[enum.Enum] = None,
-    ):
-        try:
-            enum_type(value)  # 允許字串轉換成 Enum
-        except ValueError:
-            raise ValueError(
-                f"Invalid status: {value}. Must be one of {[e.value for e in enum_type]}"
-            )
-
 
 class PerchMountFilter(PerchAIFilter):
     def __init__(
@@ -71,10 +44,12 @@ class PerchMountFilter(PerchAIFilter):
         self.claim_by_ids = self._strs_to_uuids(claim_by_ids)
         self.habitats = habitats
         self.terminated = terminated
+        self._validate_enums()
 
     def filter_query(
         self, query: sqlalchemy.orm.Query
     ) -> sqlalchemy.orm.Query[model.PerchMounts]:
+
         if self.project_ids:
             query = query.filter(model.PerchMounts.project_id.in_(self.project_ids))
 
@@ -88,6 +63,10 @@ class PerchMountFilter(PerchAIFilter):
             query = query.filter(model.PerchMounts.claim_by_id.in_(self.claim_by_ids))
 
         return query
+
+    def _validate_enums(self):
+        if self.habitats:
+            enums.validate_enums(self.habitats, enum_type=enums.Habitats)
 
 
 class SpeciesFilter(PerchAIFilter):

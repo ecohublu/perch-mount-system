@@ -1,5 +1,5 @@
 import enum
-
+import typing
 
 class Habitats(enum.Enum):
     NATURAL = "natural"
@@ -40,3 +40,27 @@ class ConservationStatus(enum.Enum):
     I = "I"
     II = "II"
     III = "III"
+
+def validate_enums(
+    values: typing.List[str | enum.Enum],
+    enum_type: typing.Type[enum.Enum] = None,
+):
+    not_in_enum = []
+    for v in values:
+        if not isinstance(v, enum_type):
+            not_in_enum.append(v)
+    if not_in_enum:
+        raise ValueError(
+            f"Invalid status: {",".join(not_in_enum)}. Must be one of {[e.value for e in enum_type]}"
+        )
+
+def validate_enum(
+    value: typing.Union[str | enum.Enum],
+    enum_type: typing.Type[enum.Enum] = None,
+):
+    try:
+        enum_type(value)
+    except ValueError:
+        raise ValueError(
+            f"Invalid status: {value}. Must be one of {[e.value for e in enum_type]}"
+        )
