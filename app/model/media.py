@@ -29,7 +29,9 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
         server_default=sqlalchemy.func.now(),
         nullable=False,
     )
-    medium_type = extensions.db.Column(sqlalchemy.Enum(enums.MediaType), nullable=False)
+    medium_type = extensions.db.Column(
+        sqlalchemy.Enum(enums.MediaTypes), nullable=False
+    )
     nas_path = extensions.db.Column(sqlalchemy.String(255))
     status = extensions.db.Column(
         sqlalchemy.Enum(enums.MediaStatus),

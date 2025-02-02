@@ -21,7 +21,7 @@ class MediaStatus(enum.Enum):
     ACCIDENTAL = "accidental"
 
 
-class MediaType(enum.Enum):
+class MediaTypes(enum.Enum):
     IMAGE = "image"
     VIDEO = "video"
 
