@@ -1,0 +1,259 @@
+import sqlalchemy
+import uuid
+
+from app.services import perchai
+from app.services import utils
+from app import model
+from app.model import enums
+
+
+def get_perch_mounts(filter: utils.PerchMountFilter) -> list[model.PerchMounts]:
+    with perchai.session.begin() as session:
+        query = session.query(model.PerchMounts)
+        query = filter.filter_query(query)
+        perch_mounts = query.all()
+    return perch_mounts
+
+
+def get_perch_mount_by_id(perch_mount_id: int):
+    with perchai.session.begin() as session:
+        perch_mount = (
+            session.query(model.PerchMounts)
+            .filter(model.PerchMounts.id == perch_mount_id)
+            .one_or_none()
+        )
+    return perch_mount
+
+
+def add_perch_mount(
+    perch_mount_name: str,
+    latitude: float,
+    longitude: float,
+    project_id: str,
+    habitat: str | enums.Habitats,
+    mount_layer: str | enums.MountLayers,
+    note: str = None,
+) -> int:
+    project_id = uuid.UUID(project_id)
+    new_perch_mount = model.PerchMounts(
+        perch_mount_name=perch_mount_name,
+        latitude=latitude,
+        longitude=longitude,
+        habitat=habitat,
+        project_id=project_id,
+        mount_layer=mount_layer,
+        note=note,
+    )
+    with perchai.session.begin() as session:
+        session.add(new_perch_mount)
+        session.commit()
+        new_id = new_perch_mount.id
+    return new_id
+
+
+def update_perch_mount(perch_mount_id: int, arg: dict):
+    with perchai.session.begin() as session:
+        session.query(model.PerchMounts).filter(
+            model.PerchMounts.perch_mount_id == perch_mount_id
+        ).update(arg)
+        session.commit()
+
+
+def section_media_count(perch_mount_id: int) -> dict:
+    with perchai.session.begin() as session:
+        query = (
+            session.query(model.Sections.section_id)
+            .join(
+                model.PerchMounts,
+                model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+            )
+            .filter(model.PerchMounts.perch_mount_id == perch_mount_id)
+        )
+        section_indice = [section.section_id for section in query.all()]
+
+        empty = (
+            session.query(
+                model.EmptyMedia.section,
+                sqlalchemy.func.count(model.EmptyMedia.empty_medium_id).label("count"),
+            )
+            .filter(model.EmptyMedia.section.in_(section_indice))
+            .filter(model.EmptyMedia.checked == False)
+            .filter(model.EmptyMedia.section != None)
+            .group_by(model.EmptyMedia.section)
+        ).all()
+
+        detected = (
+            session.query(
+                model.DetectedMedia.section,
+                sqlalchemy.func.count(model.DetectedMedia.detected_medium_id).label(
+                    "count"
+                ),
+            )
+            .filter(model.DetectedMedia.section.in_(section_indice))
+            .filter(model.DetectedMedia.reviewed == False)
+            .filter(model.DetectedMedia.section != None)
+            .group_by(model.DetectedMedia.section)
+        ).all()
+
+        media = (
+            session.query(
+                model.Media.section,
+                sqlalchemy.func.count(model.Media.medium_id).label("count"),
+            )
+            .filter(model.Media.section.in_(section_indice))
+            .filter(model.Media.section != None)
+            .group_by(model.Media.section)
+        ).all()
+
+        prey = (
+            session.query(
+                model.Media.section,
+                sqlalchemy.func.count(model.Individuals.individual_id).label("count"),
+            )
+            .join(model.Individuals, model.Individuals.medium == model.Media.medium_id)
+            .filter(model.Individuals.prey == True and not model.Individuals.prey_name)
+            .filter(model.Media.section != None)
+            .group_by(model.Media.section)
+            .all()
+        )
+
+    return {
+        "empty": {row.section: row.count for row in empty},
+        "detected": {row.section: row.count for row in detected},
+        "media": {row.section: row.count for row in media},
+        "prey": {row.section: row.count for row in prey},
+    }
+
+
+def perch_mounts_pending_media_count():
+    with perchai.session.begin() as session:
+        empty = (
+            session.query(
+                model.Sections.perch_mount,
+                sqlalchemy.func.count(model.EmptyMedia.empty_medium_id).label(
+                    "empty_count"
+                ),
+            )
+            .filter(model.EmptyMedia.checked == False)
+            .join(model.Sections, model.Sections.section_id == model.EmptyMedia.section)
+            .group_by(model.Sections.perch_mount)
+            .subquery()
+        )
+        detected = (
+            session.query(
+                model.Sections.perch_mount,
+                sqlalchemy.func.count(model.DetectedMedia.detected_medium_id).label(
+                    "detected_count"
+                ),
+            )
+            .filter(model.DetectedMedia.reviewed == False)
+            .join(
+                model.Sections, model.Sections.section_id == model.DetectedMedia.section
+            )
+            .group_by(model.Sections.perch_mount)
+            .subquery()
+        )
+
+        results = (
+            session.query(
+                model.PerchMounts.perch_mount_id,
+                model.PerchMounts.perch_mount_name,
+                model.PerchMounts.project,
+                model.PerchMounts.claim_by,
+                detected.c.detected_count,
+                empty.c.empty_count,
+            )
+            .join(
+                empty,
+                empty.c.perch_mount == model.PerchMounts.perch_mount_id,
+                isouter=True,
+            )
+            .join(
+                detected,
+                detected.c.perch_mount == model.PerchMounts.perch_mount_id,
+                isouter=True,
+            )
+            .order_by(model.PerchMounts.perch_mount_id)
+            .filter(
+                sqlalchemy.or_(detected.c.detected_count > 0, empty.c.empty_count > 0)
+            )
+            .all()
+        )
+
+    return results
+
+
+def get_pending_media_monthly_count(
+    perch_mount_id: int,
+):
+    with perchai.session.begin() as session:
+        empty_counts = (
+            session.query(
+                sqlalchemy.func.count(model.EmptyMedia.empty_medium_id).label("count"),
+                sqlalchemy.func.month(model.EmptyMedia.medium_datetime).label("month"),
+                sqlalchemy.func.year(model.EmptyMedia.medium_datetime).label("year"),
+            )
+            .join(model.Sections, model.Sections.section_id == model.EmptyMedia.section)
+            .filter(model.Sections.perch_mount == perch_mount_id)
+            .filter(model.EmptyMedia.checked == 0)
+            .group_by(
+                sqlalchemy.func.month(model.EmptyMedia.medium_datetime),
+                sqlalchemy.func.year(model.EmptyMedia.medium_datetime),
+            )
+            .order_by(
+                sqlalchemy.func.year(model.EmptyMedia.medium_datetime),
+                sqlalchemy.func.month(model.EmptyMedia.medium_datetime),
+            )
+            .all()
+        )
+
+        detected_counts = (
+            session.query(
+                sqlalchemy.func.count(model.DetectedMedia.detected_medium_id).label(
+                    "count"
+                ),
+                sqlalchemy.func.month(model.DetectedMedia.medium_datetime).label(
+                    "month"
+                ),
+                sqlalchemy.func.year(model.DetectedMedia.medium_datetime).label("year"),
+            )
+            .join(
+                model.Sections, model.Sections.section_id == model.DetectedMedia.section
+            )
+            .filter(model.Sections.perch_mount == perch_mount_id)
+            .filter(model.DetectedMedia.reviewed == 0)
+            .group_by(
+                sqlalchemy.func.month(model.DetectedMedia.medium_datetime),
+                sqlalchemy.func.year(model.DetectedMedia.medium_datetime),
+            )
+            .order_by(
+                sqlalchemy.func.year(model.DetectedMedia.medium_datetime),
+                sqlalchemy.func.month(model.DetectedMedia.medium_datetime),
+            )
+            .all()
+        )
+
+        completed_counts = (
+            session.query(
+                sqlalchemy.func.count(model.Media.medium_id).label("count"),
+                sqlalchemy.func.month(model.Media.medium_datetime).label("month"),
+                sqlalchemy.func.year(model.Media.medium_datetime).label("year"),
+            )
+            .join(model.Sections, model.Sections.section_id == model.Media.section)
+            .filter(model.Sections.perch_mount == perch_mount_id)
+            .group_by(
+                sqlalchemy.func.month(model.Media.medium_datetime),
+                sqlalchemy.func.year(model.Media.medium_datetime),
+            )
+            .order_by(
+                sqlalchemy.func.year(model.Media.medium_datetime),
+                sqlalchemy.func.month(model.Media.medium_datetime),
+            )
+            .all()
+        )
+
+    return {
+        "empty_counts": [row._asdict() for row in empty_counts],
+        "detected_counts": [row._asdict() for row in detected_counts],
+        "completed_counts": [row._asdict() for row in completed_counts],
+    }

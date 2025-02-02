@@ -32,8 +32,8 @@ ProjectIDsQuery:
     items:
       type: string
       format: uuid
-HabitatIDsQuery:
-  name: habitat_ids
+HabitatsQuery:
+  name: habitats
   in: query
   required: false
   style: form
@@ -42,7 +42,6 @@ HabitatIDsQuery:
     type: array
     items:
       type: string
-      format: uuid
 
 PerchMountIDsQuery:
   name: perch_mount_ids

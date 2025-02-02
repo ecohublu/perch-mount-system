@@ -1,5 +1,8 @@
+import enum
 import sqlalchemy
 import sqlalchemy.orm
+import uuid
+import typing
 
 from app import model
 from app.services import utils
@@ -24,7 +27,70 @@ class SearchStr(str):
         return f"%{self.__str__()}"
 
 
-class SpeciesFilter:
+class PerchAIFilter:
+    def _strs_to_uuids(self, ids: list[str]) -> list[uuid.UUID]:
+        return list(map(uuid.UUID, ids))
+
+    def _validate_enums(
+        self,
+        values: typing.List[str | enum.Enum],
+        enum_type: typing.Type[enum.Enum] = None,
+    ):
+        not_in_enum = []
+        for v in values:
+            if not isinstance(v, enum_type):
+                not_in_enum.append(v)
+        if not_in_enum:
+            raise ValueError(
+                f"Invalid status: {",".join(not_in_enum)}. Must be one of {[e.value for e in enum_type]}"
+            )
+
+    def _validate_enum(
+        self,
+        value: typing.Union[str | enum.Enum],
+        enum_type: typing.Type[enum.Enum] = None,
+    ):
+        try:
+            enum_type(value)  # 允許字串轉換成 Enum
+        except ValueError:
+            raise ValueError(
+                f"Invalid status: {value}. Must be one of {[e.value for e in enum_type]}"
+            )
+
+
+class PerchMountFilter(PerchAIFilter):
+    def __init__(
+        self,
+        project_ids: list[str] = None,
+        claim_by_ids: list[str] = None,
+        habitats: list[str] = None,
+        terminated: bool = None,
+    ) -> None:
+        super().__init__()
+        self.project_ids = self._strs_to_uuids(project_ids)
+        self.claim_by_ids = self._strs_to_uuids(claim_by_ids)
+        self.habitats = habitats
+        self.terminated = terminated
+
+    def filter_query(
+        self, query: sqlalchemy.orm.Query
+    ) -> sqlalchemy.orm.Query[model.PerchMounts]:
+        if self.project_ids:
+            query = query.filter(model.PerchMounts.project_id.in_(self.project_ids))
+
+        if self.habitats:
+            query = query.filter(model.PerchMounts.habitat.in_(self.habitats))
+
+        if self.terminated is not None:
+            query = query.filter(model.PerchMounts.terminated == self.terminated)
+
+        if self.claim_by_ids:
+            query = query.filter(model.PerchMounts.claim_by_id.in_(self.claim_by_ids))
+
+        return query
+
+
+class SpeciesFilter(PerchAIFilter):
     def __init__(
         self,
         taxon_orders: list[int] = None,
@@ -37,6 +103,7 @@ class SpeciesFilter:
         families: list[str] = None,
         codes: list[str] = None,
     ) -> None:
+        super().__init__()
         self.taxon_orders = taxon_orders
         self.chinese_common_name = chinese_common_name
         self.english_common_name = english_common_name
@@ -101,10 +168,3 @@ class SpeciesFilter:
             query = query.filter(model.Species.codes.contains(self.codes))
 
         return query
-
-
-if __name__ == "__main__":
-    s = SearchStr("test")
-    str()
-    print(s.search_phrase)
-    print(s)

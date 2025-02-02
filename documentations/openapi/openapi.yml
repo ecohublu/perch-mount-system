@@ -522,7 +522,7 @@ components:
     ProjectIDsQuery:
       $ref: "./parameters.yml#/ProjectIDsQuery"
     HabitatIDsQuery:
-      $ref: "./parameters.yml#/HabitatIDsQuery"
+      $ref: "./parameters.yml#/HabitatsQuery"
     PerchMountIDsQuery:
       $ref: "./parameters.yml#/PerchMountIDsQuery"
     SectionSwappedDateFromQuery:
