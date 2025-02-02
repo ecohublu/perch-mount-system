@@ -41,20 +41,5 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
         server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
+    swapper_ids = extensions.db.Column(postgresql.ARRAY(postgresql.UUID(as_uuid=True)))
     note = extensions.db.Column(sqlalchemy.Text)
-
-
-class SectionSwappers(extensions.db.Model, utils.JsonAbleModel):
-    __tablename__ = "section_swappers"
-    section_id = extensions.db.Column(
-        postgresql.UUID(as_uuid=True),
-        sqlalchemy.ForeignKey(fk_names.SECTIONS_ID),
-        primary_key=True,
-        nullable=False,
-    )
-    swapper_id = extensions.db.Column(
-        postgresql.UUID(as_uuid=True),
-        sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
-        primary_key=True,
-        nullable=False,
-    )

@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlalchemy
 import sqlalchemy.orm
 import uuid
@@ -44,7 +45,7 @@ class PerchMountFilter(PerchAIFilter):
         self.claim_by_ids = self._strs_to_uuids(claim_by_ids)
         self.habitats = habitats
         self.terminated = terminated
-        self._validate_enums()
+        self._validate_all_enums()
 
     def filter_query(
         self, query: sqlalchemy.orm.Query
@@ -64,9 +65,43 @@ class PerchMountFilter(PerchAIFilter):
 
         return query
 
-    def _validate_enums(self):
+    def _validate_all_enums(self):
         if self.habitats:
             enums.validate_enums(self.habitats, enum_type=enums.Habitats)
+
+
+class SectionFilter(PerchAIFilter):
+    def __init__(
+        self,
+        perch_mount_ids: list[str] = None,
+        swapped_date_from: datetime = None,
+        swapped_date_to: datetime = None,
+        swapper_ids: list[str] = None,
+    ) -> None:
+        super().__init__()
+        self.perch_mount_ids = self._strs_to_uuids(perch_mount_ids)
+        self.swapped_date_from = swapped_date_from
+        self.swapped_date_to = swapped_date_to
+        self.swapper_ids = self._strs_to_uuids(swapper_ids)
+
+    def filter_query(
+        self, query: sqlalchemy.orm.Query
+    ) -> sqlalchemy.orm.Query[model.Sections]:
+        if self.perch_mount_ids:
+            query = query.filter(
+                model.Sections.perch_mount_id.in_(self.perch_mount_ids)
+            )
+
+        if self.swapped_date_from:
+            query = query.filter(model.Sections.swapped_date >= self.swapped_date_from)
+
+        if self.swapped_date_to:
+            query = query.filter(model.Sections.swapped_date < self.swapped_date_to)
+
+        if self.swapper_ids:
+            query = query.filter(model.Sections.swapper_ids.contains(self.swapper_ids))
+
+        return query
 
 
 class SpeciesFilter(PerchAIFilter):
