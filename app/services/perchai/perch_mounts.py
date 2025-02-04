@@ -1,15 +1,16 @@
 import uuid
 
 from app.services import perchai
-from app.services import utils
+from app.services.perchai.utils import query_filter, query_modifier
 from app import model
 from app.model import enums
 
 
-def get_perch_mounts(filter: utils.PerchMountFilter) -> list[model.PerchMounts]:
+def get_perch_mounts(filter: query_filter.PerchMountFilter) -> list[model.PerchMounts]:
+    modifier = query_modifier.PerchMountQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.PerchMounts)
-        query = filter.filter_query(query)
+        query = modifier.filter_query(query)
         perch_mounts = query.all()
     return perch_mounts
 

@@ -2,14 +2,15 @@ from datetime import date
 import uuid
 
 from app.services import perchai
-from app.services import utils
+from app.services.perchai.utils import query_filter, query_modifier
 from app import model
 
 
-def get_sections(filter: utils.SectionFilter) -> list[model.Sections]:
+def get_sections(filter: query_filter.SectionFilter) -> list[model.Sections]:
+    modifier = query_modifier.SectionQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.Sections)
-        query = filter.filter_query(query)
+        query = modifier.filter_query(query)
         sections = query.all()
     return sections
 
@@ -42,7 +43,7 @@ def add_section(
         mount_type=mount_type_id,
         camera=camera_id,
         swapper_date=swapper_date,
-        swapper_ids = swapper_ids,
+        swapper_ids=swapper_ids,
         valid=valid,
         note=note,
     )

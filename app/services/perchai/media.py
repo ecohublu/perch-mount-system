@@ -4,26 +4,12 @@ import sqlalchemy
 import sqlalchemy.orm
 
 from app.services import perchai
-from app.services import utils
+from app.services.perchai.utils import query_filter
 from app import model
 from app.model import enums
 
-def get_media(
-    section_id: int = None,
-    perch_mount_id: int = None,
-    taxon_order: int = None,
-    category: str = None,
-    order: str = None,
-    family: str = None,
-    prey: bool = None,
-    start_time: datetime.datetime = None,
-    end_time: datetime.datetime = None,
-    offset: int = 0,
-    limit: int = 50,
-    featured: bool = None,
-    featured_behavior: str = None,
-    featured_by: int = None,
-) -> list[model.Media]:
+
+def get_media(filter: query_filter.MediaFilter) -> list[model.Media]:
     with perchai.session.begin() as session:
         query = session.query(
             model.Media.medium_id,
@@ -60,8 +46,6 @@ def get_media(
         results = query.all()
 
     return results
-
-
 
 
 def get_medium_by_id(medium_id: str) -> model.Media:
@@ -141,4 +125,3 @@ def _pop_media_individual(media: list[dict]) -> list[dict]:
     for medium in media:
         medium.pop("individuals")
     return media
-
