@@ -1,6 +1,7 @@
 import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
+import sqlalchemy.orm
 
 import app.extensions as extensions
 from app.model import enums
@@ -39,6 +40,12 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
         server_default="UNDETECTED",
     )
 
+    unchecked_contents = sqlalchemy.orm.relationship("UncheckedMediaContents")
+    detected_contents = sqlalchemy.orm.relationship("MediaDetectedContents")
+    checked_contents = sqlalchemy.orm.relationship("MediaCheckedContents")
+    unreviewued_contents = sqlalchemy.orm.relationship("UnreviewedMediaContents")
+    reviewed_contents = sqlalchemy.orm.relationship("ReviewedMediaContents")
+
 
 class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "undetected_media_contents"
@@ -61,7 +68,7 @@ class MediaDetectedContents(extensions.db.Model, utils.JsonAbleModel):
     detected_at = extensions.db.Column(sqlalchemy.DateTime)
 
 
-class MediaCheckedontents(extensions.db.Model, utils.JsonAbleModel):
+class MediaCheckedContents(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "media_checked_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),

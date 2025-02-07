@@ -1,6 +1,7 @@
 import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
+import sqlalchemy.orm
 
 import app.extensions as extensions
 from app.model import enums
@@ -28,6 +29,12 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
         default="UNCHECKED",
         server_default="UNCHECKED",
     )
+
+    unreviewed_contents = sqlalchemy.orm.relationship("UnreviewedIndividualsContents")
+    reviewed_contents = sqlalchemy.orm.relationship("ReviewedIndividualsContents")
+    marked_prey_contents = sqlalchemy.orm.relationship("MarkedPreyIndividualsContents")
+    identified_prey_contents = sqlalchemy.orm.relationship("IdentifiedPreyIndividualsContents")
+    tagged_contents = sqlalchemy.orm.relationship("TaggedIndividualsContents")
 
 
 class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
