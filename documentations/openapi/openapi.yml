@@ -242,7 +242,6 @@ paths:
       tags:
         - Media
       parameters:
-        - $ref: "#/components/parameters/ProjectIDsQuery"
         - $ref: "#/components/parameters/PerchMountIDsQuery"
         - $ref: "#/components/parameters/SectionIDsQuery"
         - $ref: "#/components/parameters/MediaStatusQuery"
