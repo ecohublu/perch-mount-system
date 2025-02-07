@@ -20,7 +20,7 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
     )
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
-        sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),
+        sqlalchemy.ForeignKey(fk_names.MEDIA_ID),
         nullable=False,
     )
     note = extensions.db.Column(sqlalchemy.Text)
@@ -29,6 +29,8 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
         default="UNCHECKED",
         server_default="UNCHECKED",
     )
+
+    medium = sqlalchemy.orm.relationship("Media", lazy="subquery")
 
     unreviewed_contents = sqlalchemy.orm.relationship("UnreviewedIndividualsContents")
     reviewed_contents = sqlalchemy.orm.relationship("ReviewedIndividualsContents")
