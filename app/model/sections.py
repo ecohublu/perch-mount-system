@@ -1,6 +1,7 @@
 import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
+import sqlalchemy.orm
 
 import app.extensions as extensions
 from app.model import utils
@@ -43,3 +44,8 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     )
     swapper_ids = extensions.db.Column(postgresql.ARRAY(postgresql.UUID(as_uuid=True)))
     note = extensions.db.Column(sqlalchemy.Text)
+
+    perch_mount = sqlalchemy.orm.relationship("PerchMounts")
+    swappers = sqlalchemy.orm.relationship("Members", lazy="subquery")
+    camera = sqlalchemy.orm.relationship("Cameras", lazy="immediate")
+    mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="immediate")

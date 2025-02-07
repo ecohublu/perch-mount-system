@@ -1,6 +1,7 @@
 import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
+import sqlalchemy.orm
 
 import app.extensions as extensions
 from app.model import enums
@@ -54,3 +55,6 @@ class PerchMounts(extensions.db.Model, utils.JsonAbleModel):
         nullable=False,
     )
     note = extensions.db.Column(sqlalchemy.Text)
+
+    claimer = sqlalchemy.orm.relationship("Members", lazy="immediate")
+    project = sqlalchemy.orm.relationship("Projects", lazy="immediate")
