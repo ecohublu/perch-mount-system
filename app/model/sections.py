@@ -44,6 +44,11 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     )
     swapper_ids = extensions.db.Column(postgresql.ARRAY(postgresql.UUID(as_uuid=True)))
     note = extensions.db.Column(sqlalchemy.Text)
+    undetected_count = extensions.db.Column(sqlalchemy.Integer, default=0)
+    unchecked_count = extensions.db.Column(sqlalchemy.Integer, default=0)
+    unreviewed_count = extensions.db.Column(sqlalchemy.Integer, default=0)
+    reviewed_count = extensions.db.Column(sqlalchemy.Integer, default=0)
+    accidental_count = extensions.db.Column(sqlalchemy.Integer, default=0)
 
     perch_mount = sqlalchemy.orm.relationship("PerchMounts")
     swappers = sqlalchemy.orm.relationship("Members", lazy="subquery")
