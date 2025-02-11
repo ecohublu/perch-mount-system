@@ -51,6 +51,6 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     accidental_count = extensions.db.Column(sqlalchemy.Integer, default=0)
 
     perch_mount = sqlalchemy.orm.relationship("PerchMounts")
-    swappers = sqlalchemy.orm.relationship("Members", lazy="subquery")
+    swappers = sqlalchemy.orm.relationship("Members", lazy="immediate")
     camera = sqlalchemy.orm.relationship("Cameras", lazy="immediate")
     mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="immediate")

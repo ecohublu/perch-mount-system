@@ -35,7 +35,9 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
     unreviewed_contents = sqlalchemy.orm.relationship("UnreviewedIndividualsContents")
     reviewed_contents = sqlalchemy.orm.relationship("ReviewedIndividualsContents")
     marked_prey_contents = sqlalchemy.orm.relationship("MarkedPreyIndividualsContents")
-    identified_prey_contents = sqlalchemy.orm.relationship("IdentifiedPreyIndividualsContents")
+    identified_prey_contents = sqlalchemy.orm.relationship(
+        "IdentifiedPreyIndividualsContents"
+    )
     tagged_contents = sqlalchemy.orm.relationship("TaggedIndividualsContents")
 
 
@@ -63,6 +65,7 @@ class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
         "box_ymin >= 0 AND box_ymin <= 1",
         "box_ymax >= 0 AND box_ymax <= 1",
     )
+    species_by_ai = sqlalchemy.orm.relationship("Species", lazy="immediate")
 
 
 class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
@@ -90,9 +93,11 @@ class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
         "box_ymax >= 0 AND box_ymax <= 1",
     )
 
+    species_by_human = sqlalchemy.orm.relationship("Species", lazy="immediate")
+
 
 class MarkedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
-    __tablename__ = "marded_prey_individuals_contents"
+    __tablename__ = "marked_prey_individuals_contents"
     individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.INDIVIDUALS_ID),

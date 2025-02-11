@@ -49,7 +49,6 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
     reviewed_contents = sqlalchemy.orm.relationship("ReviewedMediaContents")
 
 
-
 class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "undetected_media_contents"
     medium_id = extensions.db.Column(
@@ -137,6 +136,8 @@ class ReviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.BEHAVIORS_ID),
     )
+    behavior = sqlalchemy.orm.relationship("Behaviors", lazy="immediate")
+    event = sqlalchemy.orm.relationship("Events", lazy="immediate")
 
 
 class AccidentalMediaContents(extensions.db.Model, utils.JsonAbleModel):

@@ -2,6 +2,6 @@ from .options import *
 from .members import Members
 from .species import Species
 from .perch_mounts import PerchMounts
-from .sections import Sections, SectionSwappers
+from .sections import Sections
 from .media import *
 from .individuals import *

@@ -1,8 +1,8 @@
-"""init all tables
+"""tables init
 
-Revision ID: 86e6eedb9053
-Revises:
-Create Date: 2025-01-30 23:30:10.051145
+Revision ID: c70b7879e68b
+Revises: 
+Create Date: 2025-02-11 21:46:32.182603
 
 """
 
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "86e6eedb9053"
+revision = "c70b7879e68b"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -67,31 +67,6 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("id"),
         sa.UniqueConstraint("name"),
-    )
-    op.create_table(
-        "individuals",
-        sa.Column("id", sa.UUID(), nullable=False),
-        sa.Column("medium_id", sa.UUID(), nullable=False),
-        sa.Column("note", sa.Text(), nullable=True),
-        sa.Column(
-            "prey_status",
-            sa.Enum(
-                "UNDETECTED",
-                "UNCHECKED",
-                "UNREVIEWED",
-                "REVIEWED",
-                "ACCIDENTAL",
-                name="mediastatus",
-            ),
-            server_default="UNCHECKED",
-            nullable=True,
-        ),
-        sa.ForeignKeyConstraint(
-            ["medium_id"],
-            ["individuals.id"],
-        ),
-        sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("id"),
     )
     op.create_table(
         "members",
@@ -178,31 +153,6 @@ def upgrade():
         sa.UniqueConstraint("taxon_order"),
     )
     op.create_table(
-        "identified_prey_individuals_contents",
-        sa.Column("individual_id", sa.UUID(), nullable=False),
-        sa.Column("inaturalist_taxa_id", sa.Integer(), nullable=False),
-        sa.Column("identifier_id", sa.UUID(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["identifier_id"],
-            ["members.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["individual_id"],
-            ["individuals.id"],
-        ),
-        sa.PrimaryKeyConstraint("individual_id"),
-    )
-    op.create_table(
-        "marded_prey_individuals_contents",
-        sa.Column("individual_id", sa.UUID(), nullable=False),
-        sa.Column("has_prey", sa.Boolean(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["individual_id"],
-            ["individuals.id"],
-        ),
-        sa.PrimaryKeyConstraint("individual_id"),
-    )
-    op.create_table(
         "perch_mounts",
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("perch_mount_name", sa.String(length=15), nullable=False),
@@ -240,54 +190,6 @@ def upgrade():
         sa.UniqueConstraint("perch_mount_name"),
     )
     op.create_table(
-        "reviewed_individuals_contents",
-        sa.Column("individual_id", sa.UUID(), nullable=False),
-        sa.Column("taxon_order_by_human", sa.Integer(), nullable=False),
-        sa.Column("box_xmin", sa.Float(), nullable=True),
-        sa.Column("box_xmax", sa.Float(), nullable=True),
-        sa.Column("box_ymin", sa.Float(), nullable=True),
-        sa.Column("box_ymax", sa.Float(), nullable=True),
-        sa.ForeignKeyConstraint(
-            ["individual_id"],
-            ["individuals.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["taxon_order_by_human"],
-            ["species.taxon_order"],
-        ),
-        sa.PrimaryKeyConstraint("individual_id"),
-    )
-    op.create_table(
-        "tagged_individuals_contents",
-        sa.Column("individual_id", sa.UUID(), nullable=False),
-        sa.Column("is_tagged", sa.Boolean(), nullable=False),
-        sa.Column("has_ring", sa.Boolean(), nullable=False),
-        sa.Column("ring_number", sa.String(length=20), nullable=True),
-        sa.ForeignKeyConstraint(
-            ["individual_id"],
-            ["individuals.id"],
-        ),
-        sa.PrimaryKeyConstraint("individual_id"),
-    )
-    op.create_table(
-        "unreviewed_individuals_contents",
-        sa.Column("individual_id", sa.UUID(), nullable=False),
-        sa.Column("taxon_order_by_ai", sa.Integer(), nullable=False),
-        sa.Column("box_xmin", sa.Float(), nullable=True),
-        sa.Column("box_xmax", sa.Float(), nullable=True),
-        sa.Column("box_ymin", sa.Float(), nullable=True),
-        sa.Column("box_ymax", sa.Float(), nullable=True),
-        sa.ForeignKeyConstraint(
-            ["individual_id"],
-            ["individuals.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["taxon_order_by_ai"],
-            ["species.taxon_order"],
-        ),
-        sa.PrimaryKeyConstraint("individual_id"),
-    )
-    op.create_table(
         "sections",
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("perch_mount_id", sa.UUID(), nullable=False),
@@ -297,7 +199,13 @@ def upgrade():
         sa.Column(
             "valid", sa.Boolean(), server_default=sa.text("FALSE"), nullable=False
         ),
+        sa.Column("swapper_ids", postgresql.ARRAY(sa.UUID()), nullable=True),
         sa.Column("note", sa.Text(), nullable=True),
+        sa.Column("undetected_count", sa.Integer(), nullable=True),
+        sa.Column("unchecked_count", sa.Integer(), nullable=True),
+        sa.Column("unreviewed_count", sa.Integer(), nullable=True),
+        sa.Column("reviewed_count", sa.Integer(), nullable=True),
+        sa.Column("accidental_count", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["camera_id"],
             ["cameras.id"],
@@ -322,7 +230,7 @@ def upgrade():
             "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
         ),
         sa.Column(
-            "medium_type", sa.Enum("IMAGE", "VIDEO", name="mediatype"), nullable=False
+            "medium_type", sa.Enum("IMAGE", "VIDEO", name="mediatypes"), nullable=False
         ),
         sa.Column("nas_path", sa.String(length=255), nullable=True),
         sa.Column(
@@ -346,20 +254,6 @@ def upgrade():
         sa.UniqueConstraint("id"),
     )
     op.create_table(
-        "section_swappers",
-        sa.Column("section_id", sa.UUID(), nullable=False),
-        sa.Column("swapper_id", sa.UUID(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["section_id"],
-            ["sections.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["swapper_id"],
-            ["members.id"],
-        ),
-        sa.PrimaryKeyConstraint("section_id", "swapper_id"),
-    )
-    op.create_table(
         "accidental_media_contents",
         sa.Column("medium_id", sa.UUID(), nullable=False),
         sa.ForeignKeyConstraint(
@@ -367,6 +261,31 @@ def upgrade():
             ["media.id"],
         ),
         sa.PrimaryKeyConstraint("medium_id"),
+    )
+    op.create_table(
+        "individuals",
+        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("medium_id", sa.UUID(), nullable=False),
+        sa.Column("note", sa.Text(), nullable=True),
+        sa.Column(
+            "prey_status",
+            sa.Enum(
+                "UNDETECTED",
+                "UNCHECKED",
+                "UNREVIEWED",
+                "REVIEWED",
+                "ACCIDENTAL",
+                name="mediastatus",
+            ),
+            server_default="UNCHECKED",
+            nullable=True,
+        ),
+        sa.ForeignKeyConstraint(
+            ["medium_id"],
+            ["media.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("id"),
     )
     op.create_table(
         "media_checked_contents",
@@ -450,8 +369,81 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("medium_id"),
     )
-    # ### end Alembic commands ###
+    op.create_table(
+        "identified_prey_individuals_contents",
+        sa.Column("individual_id", sa.UUID(), nullable=False),
+        sa.Column("inaturalist_taxa_id", sa.Integer(), nullable=False),
+        sa.Column("identifier_id", sa.UUID(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["identifier_id"],
+            ["members.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["individual_id"],
+            ["individuals.id"],
+        ),
+        sa.PrimaryKeyConstraint("individual_id"),
+    )
+    op.create_table(
+        "marked_prey_individuals_contents",
+        sa.Column("individual_id", sa.UUID(), nullable=False),
+        sa.Column("has_prey", sa.Boolean(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["individual_id"],
+            ["individuals.id"],
+        ),
+        sa.PrimaryKeyConstraint("individual_id"),
+    )
+    op.create_table(
+        "reviewed_individuals_contents",
+        sa.Column("individual_id", sa.UUID(), nullable=False),
+        sa.Column("taxon_order_by_human", sa.Integer(), nullable=False),
+        sa.Column("box_xmin", sa.Float(), nullable=True),
+        sa.Column("box_xmax", sa.Float(), nullable=True),
+        sa.Column("box_ymin", sa.Float(), nullable=True),
+        sa.Column("box_ymax", sa.Float(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["individual_id"],
+            ["individuals.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["taxon_order_by_human"],
+            ["species.taxon_order"],
+        ),
+        sa.PrimaryKeyConstraint("individual_id"),
+    )
+    op.create_table(
+        "tagged_individuals_contents",
+        sa.Column("individual_id", sa.UUID(), nullable=False),
+        sa.Column("is_tagged", sa.Boolean(), nullable=False),
+        sa.Column("has_ring", sa.Boolean(), nullable=False),
+        sa.Column("ring_number", sa.String(length=20), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["individual_id"],
+            ["individuals.id"],
+        ),
+        sa.PrimaryKeyConstraint("individual_id"),
+    )
+    op.create_table(
+        "unreviewed_individuals_contents",
+        sa.Column("individual_id", sa.UUID(), nullable=False),
+        sa.Column("taxon_order_by_ai", sa.Integer(), nullable=False),
+        sa.Column("box_xmin", sa.Float(), nullable=True),
+        sa.Column("box_xmax", sa.Float(), nullable=True),
+        sa.Column("box_ymin", sa.Float(), nullable=True),
+        sa.Column("box_ymax", sa.Float(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["individual_id"],
+            ["individuals.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["taxon_order_by_ai"],
+            ["species.taxon_order"],
+        ),
+        sa.PrimaryKeyConstraint("individual_id"),
+    )
 
+    # ### end Alembic commands ###
     op.execute(
         """
         CREATE OR REPLACE FUNCTION refresh_section_counts()
@@ -483,7 +475,7 @@ def upgrade():
 
     op.execute(
         """
-        SELECT cron.schedule('0 22 * * *', 'CALL refresh_section_counts()');
+        SELECT cron.schedule('refresh_section_counts_job', '0 22 * * *', 'CALL refresh_section_counts()');
         """
     )
 
@@ -508,27 +500,26 @@ def upgrade():
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table("unreviewed_individuals_contents")
+    op.drop_table("tagged_individuals_contents")
+    op.drop_table("reviewed_individuals_contents")
+    op.drop_table("marked_prey_individuals_contents")
+    op.drop_table("identified_prey_individuals_contents")
     op.drop_table("unreviewed_media_contents")
     op.drop_table("undetected_media_contents")
     op.drop_table("unchecked_media_contents")
     op.drop_table("reviewed_media_contents")
     op.drop_table("media_detected_contents")
     op.drop_table("media_checked_contents")
+    op.drop_table("individuals")
     op.drop_table("accidental_media_contents")
-    op.drop_table("section_swappers")
     op.drop_table("media")
     op.drop_table("sections")
-    op.drop_table("unreviewed_individuals_contents")
-    op.drop_table("tagged_individuals_contents")
-    op.drop_table("reviewed_individuals_contents")
     op.drop_table("perch_mounts")
-    op.drop_table("marded_prey_individuals_contents")
-    op.drop_table("identified_prey_individuals_contents")
     op.drop_table("species")
     op.drop_table("projects")
     op.drop_table("mount_types")
     op.drop_table("members")
-    op.drop_table("individuals")
     op.drop_table("events")
     op.drop_table("cameras")
     op.drop_table("behaviors")
@@ -544,3 +535,6 @@ def downgrade():
 
     for name in ENUMS:
         op.execute(f"DROP TYPE IF EXISTS {name} CASCADE;")
+
+    op.execute("DROP FUNCTION IF EXISTS refresh_section_counts CASCADE;")
+    op.execute("SELECT cron.unschedule('refresh_section_counts_job');")
