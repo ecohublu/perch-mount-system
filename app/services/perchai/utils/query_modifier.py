@@ -68,16 +68,31 @@ class SectionQueryModifier(service_utils.QueryModifier):
 
 
 class MediaQueryModifier(service_utils.QueryModifier):
-    _BACIS_FIELDS = (
+    _BASIC_FIELDS = (
         model.Media.id,
         model.Media.section_id,
+        model.Media.medium_datetime,
+        model.Media.medium_type,
+        model.Media.nas_path,
+        model.Media.status,
     )
     _FIELD_STATUS_MAP: typing[enums.MediaStatus, tuple] = {
-        "undetected": (*_BACIS_FIELDS,),
-        "unchecked": (*_BACIS_FIELDS,),
-        "unreviewed": (*_BACIS_FIELDS,),
-        "reviewed": (*_BACIS_FIELDS,),
-        "accidental": (*_BACIS_FIELDS,),
+        "undetected": (
+            *_BASIC_FIELDS,
+            model.Media.unchecked_contents,
+        ),
+        "unchecked": (
+            *_BASIC_FIELDS,
+            model.Media.unchecked_contents,
+            model.Media.detected_contents,
+        ),
+        "unreviewed": (
+            *_BASIC_FIELDS,
+            model.Media.unreviewued_contents,
+            model.Media.detected_contents,
+        ),
+        "reviewed": (*_BASIC_FIELDS, model.Media.reviewed_contents),
+        "accidental": (*_BASIC_FIELDS,),
     }
 
     def __init__(self, filter: query_filter.MediaFilter):
