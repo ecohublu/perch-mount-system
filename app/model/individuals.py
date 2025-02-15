@@ -29,9 +29,7 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
         default="UNCHECKED",
         server_default="UNCHECKED",
     )
-
-    medium = sqlalchemy.orm.relationship("Media", lazy="subquery")
-
+    
     unreviewed_contents = sqlalchemy.orm.relationship("UnreviewedIndividualsContents")
     reviewed_contents = sqlalchemy.orm.relationship("ReviewedIndividualsContents")
     marked_prey_contents = sqlalchemy.orm.relationship("MarkedPreyIndividualsContents")

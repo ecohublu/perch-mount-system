@@ -43,7 +43,6 @@ class MediaFilter(service_utils.QueryFilter):
     def __init__(
         self,
         status: enums.MediaStatus,
-        project_ids: list[str] = None,
         perch_mount_ids: list[str] = None,
         section_ids: list[str] = None,
         is_tagged: bool = None,
@@ -56,7 +55,6 @@ class MediaFilter(service_utils.QueryFilter):
     ):
         super().__init__()
         self.status = status
-        self.project_ids = self._strs_to_uuids(project_ids)
         self.perch_mount_ids = self._strs_to_uuids(perch_mount_ids)
         self.section_ids = self._strs_to_uuids(section_ids)
         self.is_tagged = is_tagged

@@ -1,5 +1,4 @@
 from app import create_app
-from app.model import Projects
 
 app = create_app()
 

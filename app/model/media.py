@@ -3,7 +3,7 @@ import sqlalchemy
 from sqlalchemy.dialects import postgresql
 import sqlalchemy.orm
 
-import app.extensions as extensions
+from app import extensions
 from app.model import enums
 from app.model import utils
 from app.model import fk_names
@@ -39,14 +39,14 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
         default="UNDETECTED",
         server_default="UNDETECTED",
     )
-
+    section = sqlalchemy.orm.relationship("Sections")
     individuals = sqlalchemy.orm.relationship("Individuals")
 
-    unchecked_contents = sqlalchemy.orm.relationship("UncheckedMediaContents")
-    detected_contents = sqlalchemy.orm.relationship("MediaDetectedContents")
-    checked_contents = sqlalchemy.orm.relationship("MediaCheckedContents")
-    unreviewued_contents = sqlalchemy.orm.relationship("UnreviewedMediaContents")
-    reviewed_contents = sqlalchemy.orm.relationship("ReviewedMediaContents")
+    unchecked_contents = sqlalchemy.orm.relationship("UncheckedMediaContents", lazy="immediate")
+    detected_contents = sqlalchemy.orm.relationship("MediaDetectedContents", lazy="immediate")
+    checked_contents = sqlalchemy.orm.relationship("MediaCheckedContents", lazy="immediate")
+    unreviewued_contents = sqlalchemy.orm.relationship("UnreviewedMediaContents", lazy="immediate")
+    reviewed_contents = sqlalchemy.orm.relationship("ReviewedMediaContents", lazy="immediate")
 
 
 class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):

@@ -1,6 +1,7 @@
 import enum
 import typing
 
+
 class Habitats(enum.Enum):
     NATURAL = "natural"
     ARTIFICIAL = "artificial"
@@ -19,6 +20,12 @@ class MediaStatus(enum.Enum):
     UNREVIEWED = "unreviewed"
     REVIEWED = "reviewed"
     ACCIDENTAL = "accidental"
+
+
+class PreyStatus(enum.Enum):
+    UNCHECKED = "unchecked"
+    UNIDENTIFIED = "unidentified"
+    IDENTIFIED = "identified"
 
 
 class MediaTypes(enum.Enum):
@@ -41,6 +48,7 @@ class ConservationStatus(enum.Enum):
     II = "II"
     III = "III"
 
+
 def validate_enums(
     values: typing.List[str | enum.Enum],
     enum_type: typing.Type[enum.Enum] = None,
@@ -53,6 +61,7 @@ def validate_enums(
         raise ValueError(
             f"Invalid status: {",".join(not_in_enum)}. Must be one of {[e.value for e in enum_type]}"
         )
+
 
 def validate_enum(
     value: typing.Union[str | enum.Enum],

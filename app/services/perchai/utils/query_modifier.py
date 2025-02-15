@@ -99,36 +99,70 @@ class MediaQueryModifier(service_utils.QueryModifier):
         super().__init__()
         self.filter = filter
 
+    @property
+    def status_fields(self) -> tuple:
+        return self._FIELD_STATUS_MAP[self.filter.status]
+
     def filter_query(
         self, query: sqlalchemy.orm.Query[model.Media]
     ) -> sqlalchemy.orm.Query:
         query = query.filter(model.Media.status == self.filter.status)
-        if self.filter.project_ids:
-            query = query.filter(model.Projects.id.in_(self.filter.project_ids))
         if self.filter.perch_mount_ids:
-            query = query.filter(model.PerchMounts.id.in_(self.filter.perch_mount_ids))
+            query = query.filter(
+                model.Media.section.any(
+                    model.Sections.perch_mount_id.in_(self.filter.perch_mount_ids)
+                )
+            )
         if self.filter.section_ids:
-            query = query.filter(model.Sections.id.in_(self.filter.section_ids))
+            query = query.filter(model.Media.section_id.in_(self.filter.section_ids))
+
         if self.filter.is_tagged is not None:
             query = query.filter(
-                model.TaggedIndividualsContents.is_tagged == self.filter.is_tagged
+                model.Media.individuals.any(
+                    model.Individuals.tagged_contents.any(
+                        model.TaggedIndividualsContents.is_tagged
+                        == self.filter.is_tagged
+                    )
+                )
             )
         if self.filter.ring_number_search:
             ring_number_search = service_utils.SearchStr(self.filter.ring_number_search)
             query = query.filter(
-                model.TaggedIndividualsContents.ring_number.like(
-                    ring_number_search.search_phrase
+                model.Media.individuals.any(
+                    model.Individuals.tagged_contents.any(
+                        model.TaggedIndividualsContents.ring_number.like(
+                            ring_number_search.search_phrase
+                        )
+                    )
                 )
             )
+
         if self.filter.prey_status:
             query = query.filter(
-                model.Individuals.prey_status == self.filter.prey_status
+                model.Media.individuals.any(
+                    model.Individuals.prey_status == self.filter.prey_status
+                )
             )
+
         if self.filter.has_prey is not None:
             query = query.filter(
-                model.MarkedPreyIndividualsContents.has_prey == self.filter.has_prey
+                model.Media.individuals.any(
+                    model.Individuals.marked_prey_contents.any(
+                        model.MarkedPreyIndividualsContents.has_prey
+                        == self.filter.has_prey
+                    )
+                )
             )
+
         if self.filter.prey_inaturalist_taxa_ids:
+            query = query.filter(
+                model.Media.individuals.any(
+                    model.Individuals.marked_prey_contents.any(
+                        model.IdentifiedPreyIndividualsContents.inaturalist_taxa_id
+                        == self.filter.prey_inaturalist_taxa_ids
+                    )
+                )
+            )
             query = query.filter(
                 model.IdentifiedPreyIndividualsContents.inaturalist_taxa_id.in_(
                     self.filter.prey_inaturalist_taxa_ids
@@ -136,21 +170,27 @@ class MediaQueryModifier(service_utils.QueryModifier):
             )
         if self.filter.taxon_orders_by_human:
             query = query.filter(
-                model.ReviewedIndividualsContents.taxon_order_by_human.in_(
-                    self.filter.taxon_orders_by_human
+                model.Media.individuals.any(
+                    model.Individuals.marked_prey_contents.any(
+                        model.ReviewedIndividualsContents.taxon_order_by_human.in_(
+                            self.filter.taxon_orders_by_human
+                        )
+                    )
                 )
             )
+
         if self.filter.taxon_orders_by_ai:
             query = query.filter(
-                model.UnreviewedIndividualsContents.taxon_order_by_ai.in_(
-                    self.filter.taxon_orders_by_ai
+                model.Media.individuals.any(
+                    model.Individuals.marked_prey_contents.any(
+                        model.UnreviewedIndividualsContents.taxon_order_by_ai.in_(
+                            self.filter.taxon_orders_by_ai
+                        )
+                    )
                 )
             )
 
         return query
-
-    def get_fields(self) -> tuple:
-        return self._FIELD_STATUS_MAP[self.filter.status]
 
 
 class SpeciesQueryModifier(service_utils.QueryModifier):

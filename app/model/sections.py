@@ -3,7 +3,7 @@ import sqlalchemy
 from sqlalchemy.dialects import postgresql
 import sqlalchemy.orm
 
-import app.extensions as extensions
+from app import extensions
 from app.model import utils
 from app.model import fk_names
 
@@ -42,7 +42,6 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
         server_default=sqlalchemy.text("FALSE"),
         nullable=False,
     )
-    swapper_ids = extensions.db.Column(postgresql.ARRAY(postgresql.UUID(as_uuid=True)))
     note = extensions.db.Column(sqlalchemy.Text)
     undetected_count = extensions.db.Column(sqlalchemy.Integer, default=0)
     unchecked_count = extensions.db.Column(sqlalchemy.Integer, default=0)
@@ -51,6 +50,22 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     accidental_count = extensions.db.Column(sqlalchemy.Integer, default=0)
 
     perch_mount = sqlalchemy.orm.relationship("PerchMounts")
-    swappers = sqlalchemy.orm.relationship("Members", lazy="immediate")
     camera = sqlalchemy.orm.relationship("Cameras", lazy="immediate")
     mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="immediate")
+
+
+class SectionsSwappers(extensions.db.Model, utils.JsonAbleModel):
+    section_id = extensions.db.Column(
+        postgresql.UUID(as_uuid=True),
+        sqlalchemy.ForeignKey(fk_names.SECTIONS_ID),
+        nullable=False,
+        primary_key=True,
+    )
+    swapper_id = extensions.db.Column(
+        postgresql.UUID(as_uuid=True),
+        sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
+        nullable=False,
+        primary_key=True,
+    )
+
+    swappers = sqlalchemy.orm.relationship("Members", lazy="subquery")
