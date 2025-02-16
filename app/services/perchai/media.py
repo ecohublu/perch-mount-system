@@ -21,12 +21,16 @@ def get_medium_by_id(medium_id: str) -> model.Media:
     medium_id = uuid.UUID(medium_id)
     with perchai.session.begin() as session:
         query = session.query(model.Media).filter(model.Media.id == medium_id)
-        result = query.one_or_none()
+        medium = query.one_or_none()
 
-    return result
+    return medium
 
 
 def add_detected_media():
+    return
+
+
+def add_checked_media():
     return
 
 
