@@ -17,7 +17,7 @@ INDIVIDUALS_PREY_TABLES_STATUS = (
 ENUMS = (
     "positions",
     "mountlayers",
-    "mediatype",
+    "mediatypes",
     "mediastatus",
     "habitats",
     "conservationstatus",

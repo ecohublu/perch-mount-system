@@ -42,21 +42,13 @@ class Species(extensions.db.Model, utils.JsonAbleModel):
     )
     chinese_common_name = extensions.db.Column(
         sqlalchemy.String(ColumnSizes.CHINESE_COMMON_NAME),
-        nullable=False,
         unique=True,
     )
     category = extensions.db.Column(sqlalchemy.String(ColumnSizes.CATEGORY))
-    order = extensions.db.Column(
-        sqlalchemy.String(ColumnSizes.ORDER),
-        nullable=False,
-    )
-    family_name = extensions.db.Column(
-        sqlalchemy.String(ColumnSizes.FAMILY_NAME),
-        nullable=False,
-    )
+    order = extensions.db.Column(sqlalchemy.String(ColumnSizes.ORDER))
+    family_name = extensions.db.Column(sqlalchemy.String(ColumnSizes.FAMILY_NAME))
     family_latin_name = extensions.db.Column(
-        sqlalchemy.String(ColumnSizes.FAMILY_LATIN_NAME),
-        nullable=False,
+        sqlalchemy.String(ColumnSizes.FAMILY_LATIN_NAME)
     )
     taiwan_status = extensions.db.Column(sqlalchemy.String(ColumnSizes.TAIWAN_STATUS))
     matzu_status = extensions.db.Column(sqlalchemy.String(ColumnSizes.MATZU_STATUS))

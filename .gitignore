@@ -149,3 +149,4 @@ postgres_data
 openapi-codegen/
 test.py
 dev_data/
+service_test.py

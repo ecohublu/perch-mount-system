@@ -43,8 +43,8 @@ class MediaFilter(service_utils.QueryFilter):
     def __init__(
         self,
         status: enums.MediaStatus,
-        perch_mount_ids: list[str] = None,
-        section_ids: list[str] = None,
+        perch_mount_ids: list[str] = [],
+        section_ids: list[str] = [],
         is_tagged: bool = None,
         ring_number_search: str = None,
         prey_status: str = None,

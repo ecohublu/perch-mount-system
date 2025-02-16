@@ -9,7 +9,7 @@ Create Date: 2025-02-15 11:54:42.243985
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
-from migrations_custom import utils
+from migrations_custom import utils, data_init
 
 # revision identifiers, used by Alembic.
 revision = "8f214f0af359"
@@ -106,12 +106,12 @@ def upgrade():
         "species",
         sa.Column("taxon_order", sa.Integer(), nullable=False),
         sa.Column("scientific_name", sa.String(length=100), nullable=False),
-        sa.Column("english_common_name", sa.String(length=100), nullable=False),
-        sa.Column("chinese_common_name", sa.String(length=50), nullable=False),
+        sa.Column("english_common_name", sa.String(length=100), nullable=True),
+        sa.Column("chinese_common_name", sa.String(length=50), nullable=True),
         sa.Column("category", sa.String(length=15), nullable=True),
-        sa.Column("order", sa.String(length=50), nullable=False),
-        sa.Column("family_name", sa.String(length=50), nullable=False),
-        sa.Column("family_latin_name", sa.String(length=50), nullable=False),
+        sa.Column("order", sa.String(length=50), nullable=True),
+        sa.Column("family_name", sa.String(length=50), nullable=True),
+        sa.Column("family_latin_name", sa.String(length=50), nullable=True),
         sa.Column("taiwan_status", sa.String(length=50), nullable=True),
         sa.Column("matzu_status", sa.String(length=50), nullable=True),
         sa.Column("kinmen_status", sa.String(length=50), nullable=True),
@@ -435,6 +435,7 @@ def upgrade():
     # ### end Alembic commands ###
 
     utils.upgrade_ext()
+    data_init.init_species()
 
 
 def downgrade():

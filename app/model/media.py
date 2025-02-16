@@ -42,11 +42,21 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
     section = sqlalchemy.orm.relationship("Sections")
     individuals = sqlalchemy.orm.relationship("Individuals")
 
-    unchecked_contents = sqlalchemy.orm.relationship("UncheckedMediaContents", lazy="immediate")
-    detected_contents = sqlalchemy.orm.relationship("MediaDetectedContents", lazy="immediate")
-    checked_contents = sqlalchemy.orm.relationship("MediaCheckedContents", lazy="immediate")
-    unreviewued_contents = sqlalchemy.orm.relationship("UnreviewedMediaContents", lazy="immediate")
-    reviewed_contents = sqlalchemy.orm.relationship("ReviewedMediaContents", lazy="immediate")
+    unchecked_contents = sqlalchemy.orm.relationship(
+        "UncheckedMediaContents", uselist=False
+    )
+    detected_contents = sqlalchemy.orm.relationship(
+        "MediaDetectedContents", uselist=False
+    )
+    checked_contents = sqlalchemy.orm.relationship(
+        "MediaCheckedContents", uselist=False
+    )
+    unreviewued_contents = sqlalchemy.orm.relationship(
+        "UnreviewedMediaContents", uselist=False
+    )
+    reviewed_contents = sqlalchemy.orm.relationship(
+        "ReviewedMediaContents", uselist=False
+    )
 
 
 class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):

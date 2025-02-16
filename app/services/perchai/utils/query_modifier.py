@@ -1,11 +1,10 @@
 import sqlalchemy
 import sqlalchemy.orm
-import typing
 
 from app import model
 from app.services.perchai.utils import query_filter
 from app.services import utils as service_utils
-from model import enums
+from app.model import enums
 
 
 class PerchMountQueryModifier(service_utils.QueryModifier):
@@ -75,33 +74,31 @@ class MediaQueryModifier(service_utils.QueryModifier):
         model.Media.medium_type,
         model.Media.nas_path,
         model.Media.status,
+        model.Media.section,
+        # model.Media.individuals,
+        # model.Media.unchecked_contents,
+        # model.Media.detected_contents,
+        # model.Media.checked_contents,
+        # model.Media.reviewed_contents,
     )
-    _FIELD_STATUS_MAP: typing[enums.MediaStatus, tuple] = {
-        "undetected": (
-            *_BASIC_FIELDS,
-            model.Media.unchecked_contents,
-        ),
-        "unchecked": (
-            *_BASIC_FIELDS,
-            model.Media.unchecked_contents,
-            model.Media.detected_contents,
-        ),
-        "unreviewed": (
-            *_BASIC_FIELDS,
-            model.Media.unreviewued_contents,
-            model.Media.detected_contents,
-        ),
-        "reviewed": (*_BASIC_FIELDS, model.Media.reviewed_contents),
-        "accidental": (*_BASIC_FIELDS,),
-    }
 
     def __init__(self, filter: query_filter.MediaFilter):
-        super().__init__()
         self.filter = filter
 
     @property
-    def status_fields(self) -> tuple:
-        return self._FIELD_STATUS_MAP[self.filter.status]
+    def fields(self) -> tuple:
+        return self._BASIC_FIELDS
+
+    def options(self, query: sqlalchemy.orm.Query[model.Media]) -> sqlalchemy.orm.Query:
+        query = (
+            query.options(sqlalchemy.orm.joinedload(model.Media.individuals))
+            .options(sqlalchemy.orm.joinedload(model.Media.unchecked_contents))
+            .options(sqlalchemy.orm.joinedload(model.Media.detected_contents))
+            .options(sqlalchemy.orm.joinedload(model.Media.checked_contents))
+            .options(sqlalchemy.orm.joinedload(model.Media.unreviewued_contents))
+            .options(sqlalchemy.orm.joinedload(model.Media.reviewed_contents))
+        )
+        return query
 
     def filter_query(
         self, query: sqlalchemy.orm.Query[model.Media]

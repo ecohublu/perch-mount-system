@@ -29,14 +29,22 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
         default="UNCHECKED",
         server_default="UNCHECKED",
     )
-    
-    unreviewed_contents = sqlalchemy.orm.relationship("UnreviewedIndividualsContents")
-    reviewed_contents = sqlalchemy.orm.relationship("ReviewedIndividualsContents")
-    marked_prey_contents = sqlalchemy.orm.relationship("MarkedPreyIndividualsContents")
-    identified_prey_contents = sqlalchemy.orm.relationship(
-        "IdentifiedPreyIndividualsContents"
+
+    unreviewed_contents = sqlalchemy.orm.relationship(
+        "UnreviewedIndividualsContents", uselist=False
     )
-    tagged_contents = sqlalchemy.orm.relationship("TaggedIndividualsContents")
+    reviewed_contents = sqlalchemy.orm.relationship(
+        "ReviewedIndividualsContents", uselist=False
+    )
+    marked_prey_contents = sqlalchemy.orm.relationship(
+        "MarkedPreyIndividualsContents", uselist=False
+    )
+    identified_prey_contents = sqlalchemy.orm.relationship(
+        "IdentifiedPreyIndividualsContents", uselist=False
+    )
+    tagged_contents = sqlalchemy.orm.relationship(
+        "TaggedIndividualsContents", uselist=False
+    )
 
 
 class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):

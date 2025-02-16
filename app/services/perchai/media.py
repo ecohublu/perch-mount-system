@@ -1,94 +1,37 @@
-from datetime import datetime
 import uuid
-import sqlalchemy
-import sqlalchemy.orm
 
 from app.services import perchai
-from app.services.perchai.utils import query_filter
+from app.services.perchai.utils import query_filter, query_modifier
 from app import model
-from app.model import enums
 
 
 def get_media(filter: query_filter.MediaFilter) -> list[model.Media]:
+    modifier = query_modifier.MediaQueryModifier(filter)
     with perchai.session.begin() as session:
-        query = session.query(
-            model.Media.medium_id,
-            model.Media.medium_datetime,
-            model.Media.section,
-            model.Media.path,
-            model.Media.empty_checker,
-            model.Media.reviewer,
-            model.Media.event,
-            model.Media.featured_behavior,
-            model.Media.featured_by,
-            model.Media.featured_title,
-            model.Sections.check_date,
-            model.PerchMounts.perch_mount_id,
-            model.PerchMounts.perch_mount_name,
-            model.Projects.name.label("project_name"),
-        )
-
-        query = query.join(
-            model.Sections,
-            model.Sections.section_id == model.Media.section,
-        )
-        query = query.join(
-            model.PerchMounts,
-            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
-        )
-        query = query.join(
-            model.Projects,
-            model.Projects.project_id == model.PerchMounts.project,
-        )
-
-        query = query.order_by(model.Media.medium_datetime)
-        query = query.offset(offset).limit(limit)
-        results = query.all()
-
-    return results
+        query = session.query(model.Media)
+        query = modifier.options(query)
+        query = modifier.filter_query(query)
+        query = modifier.limit_query(query)
+        query = modifier.offset_query(query)
+        media = query.all()
+    return media
 
 
 def get_medium_by_id(medium_id: str) -> model.Media:
+    medium_id = uuid.UUID(medium_id)
     with perchai.session.begin() as session:
-        query = session.query(
-            model.Media.medium_id,
-            model.Media.medium_datetime,
-            model.Media.section,
-            model.Media.path,
-            model.Media.empty_checker,
-            model.Media.reviewer,
-            model.Media.event,
-            model.Media.featured_behavior,
-            model.Media.featured_by,
-            model.Media.featured_title,
-            model.Sections.check_date,
-            model.PerchMounts.perch_mount_id,
-            model.PerchMounts.perch_mount_name,
-            model.Projects.name.label("project_name"),
-        ).filter(model.Media.medium_id == medium_id)
-        query = query.join(
-            model.Sections,
-            model.Sections.section_id == model.Media.section,
-        )
-        query = query.join(
-            model.PerchMounts,
-            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
-        )
-        query = query.join(
-            model.Projects,
-            model.Projects.project_id == model.PerchMounts.project,
-        )
+        query = session.query(model.Media).filter(model.Media.id == medium_id)
         result = query.one_or_none()
 
     return result
 
 
-def update_medium(medium_id: str, arg: dict):
-    with perchai.session.begin() as session:
-        session.query(model.Media).filter(model.Media.medium_id == medium_id).update(
-            arg
-        )
-        session.commit()
+def add_detected_media():
+    return
+
+
+def add_reviewed_media():
+    return
 
 
 def add_media_and_individuals(media: list[dict]):
