@@ -1,7 +1,7 @@
 import uuid
 
 from app.services import perchai
-from app.services.perchai.utils import query_filter, query_modifier
+from app.services.perchai.utils import query_filter, query_modifier, media_operator
 from app import model
 
 
@@ -26,15 +26,19 @@ def get_medium_by_id(medium_id: str) -> model.Media:
     return medium
 
 
-def add_detected_media():
+def add_uploaded_media(media: list[media_operator.UploadedMedium]):
     return
 
 
-def add_checked_media():
+def add_detected_media(media: list[media_operator.DetectedMedium]):
     return
 
 
-def add_reviewed_media():
+def add_checked_media(media: list[media_operator.CheckedMedium]):
+    return
+
+
+def add_reviewed_media(media: list[media_operator.ReviewedMedium]):
     return
 
 
