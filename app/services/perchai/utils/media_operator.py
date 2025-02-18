@@ -148,52 +148,52 @@ class ReviewedMedium:
 
 
 class UploadedMedia(list):
-    def __init__(self, iterable=None):
+    def __init__(self, iterable: list[UploadedMedium] = None):
         if iterable is None:
             iterable = []
         super().__init__(iterable)
 
 
 class DetectedMedia(list):
-    def __init__(self, iterable=None):
+    def __init__(self, iterable: list[DetectedMedium] = None):
         if iterable is None:
             iterable = []
         super().__init__(iterable)
 
     @property
-    def media_to_unchecked(self) -> list[DetectedMedium]:
+    def media_to_unchecked(self: list[DetectedMedium]) -> list[DetectedMedium]:
         return [medium for medium in self if medium.no_individual]
 
     @property
-    def media_to_unreviewed(self) -> list[DetectedMedium]:
+    def media_to_unreviewed(self: list[DetectedMedium]) -> list[DetectedMedium]:
         return [medium for medium in self if medium.has_individual]
 
 
 class CheckedMedia(list):
-    def __init__(self, iterable=None):
+    def __init__(self, iterable: list[CheckedMedium] = None):
         if iterable is None:
             iterable = []
         super().__init__(iterable)
 
     @property
-    def media_to_accidenal(self) -> list[DetectedMedium]:
+    def media_to_accidenal(self: list[CheckedMedium]) -> list[DetectedMedium]:
         return [medium for medium in self if medium.no_individual]
 
     @property
-    def media_to_unreviewed(self) -> list[DetectedMedium]:
+    def media_to_unreviewed(self: list[CheckedMedium]) -> list[DetectedMedium]:
         return [medium for medium in self if medium.has_individual]
 
 
 class ReviewedMedia(list):
-    def __init__(self, iterable=None):
+    def __init__(self, iterable: list[ReviewedMedium] = None):
         if iterable is None:
             iterable = []
         super().__init__(iterable)
 
     @property
-    def media_to_accidenal(self) -> list[DetectedMedium]:
+    def media_to_accidenal(self: list[ReviewedMedium]) -> list[DetectedMedium]:
         return [medium for medium in self if medium.no_individual]
 
     @property
-    def media_to_reviewed(self) -> list[DetectedMedium]:
+    def media_to_reviewed(self: list[ReviewedMedium]) -> list[DetectedMedium]:
         return [medium for medium in self if medium.has_individual]
