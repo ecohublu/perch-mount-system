@@ -28,8 +28,9 @@ def get_medium_by_id(medium_id: str) -> model.Media:
 
 
 def add_uploaded_media(
-    media: media_operator.UploadedMedia,
+    uploaded_media: list[dict],
 ):
+    media = [media_operator.UploadedMedia(**medium) for medium in uploaded_media]
     model_media = [
         model.Media(
             section_id=medium.section_id,
@@ -55,8 +56,9 @@ def add_uploaded_media(
 
 
 def add_detected_media(
-    media: media_operator.DetectedMedia,
+    detected_media: list[dict],
 ):
+    media = [media_operator.DetectedMedia(**medium) for medium in detected_media]
     detected_contents = [
         model.MediaDetectedContents(medium_id=medium.id) for medium in media
     ]
@@ -96,7 +98,8 @@ def add_detected_media(
     return
 
 
-def add_checked_media(media: media_operator.CheckedMedia):
+def add_checked_media(checked_media: list[dict]):
+    media = [media_operator.CheckedMedia(**medium) for medium in checked_media]
     unreviewed_media = [
         model.UnreviewedMediaContents(medium_id=medium.id)
         for medium in media.media_to_unreviewed
@@ -114,7 +117,8 @@ def add_checked_media(media: media_operator.CheckedMedia):
             session.rollback()
 
 
-def add_reviewed_media(media: media_operator.ReviewedMedia):
+def add_reviewed_media(reviewed_media: list[dict]):
+    media = [media_operator.ReviewedMedia(**medium) for medium in reviewed_media]
     accidental_media = [
         model.AccidentalMediaContents(medium_id=medium.id)
         for medium in media.media_to_accidenal
@@ -142,42 +146,6 @@ def add_reviewed_media(media: media_operator.ReviewedMedia):
             session.commit()
         except:
             session.rollback()
-
-
-def add_media_and_individuals(media: list[dict]):
-    individauls = _get_individauls_from_media(media)
-    media = _pop_media_individual(media)
-    new_meida: list[model.Media] = []
-    new_individuals: list[model.Individuals] = []
-    for medium in media:
-        new_meida.append(model.Media(**medium))
-    for individual in individauls:
-        new_individuals.append(model.Individuals(**individual))
-
-    with perchai.session.begin() as session:
-        try:
-            session.add_all(new_meida)
-            session.flush()
-            session.add_all(new_individuals)
-            session.commit()
-        except:
-            session.rollback()
-            raise
-
-
-def _get_individauls_from_media(media: list[dict]) -> list[dict]:
-    individuals = []
-    for medium in media:
-        for individual in medium["individuals"]:
-            individual["medium"] = medium["medium_id"]
-            individuals.append(individual)
-    return individuals
-
-
-def _pop_media_individual(media: list[dict]) -> list[dict]:
-    for medium in media:
-        medium.pop("individuals")
-    return media
 
 
 def _add_reviewed_new_individuals(
@@ -272,55 +240,3 @@ def _add_reviewed_insist_individuals(
     session.add_all(reviewed_individuals)
     session.add_all(marked_prey_individuals)
     session.add_all(tagged_individuals)
-
-
-def _get_models_sets(media: media_operator.ReviewedMedia) -> list[
-    tuple[
-        model.Individuals,
-        model.ReviewedIndividualsContents,
-        model.MarkedPreyIndividualsContents,
-        model.TaggedIndividualsContents,
-    ]
-]:
-    sets = []
-    for medium in media:
-        medium: media_operator.ReviewedMedium = medium
-        for individual in medium.individuals:
-            if not individual.is_ai_detected:
-                continue
-            sets.append(
-                (
-                    model.Individuals(medium_id=medium.id),
-                    model.ReviewedIndividualsContents(
-                        taxon_order_by_human=individual.taxon_order_by_human,
-                        box_xmin=individual.box_xmin,
-                        box_xmax=individual.box_xmax,
-                        box_ymin=individual.box_ymin,
-                        box_ymax=individual.box_ymax,
-                    ),
-                    model.MarkedPreyIndividualsContents(has_prey=individual.has_prey),
-                    model.TaggedIndividualsContents(
-                        is_tagged=individual.is_tagged,
-                        has_ring=individual.has_ring,
-                        ring_number=individual.ring_number,
-                    ),
-                )
-            )
-    return sets
-
-
-def _set_model_individual_id(
-    sets: list[
-        tuple[
-            model.Individuals,
-            model.ReviewedIndividualsContents,
-            model.MarkedPreyIndividualsContents,
-            model.TaggedIndividualsContents,
-        ]
-    ]
-):
-    for s in sets:
-        id_ = s[0].id
-        s[1].individual_id = id_
-        s[2].individual_id = id_
-        s[3].individual_id = id_
