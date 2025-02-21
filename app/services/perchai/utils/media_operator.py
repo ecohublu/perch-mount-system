@@ -2,16 +2,17 @@ from datetime import datetime
 import uuid
 
 from app.model import enums
+from app import model
 
 
 class DetectedIndividual:
     def __init__(
         self,
         taxon_order_by_ai: int,
-        box_xmin: float = None,
-        box_xmax: float = None,
-        box_ymin: float = None,
-        box_ymax: float = None,
+        box_xmin: float | None = None,
+        box_xmax: float | None = None,
+        box_ymin: float | None = None,
+        box_ymax: float | None = None,
     ):
         self.taxon_order_by_ai = taxon_order_by_ai
         self.box_xmin = box_xmin
@@ -23,17 +24,39 @@ class DetectedIndividual:
 class ReviewedIndividual:
     def __init__(
         self,
-        taxon_order_by_human,
-        box_xmin=None,
-        box_xmax=None,
-        box_ymin=None,
-        box_ymax=None,
+        taxon_order_by_human: int,
+        has_prey: bool,
+        is_tagged: bool,
+        has_ring: bool,
+        id_: str | None = None,
+        box_xmin: float | None = None,
+        box_xmax: float | None = None,
+        box_ymin: float | None = None,
+        box_ymax: float | None = None,
+        ring_number: str | None = None,
     ):
+        self.id = id_
         self.taxon_order_by_human = taxon_order_by_human
         self.box_xmin = box_xmin
         self.box_xmax = box_xmax
         self.box_ymin = box_ymin
         self.box_ymax = box_ymax
+        self.has_prey = has_prey
+        self.is_tagged = is_tagged
+        self.has_ring = has_ring
+        self.ring_number = ring_number
+
+    @property
+    def is_ai_detected(self) -> bool:
+        return not None
+
+    @property
+    def is_to_marked_prey_contents(self) -> bool:
+        return self.has_prey
+
+    @property
+    def is_to_tagged_contents(self) -> bool:
+        return self.is_tagged
 
 
 class UploadedMedium:
@@ -73,10 +96,10 @@ class DetectedMedium:
     def has_individual(self) -> bool:
         return len(self.individuals) > 0
 
-    def to_unchecked(self) -> bool:
+    def is_to_unchecked(self) -> bool:
         return self.no_individual
 
-    def to_unreviewed(self) -> bool:
+    def is_to_unreviewed(self) -> bool:
         return self.has_individual
 
 
@@ -97,10 +120,10 @@ class CheckedMedium:
     def no_individual(self) -> bool:
         return not self.has_individual
 
-    def to_acciental(self) -> bool:
+    def is_to_acciental(self) -> bool:
         return not self.has_individual
 
-    def to_unreviewed(self) -> bool:
+    def is_to_unreviewed(self) -> bool:
         return self.has_individual
 
 
@@ -140,10 +163,10 @@ class ReviewedMedium:
     def has_individual(self) -> bool:
         return len(self.individuals) > 0
 
-    def to_acciental(self) -> bool:
+    def is_to_acciental(self) -> bool:
         return self.no_individual
 
-    def to_reviewed(self) -> bool:
+    def is_to_reviewed(self) -> bool:
         return self.has_individual
 
 
@@ -155,6 +178,7 @@ class UploadedMedia(list):
 
 
 class DetectedMedia(list):
+
     def __init__(self, iterable: list[DetectedMedium] = None):
         if iterable is None:
             iterable = []
@@ -185,15 +209,34 @@ class CheckedMedia(list):
 
 
 class ReviewedMedia(list):
+
     def __init__(self, iterable: list[ReviewedMedium] = None):
         if iterable is None:
             iterable = []
         super().__init__(iterable)
 
     @property
-    def media_to_accidenal(self: list[ReviewedMedium]) -> list[DetectedMedium]:
+    def media_to_accidenal(self: list[ReviewedMedium]) -> list[ReviewedMedium]:
         return [medium for medium in self if medium.no_individual]
 
     @property
-    def media_to_reviewed(self: list[ReviewedMedium]) -> list[DetectedMedium]:
+    def media_to_reviewed(self: list[ReviewedMedium]) -> list[ReviewedMedium]:
         return [medium for medium in self if medium.has_individual]
+
+
+class _ReviewedNewIndividuals:
+    def __init__(self, individuals: list[ReviewedIndividual]):
+        self.model_sets = self._to_model_sets(individuals)
+
+    def _to_model_sets(self, individuals: list[ReviewedIndividual]) -> list[
+        tuple[
+            model.Individuals,
+            model.ReviewedIndividualsContents | None,
+            model.MarkedPreyIndividualsContents | None,
+            model.TaggedIndividualsContents | None,
+        ]
+    ]:
+        sets = []
+        for individual in individuals:
+            sets.append((model.Individuals(medium_id=individual)))
+        return
