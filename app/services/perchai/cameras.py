@@ -1,6 +1,7 @@
-from app.services import perchai
-import model
 import uuid
+
+from app.services import perchai
+from app import model
 
 
 def get_cameras() -> list[model.Cameras]:

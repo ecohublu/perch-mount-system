@@ -10,7 +10,7 @@ from app.model import enums
 class PerchMountQueryModifier(service_utils.QueryModifier):
     def __init__(self, filter: query_filter.PerchMountFilter) -> None:
         self.filter = filter
-        super().__init__()
+        super().__init__(filter)
 
     def filter_query(
         self, query: sqlalchemy.orm.Query
@@ -38,7 +38,7 @@ class PerchMountQueryModifier(service_utils.QueryModifier):
 class SectionQueryModifier(service_utils.QueryModifier):
     def __init__(self, filter: query_filter.SectionFilter) -> None:
         self.filter = filter
-        super().__init__()
+        super().__init__(filter)
 
     def filter_query(
         self, query: sqlalchemy.orm.Query
@@ -83,6 +83,7 @@ class MediaQueryModifier(service_utils.QueryModifier):
     )
 
     def __init__(self, filter: query_filter.MediaFilter):
+        super().__init__(filter)
         self.filter = filter
 
     @property
@@ -127,7 +128,7 @@ class MediaQueryModifier(service_utils.QueryModifier):
             query = query.filter(
                 model.Media.individuals.any(
                     model.Individuals.tagged_contents.any(
-                        model.TaggedIndividualsContents.ring_number.like(
+                        model.TaggedIndividualsContents.ring_number.ilike(
                             ring_number_search.search_phrase
                         )
                     )
@@ -192,7 +193,7 @@ class MediaQueryModifier(service_utils.QueryModifier):
 
 class SpeciesQueryModifier(service_utils.QueryModifier):
     def __init__(self, filter: query_filter.SpeciesFilter) -> None:
-        super().__init__()
+        super().__init__(filter)
         self.filter = filter
 
     def filter_query(
@@ -210,7 +211,7 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 self.filter.chinese_common_name
             )
             query = query.filter(
-                model.Species.chinese_common_name.like(
+                model.Species.chinese_common_name.ilike(
                     chinese_name_search.search_phrase
                 )
             )
@@ -219,7 +220,7 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 self.filter.english_common_name
             )
             query = query.filter(
-                model.Species.english_common_name.like(
+                model.Species.english_common_name.ilike(
                     english_name_search.search_phrase
                 )
             )
@@ -228,16 +229,18 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 self.filter.scientific_name
             )
             query = query.filter(
-                model.Species.scientific_name.like(scientific_name_search.search_phrase)
+                model.Species.scientific_name.ilike(
+                    scientific_name_search.search_phrase
+                )
             )
 
         if self.filter.name:
             name_search = service_utils.SearchStr(self.filter.name)
             query = query.filter(
                 sqlalchemy.or_(
-                    model.Species.chinese_common_name.like(name_search.search_phrase),
-                    model.Species.english_common_name.like(name_search.search_phrase),
-                    model.Species.scientific_name.like(name_search.search_phrase),
+                    model.Species.chinese_common_name.ilike(name_search.search_phrase),
+                    model.Species.english_common_name.ilike(name_search.search_phrase),
+                    model.Species.scientific_name.ilike(name_search.search_phrase),
                 )
             )
         if self.filter.orders:
@@ -255,6 +258,7 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 == self.filter.conservation_status.upper()
             )
         if self.filter.codes:
-            query = query.filter(model.Species.codes.contains(self.filter.codes))
+            upper_codes = [code.upper() for code in self.filter.codes]
+            query = query.filter(model.Species.codes.overlap(upper_codes))
 
         return query
