@@ -31,19 +31,29 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
     )
 
     unreviewed_contents = sqlalchemy.orm.relationship(
-        "UnreviewedIndividualsContents", uselist=False
+        "UnreviewedIndividualsContents",
+        uselist=False,
+        lazy="immediate",
     )
     reviewed_contents = sqlalchemy.orm.relationship(
-        "ReviewedIndividualsContents", uselist=False
+        "ReviewedIndividualsContents",
+        uselist=False,
+        lazy="immediate",
     )
     marked_prey_contents = sqlalchemy.orm.relationship(
-        "MarkedPreyIndividualsContents", uselist=False
+        "MarkedPreyIndividualsContents",
+        uselist=False,
+        lazy="immediate",
     )
     identified_prey_contents = sqlalchemy.orm.relationship(
-        "IdentifiedPreyIndividualsContents", uselist=False
+        "IdentifiedPreyIndividualsContents",
+        uselist=False,
+        lazy="immediate",
     )
     tagged_contents = sqlalchemy.orm.relationship(
-        "TaggedIndividualsContents", uselist=False
+        "TaggedIndividualsContents",
+        uselist=False,
+        lazy="immediate",
     )
 
 

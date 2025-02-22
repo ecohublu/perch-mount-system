@@ -9,4 +9,3 @@ class Sections(flask_restful.Resource):
         args = dict(flask.request.args)
         filter = perchai_service.utils.query_filter.SectionFilter(**args)
         sections = perchai_service.sections.get_sections(filter)
-        return

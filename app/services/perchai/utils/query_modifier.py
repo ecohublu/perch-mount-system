@@ -59,7 +59,11 @@ class SectionQueryModifier(service_utils.QueryModifier):
             )
 
         if self.filter.swapper_ids:
-            query = query.filter(model.Sections)
+            query = query.filter(
+                model.Sections.swappers.any(
+                    model.Members.id.in_(self.filter.swapper_ids)
+                )
+            )
 
         return query
 
@@ -102,7 +106,7 @@ class MediaQueryModifier(service_utils.QueryModifier):
     def filter_query(
         self, query: sqlalchemy.orm.Query[model.Media]
     ) -> sqlalchemy.orm.Query:
-        query = query.filter(model.Media.status == self.filter.status)
+        query = query.filter(model.Media.status == self.filter.status.upper())
         if self.filter.perch_mount_ids:
             query = query.filter(
                 model.Media.section.any(
