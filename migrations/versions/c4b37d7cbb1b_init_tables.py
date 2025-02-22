@@ -1,8 +1,8 @@
 """init tables
 
-Revision ID: 8f214f0af359
+Revision ID: c4b37d7cbb1b
 Revises: 
-Create Date: 2025-02-15 11:54:42.243985
+Create Date: 2025-02-22 10:32:14.888255
 
 """
 
@@ -12,7 +12,7 @@ from sqlalchemy.dialects import postgresql
 from migrations_custom import utils, data_init
 
 # revision identifiers, used by Alembic.
-revision = "8f214f0af359"
+revision = "c4b37d7cbb1b"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -106,7 +106,7 @@ def upgrade():
         "species",
         sa.Column("taxon_order", sa.Integer(), nullable=False),
         sa.Column("scientific_name", sa.String(length=100), nullable=False),
-        sa.Column("english_common_name", sa.String(length=100), nullable=True),
+        sa.Column("english_common_name", sa.String(length=100), nullable=False),
         sa.Column("chinese_common_name", sa.String(length=50), nullable=True),
         sa.Column("category", sa.String(length=15), nullable=True),
         sa.Column("order", sa.String(length=50), nullable=True),
@@ -173,6 +173,8 @@ def upgrade():
         sa.Column("mount_type_id", sa.UUID(), nullable=False),
         sa.Column("camera_id", sa.UUID(), nullable=False),
         sa.Column("swapped_date", sa.Date(), nullable=False),
+        sa.Column("start_time", sa.DateTime(), nullable=True),
+        sa.Column("end_time", sa.DateTime(), nullable=True),
         sa.Column(
             "valid", sa.Boolean(), server_default=sa.text("FALSE"), nullable=False
         ),
@@ -433,7 +435,6 @@ def upgrade():
         sa.PrimaryKeyConstraint("individual_id"),
     )
     # ### end Alembic commands ###
-
     utils.upgrade_ext()
     data_init.init_species()
 
@@ -465,5 +466,4 @@ def downgrade():
     op.drop_table("cameras")
     op.drop_table("behaviors")
     # ### end Alembic commands ###
-
     utils.downgrade_ext()

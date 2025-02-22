@@ -59,9 +59,7 @@ class SectionQueryModifier(service_utils.QueryModifier):
             )
 
         if self.filter.swapper_ids:
-            query = query.filter(
-                model.Sections.swapper_ids.contains(self.filter.swapper_ids)
-            )
+            query = query.filter(model.Sections)
 
         return query
 

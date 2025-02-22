@@ -8,6 +8,24 @@ from app.model import utils
 from app.model import fk_names
 
 
+sections_swappers = sqlalchemy.Table(
+    "sections_swappers",
+    extensions.db.metadata,
+    sqlalchemy.Column(
+        "section_id",
+        postgresql.UUID(as_uuid=True),
+        sqlalchemy.ForeignKey("sections.id"),
+        primary_key=True,
+    ),
+    sqlalchemy.Column(
+        "swapper_id",
+        postgresql.UUID(as_uuid=True),
+        sqlalchemy.ForeignKey("members.id"),
+        primary_key=True,
+    ),
+)
+
+
 class Sections(extensions.db.Model, utils.JsonAbleModel):
     __tablename__ = "sections"
     id = extensions.db.Column(
@@ -36,6 +54,8 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
         sqlalchemy.Date,
         nullable=False,
     )
+    start_time = extensions.db.Column(sqlalchemy.DateTime)
+    end_time = extensions.db.Column(sqlalchemy.DateTime)
     valid = extensions.db.Column(
         sqlalchemy.Boolean,
         default=True,
@@ -52,20 +72,7 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     perch_mount = sqlalchemy.orm.relationship("PerchMounts")
     camera = sqlalchemy.orm.relationship("Cameras", lazy="immediate")
     mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="immediate")
-
-
-class SectionsSwappers(extensions.db.Model, utils.JsonAbleModel):
-    section_id = extensions.db.Column(
-        postgresql.UUID(as_uuid=True),
-        sqlalchemy.ForeignKey(fk_names.SECTIONS_ID),
-        nullable=False,
-        primary_key=True,
+    swappers = sqlalchemy.orm.relationship(
+        "Members", secondary=sections_swappers, lazy="immediate"
     )
-    swapper_id = extensions.db.Column(
-        postgresql.UUID(as_uuid=True),
-        sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
-        nullable=False,
-        primary_key=True,
-    )
-
-    swappers = sqlalchemy.orm.relationship("Members", lazy="subquery")
+    __table_arg__ = sqlalchemy.CheckConstraint("start_time <= end_time")

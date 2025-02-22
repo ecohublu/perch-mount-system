@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import uuid
 
 from app.services import perchai
@@ -28,7 +28,9 @@ def add_section(
     perch_mount_id: str,
     mount_type_id: str,
     camera_id: str,
-    swapper_date: date,
+    swapped_date: date,
+    start_time: str,
+    end_time: str,
     swapper_ids: list[str],
     valid: bool,
     note: str | None = None,
@@ -36,13 +38,16 @@ def add_section(
     perch_mount_id = uuid.UUID(perch_mount_id)
     mount_type_id = uuid.UUID(mount_type_id)
     camera_id = uuid.UUID(camera_id)
+    swapped_date = date.fromisoformat(swapped_date)
+    start_time = datetime.fromisoformat(start_time)
+    end_time = datetime.fromisoformat(end_time)
     swapper_ids = list(map(uuid.UUID, swapper_ids))
 
     new_section = model.Sections(
         perch_mount_id=perch_mount_id,
         mount_type=mount_type_id,
         camera=camera_id,
-        swapper_date=swapper_date,
+        swapped_date=swapped_date,
         swapper_ids=swapper_ids,
         valid=valid,
         note=note,

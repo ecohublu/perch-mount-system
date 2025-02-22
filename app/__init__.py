@@ -1,5 +1,6 @@
 from flask import Flask
 from app.extensions import db, migrate
+from app import model
 
 
 def create_app(config_object="config.Config") -> Flask:

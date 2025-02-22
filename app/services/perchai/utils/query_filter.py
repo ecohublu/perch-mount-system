@@ -7,9 +7,9 @@ from app.services import utils as service_utils
 class PerchMountFilter(service_utils.QueryFilter):
     def __init__(
         self,
-        project_ids: list[str] = None,
-        claim_by_ids: list[str] = None,
-        habitats: list[str] = None,
+        project_ids: list[str] = [],
+        claim_by_ids: list[str] = [],
+        habitats: list[str] = [],
         terminated: bool = None,
     ) -> None:
         super().__init__()
@@ -27,10 +27,10 @@ class PerchMountFilter(service_utils.QueryFilter):
 class SectionFilter(service_utils.QueryFilter):
     def __init__(
         self,
-        perch_mount_ids: list[str] = None,
+        perch_mount_ids: list[str] = [],
         swapped_date_from: datetime = None,
         swapped_date_to: datetime = None,
-        swapper_ids: list[str] = None,
+        swapper_ids: list[str] = [],
     ) -> None:
         super().__init__()
         self.perch_mount_ids = self._strs_to_uuids(perch_mount_ids)
