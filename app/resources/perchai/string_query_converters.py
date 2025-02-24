@@ -33,3 +33,19 @@ perch_mount = utils.StringQueryTypeCoverter(
         "terminated": utils.StringQueryTypeCoverter.to_bool,
     }
 )
+
+
+media = utils.StringQueryTypeCoverter(
+    {
+        "status": str,
+        "perch_mount_ids": utils.StringQueryTypeCoverter.to_uuid_list,
+        "section_ids": utils.StringQueryTypeCoverter.to_uuid_list,
+        "is_tagged": utils.StringQueryTypeCoverter.to_bool,
+        "ring_number_search": str,
+        "prey_status": str,
+        "has_prey": utils.StringQueryTypeCoverter.to_bool,
+        "prey_inaturalist_taxa_ids": utils.StringQueryTypeCoverter.to_int_list,
+        "taxon_orders_by_human": utils.StringQueryTypeCoverter.to_int_list,
+        "taxon_orders_by_ai": utils.StringQueryTypeCoverter.to_int_list,
+    }
+)

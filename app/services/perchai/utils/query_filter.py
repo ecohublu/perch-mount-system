@@ -44,8 +44,8 @@ class MediaFilter(service_utils.QueryFilter):
     def __init__(
         self,
         status: enums.MediaStatus,
-        perch_mount_ids: list[str] = [],
-        section_ids: list[str] = [],
+        perch_mount_ids: list[uuid.UUID] = [],
+        section_ids: list[uuid.UUID] = [],
         is_tagged: bool = None,
         ring_number_search: str = None,
         prey_status: str = None,
@@ -56,8 +56,8 @@ class MediaFilter(service_utils.QueryFilter):
     ):
         super().__init__()
         self.status = status
-        self.perch_mount_ids = self._strs_to_uuids(perch_mount_ids)
-        self.section_ids = self._strs_to_uuids(section_ids)
+        self.perch_mount_ids = perch_mount_ids
+        self.section_ids = section_ids
         self.is_tagged = is_tagged
         self.ring_number_search = ring_number_search
         self.prey_status = prey_status
