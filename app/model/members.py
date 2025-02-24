@@ -2,11 +2,10 @@ import uuid
 import re
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
-
+from sqlalchemy_serializer import SerializerMixin
 
 import app.extensions as extensions
 from app.model import enums
-from app.model import utils
 
 
 class ColumnSize:
@@ -15,7 +14,7 @@ class ColumnSize:
     LAST_NAME = 50
 
 
-class Members(extensions.db.Model, utils.JsonAbleModel):
+class Members(extensions.db.Model, SerializerMixin):
     __tablename__ = "members"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),

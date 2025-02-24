@@ -2,14 +2,14 @@ import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 import sqlalchemy.orm
+from sqlalchemy_serializer import SerializerMixin
 
 from app import extensions
 from app.model import enums
-from app.model import utils
 from app.model import fk_names
 
 
-class Media(extensions.db.Model, utils.JsonAbleModel):
+class Media(extensions.db.Model, SerializerMixin):
     __tablename__ = "media"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -59,7 +59,7 @@ class Media(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
+class UndetectedMediaContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "undetected_media_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -69,7 +69,7 @@ class UndetectedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class MediaDetectedContents(extensions.db.Model, utils.JsonAbleModel):
+class MediaDetectedContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "media_detected_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -80,7 +80,7 @@ class MediaDetectedContents(extensions.db.Model, utils.JsonAbleModel):
     detected_at = extensions.db.Column(sqlalchemy.DateTime)
 
 
-class MediaCheckedContents(extensions.db.Model, utils.JsonAbleModel):
+class MediaCheckedContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "media_checked_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -96,7 +96,7 @@ class MediaCheckedContents(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class UncheckedMediaContents(extensions.db.Model, utils.JsonAbleModel):
+class UncheckedMediaContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "unchecked_media_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -106,7 +106,7 @@ class UncheckedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class UnreviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
+class UnreviewedMediaContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "unreviewed_media_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -116,7 +116,7 @@ class UnreviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class ReviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
+class ReviewedMediaContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "reviewed_media_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -150,7 +150,7 @@ class ReviewedMediaContents(extensions.db.Model, utils.JsonAbleModel):
     event = sqlalchemy.orm.relationship("Events", lazy="immediate")
 
 
-class AccidentalMediaContents(extensions.db.Model, utils.JsonAbleModel):
+class AccidentalMediaContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "accidental_media_contents"
     medium_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),

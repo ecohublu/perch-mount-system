@@ -2,10 +2,10 @@ import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 import sqlalchemy.orm
+from sqlalchemy_serializer import SerializerMixin
 
 import app.extensions as extensions
 from app.model import enums
-from app.model import utils
 from app.model import fk_names
 
 
@@ -13,7 +13,7 @@ class ColumnSize:
     PERCH_MOUNT_NAME = 15
 
 
-class PerchMounts(extensions.db.Model, utils.JsonAbleModel):
+class PerchMounts(extensions.db.Model, SerializerMixin):
     __tablename__ = "perch_mounts"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),

@@ -119,7 +119,7 @@ class MediaQueryModifier(service_utils.QueryModifier):
         if self.filter.is_tagged is not None:
             query = query.filter(
                 model.Media.individuals.any(
-                    model.Individuals.tagged_contents.any(
+                    model.Individuals.tagged_contents.has(
                         model.TaggedIndividualsContents.is_tagged
                         == self.filter.is_tagged
                     )
@@ -259,8 +259,14 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 model.Species.conservation_status
                 == self.filter.conservation_status.upper()
             )
+        if self.filter.protected is True:
+            query = query.filter(model.Species.conservation_status.isnot(sqlalchemy.null()))
+        if self.filter.protected is False:
+            query = query.filter(model.Species.conservation_status.is_(sqlalchemy.null()))
+
         if self.filter.codes:
             upper_codes = [code.upper() for code in self.filter.codes]
             query = query.filter(model.Species.codes.overlap(upper_codes))
+
 
         return query

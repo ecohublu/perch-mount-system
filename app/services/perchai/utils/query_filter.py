@@ -1,4 +1,5 @@
 from datetime import datetime
+import uuid
 
 from app.model import enums
 from app.services import utils as service_utils
@@ -7,14 +8,14 @@ from app.services import utils as service_utils
 class PerchMountFilter(service_utils.QueryFilter):
     def __init__(
         self,
-        project_ids: list[str] = [],
-        claim_by_ids: list[str] = [],
+        project_ids: list[uuid.UUID] = [],
+        claim_by_ids: list[uuid.UUID] = [],
         habitats: list[str] = [],
         terminated: bool = None,
     ) -> None:
         super().__init__()
-        self.project_ids = self._strs_to_uuids(project_ids)
-        self.claim_by_ids = self._strs_to_uuids(claim_by_ids)
+        self.project_ids = project_ids
+        self.claim_by_ids = claim_by_ids
         self.habitats = habitats
         self.terminated = terminated
         self._validate_all_enums()
@@ -27,16 +28,16 @@ class PerchMountFilter(service_utils.QueryFilter):
 class SectionFilter(service_utils.QueryFilter):
     def __init__(
         self,
-        perch_mount_ids: list[str] = [],
+        perch_mount_ids: list[uuid.UUID] = [],
         swapped_date_from: datetime = None,
         swapped_date_to: datetime = None,
-        swapper_ids: list[str] = [],
+        swapper_ids: list[uuid.UUID] = [],
     ) -> None:
         super().__init__()
-        self.perch_mount_ids = self._strs_to_uuids(perch_mount_ids)
+        self.perch_mount_ids = perch_mount_ids
         self.swapped_date_from = swapped_date_from
         self.swapped_date_to = swapped_date_to
-        self.swapper_ids = self._strs_to_uuids(swapper_ids)
+        self.swapper_ids = swapper_ids
 
 
 class MediaFilter(service_utils.QueryFilter):
@@ -75,6 +76,7 @@ class SpeciesFilter(service_utils.QueryFilter):
         scientific_name: str = None,
         name: str = None,
         conservation_status: str = None,
+        protected: bool = None,
         orders: list[str] = None,
         families: list[str] = None,
         codes: list[str] = None,
@@ -86,6 +88,7 @@ class SpeciesFilter(service_utils.QueryFilter):
         self.scientific_name = scientific_name
         self.name = name
         self.conservation_status = conservation_status
+        self.protected = protected
         self.orders = orders
         self.families = families
         self.codes = codes

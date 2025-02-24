@@ -1,6 +1,7 @@
 from flask import Flask
 from app.extensions import db, migrate
 from app import model
+from app.resources import perchai
 
 
 def create_app(config_object="config.Config") -> Flask:
@@ -9,5 +10,6 @@ def create_app(config_object="config.Config") -> Flask:
 
     db.init_app(app)
     migrate.init_app(app, db)
+    perchai.api.init_app(app)
 
     return app

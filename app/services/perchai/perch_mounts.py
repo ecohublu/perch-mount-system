@@ -6,7 +6,9 @@ from app import model
 from app.model import enums
 
 
-def get_perch_mounts(filter: query_filter.PerchMountFilter) -> list[model.PerchMounts]:
+def get_perch_mounts_by_filter(
+    filter: query_filter.PerchMountFilter,
+) -> list[model.PerchMounts]:
     modifier = query_modifier.PerchMountQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.PerchMounts)

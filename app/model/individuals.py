@@ -2,14 +2,14 @@ import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 import sqlalchemy.orm
+from sqlalchemy_serializer import SerializerMixin
 
 import app.extensions as extensions
 from app.model import enums
-from app.model import utils
 from app.model import fk_names
 
 
-class Individuals(extensions.db.Model, utils.JsonAbleModel):
+class Individuals(extensions.db.Model, SerializerMixin):
     __tablename__ = "individuals"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -57,7 +57,7 @@ class Individuals(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
+class UnreviewedIndividualsContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "unreviewed_individuals_contents"
     individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -84,7 +84,7 @@ class UnreviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     species_by_ai = sqlalchemy.orm.relationship("Species", lazy="immediate")
 
 
-class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
+class ReviewedIndividualsContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "reviewed_individuals_contents"
     individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -112,7 +112,7 @@ class ReviewedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     species_by_human = sqlalchemy.orm.relationship("Species", lazy="immediate")
 
 
-class MarkedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
+class MarkedPreyIndividualsContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "marked_prey_individuals_contents"
     individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -123,7 +123,7 @@ class MarkedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
     has_prey = extensions.db.Column(sqlalchemy.Boolean, nullable=False)
 
 
-class IdentifiedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
+class IdentifiedPreyIndividualsContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "identified_prey_individuals_contents"
     individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -139,7 +139,7 @@ class IdentifiedPreyIndividualsContents(extensions.db.Model, utils.JsonAbleModel
     )
 
 
-class TaggedIndividualsContents(extensions.db.Model, utils.JsonAbleModel):
+class TaggedIndividualsContents(extensions.db.Model, SerializerMixin):
     __tablename__ = "tagged_individuals_contents"
     individual_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),

@@ -1,11 +1,20 @@
-import flask
 import flask_restful
+import uuid
 
 from app.services import perchai as perchai_service
+import app.resources.perchai.string_query_converters as sq_converters
+import app.resources.utils as res_utils
 
 
 class Sections(flask_restful.Resource):
-    def get(self):
-        args = dict(flask.request.args)
-        filter = perchai_service.utils.query_filter.SectionFilter(**args)
+    @res_utils.parse_args(sq_converters.section)
+    def get(self, parsed_args):
+        filter = perchai_service.utils.query_filter.SectionFilter(**parsed_args)
         sections = perchai_service.sections.get_sections(filter)
+        return [section.to_dict() for section in sections]
+
+
+class Section(flask_restful.Resource):
+    def get(self, section_id: uuid.UUID):
+        section = perchai_service.sections.get_section_by_id(section_id)
+        return section.to_dict()

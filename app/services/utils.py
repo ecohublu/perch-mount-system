@@ -26,14 +26,11 @@ class QueryFilter:
         self.offset = offset
         self.limit = limit
 
-    def offset_query(self, query: sqlalchemy.orm.Query) -> sqlalchemy.orm.Query:
-        return query.offset(self.offset)
-
-    def limit_query(self, query: sqlalchemy.orm.Query) -> sqlalchemy.orm.Query:
-        return query.limit(self.limit)
-
     def _strs_to_uuids(self, ids: list[str]) -> list[uuid.UUID]:
         return list(map(uuid.UUID, ids))
+
+    def to_bool(self, arg) -> bool:
+        pass
 
 
 class QueryModifier:

@@ -1,9 +1,9 @@
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
+from sqlalchemy_serializer import SerializerMixin
 
 import app.extensions as extensions
 from app.model import enums
-from app.model import utils
 
 
 class ColumnSizes:
@@ -22,7 +22,7 @@ class ColumnSizes:
     CODES = 10
 
 
-class Species(extensions.db.Model, utils.JsonAbleModel):
+class Species(extensions.db.Model, SerializerMixin):
     __tablename__ = "species"
     taxon_order = extensions.db.Column(
         sqlalchemy.Integer,

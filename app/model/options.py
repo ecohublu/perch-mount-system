@@ -1,9 +1,9 @@
 import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
+from sqlalchemy_serializer import SerializerMixin
 
 import app.extensions as extensions
-from app.model import utils
 
 
 class ColumnSize:
@@ -14,7 +14,7 @@ class ColumnSize:
     MOUNT_TYPE_NAME = 15
 
 
-class Projects(extensions.db.Model, utils.JsonAbleModel):
+class Projects(extensions.db.Model, SerializerMixin):
     __tablename__ = "projects"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -30,7 +30,7 @@ class Projects(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class Cameras(extensions.db.Model, utils.JsonAbleModel):
+class Cameras(extensions.db.Model, SerializerMixin):
     __tablename__ = "cameras"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -46,7 +46,7 @@ class Cameras(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class Events(extensions.db.Model, utils.JsonAbleModel):
+class Events(extensions.db.Model, SerializerMixin):
     __tablename__ = "events"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -62,7 +62,7 @@ class Events(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class MountTypes(extensions.db.Model, utils.JsonAbleModel):
+class MountTypes(extensions.db.Model, SerializerMixin):
     __tablename__ = "mount_types"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -78,7 +78,7 @@ class MountTypes(extensions.db.Model, utils.JsonAbleModel):
     )
 
 
-class Behaviors(extensions.db.Model, utils.JsonAbleModel):
+class Behaviors(extensions.db.Model, SerializerMixin):
     __tablename__ = "behaviors"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),

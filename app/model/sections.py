@@ -2,9 +2,9 @@ import uuid
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 import sqlalchemy.orm
+from sqlalchemy_serializer import SerializerMixin
 
 from app import extensions
-from app.model import utils
 from app.model import fk_names
 
 
@@ -26,7 +26,7 @@ sections_swappers = sqlalchemy.Table(
 )
 
 
-class Sections(extensions.db.Model, utils.JsonAbleModel):
+class Sections(extensions.db.Model, SerializerMixin):
     __tablename__ = "sections"
     id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
@@ -69,7 +69,6 @@ class Sections(extensions.db.Model, utils.JsonAbleModel):
     reviewed_count = extensions.db.Column(sqlalchemy.Integer, default=0)
     accidental_count = extensions.db.Column(sqlalchemy.Integer, default=0)
 
-    perch_mount = sqlalchemy.orm.relationship("PerchMounts")
     camera = sqlalchemy.orm.relationship("Cameras", lazy="immediate")
     mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="immediate")
     swappers = sqlalchemy.orm.relationship(
