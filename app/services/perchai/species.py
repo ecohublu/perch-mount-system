@@ -30,7 +30,7 @@ def get_species_by_taxon_orders(taxon_orders: list[int]) -> list[model.Species]:
     return species
 
 
-def get_species_by_taxon_order(taxon_order: int) -> model.Species:
+def get_species_by_taxon_order(taxon_order: int) -> model.Species | None:
     with perchai.session.begin() as session:
         species = (
             session.query(model.Species)

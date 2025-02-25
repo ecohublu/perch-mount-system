@@ -5,6 +5,8 @@ from app.services import perchai as perchai_service
 import app.resources.perchai.string_query_converters as sq_converters
 import app.resources.utils as res_utils
 from app.error_handler import errors
+from app import model
+
 
 class Media(flask_restful.Resource):
     @res_utils.parse_args(sq_converters.media)
@@ -22,8 +24,8 @@ class Media(flask_restful.Resource):
 class Medium(flask_restful.Resource):
     def get(self, medium_id: uuid.UUID):
         medium = perchai_service.media.get_medium_by_id(medium_id)
-        print(type(medium_id))
+
         if medium is None:
-            raise errors.ResourceNotFoundError(type(medium).__name__)
+            raise errors.ResourceNotFoundError(model.Media.__name__)
 
         return medium.to_dict()

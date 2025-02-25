@@ -69,28 +69,10 @@ class SectionQueryModifier(service_utils.QueryModifier):
 
 
 class MediaQueryModifier(service_utils.QueryModifier):
-    _BASIC_FIELDS = (
-        model.Media.id,
-        model.Media.section_id,
-        model.Media.medium_datetime,
-        model.Media.medium_type,
-        model.Media.nas_path,
-        model.Media.status,
-        model.Media.section,
-        # model.Media.individuals,
-        # model.Media.unchecked_contents,
-        # model.Media.detected_contents,
-        # model.Media.checked_contents,
-        # model.Media.reviewed_contents,
-    )
 
     def __init__(self, filter: query_filter.MediaFilter):
         super().__init__(filter)
         self.filter = filter
-
-    @property
-    def fields(self) -> tuple:
-        return self._BASIC_FIELDS
 
     def options(self, query: sqlalchemy.orm.Query[model.Media]) -> sqlalchemy.orm.Query:
         query = (
@@ -260,13 +242,16 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 == self.filter.conservation_status.upper()
             )
         if self.filter.protected is True:
-            query = query.filter(model.Species.conservation_status.isnot(sqlalchemy.null()))
+            query = query.filter(
+                model.Species.conservation_status.isnot(sqlalchemy.null())
+            )
         if self.filter.protected is False:
-            query = query.filter(model.Species.conservation_status.is_(sqlalchemy.null()))
+            query = query.filter(
+                model.Species.conservation_status.is_(sqlalchemy.null())
+            )
 
         if self.filter.codes:
             upper_codes = [code.upper() for code in self.filter.codes]
             query = query.filter(model.Species.codes.overlap(upper_codes))
-
 
         return query

@@ -12,3 +12,8 @@ def not_found(e: errors.NotFoundError):
 @blueprint.app_errorhandler(errors.StringQueryMissingError)
 def string_query_missing(e: errors.StringQueryMissingError):
     return e.json_response()
+
+
+@blueprint.app_errorhandler(errors.ResourceNotFoundError)
+def resource_not_found(e: errors.ResourceNotFoundError):
+    return e.json_response()

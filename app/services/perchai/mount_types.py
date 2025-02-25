@@ -9,7 +9,7 @@ def get_mount_types() -> list[model.MountTypes]:
     return mount_types
 
 
-def get_mount_type_by_id(mount_type_id: str) -> model.MountTypes:
+def get_mount_type_by_id(mount_type_id: str) -> model.MountTypes | None:
     mount_type_id = uuid.UUID(mount_type_id)
     with perchai.session.begin() as session:
         mount_type = (

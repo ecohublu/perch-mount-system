@@ -39,23 +39,22 @@ class Media(extensions.db.Model, SerializerMixin):
         default="UNDETECTED",
         server_default="UNDETECTED",
     )
-    section = sqlalchemy.orm.relationship("Sections")
-    individuals = sqlalchemy.orm.relationship("Individuals")
+    individuals = sqlalchemy.orm.relationship("Individuals", lazy="immediate")
 
     unchecked_contents = sqlalchemy.orm.relationship(
-        "UncheckedMediaContents", uselist=False
+        "UncheckedMediaContents", uselist=False, lazy="immediate"
     )
     detected_contents = sqlalchemy.orm.relationship(
-        "MediaDetectedContents", uselist=False
+        "MediaDetectedContents", uselist=False, lazy="immediate"
     )
     checked_contents = sqlalchemy.orm.relationship(
-        "MediaCheckedContents", uselist=False
+        "MediaCheckedContents", uselist=False, lazy="immediate"
     )
     unreviewued_contents = sqlalchemy.orm.relationship(
-        "UnreviewedMediaContents", uselist=False
+        "UnreviewedMediaContents", uselist=False, lazy="immediate"
     )
     reviewed_contents = sqlalchemy.orm.relationship(
-        "ReviewedMediaContents", uselist=False
+        "ReviewedMediaContents", uselist=False, lazy="immediate"
     )
 
 

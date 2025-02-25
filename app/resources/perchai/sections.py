@@ -4,6 +4,8 @@ import uuid
 from app.services import perchai as perchai_service
 import app.resources.perchai.string_query_converters as sq_converters
 import app.resources.utils as res_utils
+from app.error_handler import errors
+from app import model
 
 
 class Sections(flask_restful.Resource):
@@ -17,4 +19,8 @@ class Sections(flask_restful.Resource):
 class Section(flask_restful.Resource):
     def get(self, section_id: uuid.UUID):
         section = perchai_service.sections.get_section_by_id(section_id)
+
+        if section is None:
+            raise errors.ResourceNotFoundError(model.Sections.__name__)
+
         return section.to_dict()

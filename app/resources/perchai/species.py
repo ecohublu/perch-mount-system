@@ -3,6 +3,8 @@ import flask_restful
 import app.services.perchai as perchai_service
 import app.resources.perchai.string_query_converters as sq_converters
 import app.resources.utils as res_utils
+from app.error_handler import errors
+from app import model
 
 
 class Species(flask_restful.Resource):
@@ -16,4 +18,8 @@ class Species(flask_restful.Resource):
 class ASpecies(flask_restful.Resource):
     def get(self, taxon_order: int):
         species = perchai_service.species.get_species_by_taxon_order(taxon_order)
+
+        if species is None:
+            raise errors.ResourceNotFoundError(model.Species.__name__)
+
         return species.to_dict()

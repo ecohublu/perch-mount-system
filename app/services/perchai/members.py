@@ -12,7 +12,7 @@ def get_members() -> list[model.Members]:
     return members
 
 
-def get_member_by_id(member_id: uuid.UUID):
+def get_member_by_id(member_id: uuid.UUID) -> model.Members | None:
     with perchai.session.begin() as session:
         member = (
             session.query(model.Members)
@@ -28,7 +28,7 @@ def add_member(
     first_name: str,
     last_name: str,
     position: enums.Positions,
-) -> int:
+) -> uuid.UUID:
     project_id = uuid.UUID(project_id)
 
     new_member = model.Members(
@@ -36,7 +36,7 @@ def add_member(
         user_name=user_name,
         first_name=first_name,
         last_name=last_name,
-        position=position
+        position=position,
     )
     with perchai.session.begin() as session:
         session.add(new_member)

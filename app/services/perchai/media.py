@@ -18,8 +18,7 @@ def get_media_by_filter(filter: services_utils.MediaFilter) -> list[model.Media]
     return media
 
 
-def get_medium_by_id(medium_id: str) -> model.Media:
-    medium_id = uuid.UUID(medium_id)
+def get_medium_by_id(medium_id: uuid.UUID) -> model.Media | None:
     with perchai.session.begin() as session:
         query = session.query(model.Media).filter(model.Media.id == medium_id)
         medium = query.one_or_none()

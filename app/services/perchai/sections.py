@@ -15,7 +15,7 @@ def get_sections(filter: services_utils.SectionFilter) -> list[model.Sections]:
     return sections
 
 
-def get_section_by_id(section_id: uuid.UUID) -> model.Sections:
+def get_section_by_id(section_id: uuid.UUID) -> model.Sections | None:
     with perchai.session.begin() as session:
         section = (
             session.query(model.Sections).filter(model.Sections.id == section_id).one()

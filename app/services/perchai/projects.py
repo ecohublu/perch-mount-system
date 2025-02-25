@@ -18,7 +18,7 @@ def get_projects_by_ids(ids: list[str]) -> list[model.Projects]:
     return projects
 
 
-def get_project_by_id(project_id: str) -> model.Projects:
+def get_project_by_id(project_id: str) -> model.Projects | None:
     project_id = uuid.UUID(project_id)
     with perchai.session.begin() as session:
         project = (

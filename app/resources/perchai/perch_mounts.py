@@ -4,6 +4,8 @@ import uuid
 from app.services import perchai as perchai_service
 import app.resources.perchai.string_query_converters as sq_converters
 import app.resources.utils as res_utils
+from app.error_handler import errors
+from app import model
 
 
 class PerchMounts(flask_restful.Resource):
@@ -17,4 +19,8 @@ class PerchMounts(flask_restful.Resource):
 class PerchMount(flask_restful.Resource):
     def get(self, perch_mount_id: uuid.UUID):
         perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+
+        if perch_mount is None:
+            raise errors.ResourceNotFoundError(model.PerchMounts.__name__)
+
         return perch_mount.to_dict()
