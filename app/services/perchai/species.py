@@ -1,5 +1,5 @@
 from app.services import perchai
-from app.services.perchai.utils import query_filter, query_modifier
+import app.services.perchai.utils as services_utils
 from app import model
 
 
@@ -10,8 +10,8 @@ def get_species() -> list[model.Species]:
     return species_list
 
 
-def get_species_by_filter(filter: query_filter.SpeciesFilter) -> list[model.Species]:
-    modifier = query_modifier.SpeciesQueryModifier(filter)
+def get_species_by_filter(filter: services_utils.SpeciesFilter) -> list[model.Species]:
+    modifier = services_utils.SpeciesQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.Species)
         query = modifier.filter_query(query)

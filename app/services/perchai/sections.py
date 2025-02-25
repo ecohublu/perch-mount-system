@@ -2,12 +2,12 @@ from datetime import date, datetime
 import uuid
 
 from app.services import perchai
-from app.services.perchai.utils import query_filter, query_modifier
+import app.services.perchai.utils as services_utils
 from app import model
 
 
-def get_sections(filter: query_filter.SectionFilter) -> list[model.Sections]:
-    modifier = query_modifier.SectionQueryModifier(filter)
+def get_sections(filter: services_utils.SectionFilter) -> list[model.Sections]:
+    modifier = services_utils.SectionQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.Sections)
         query = modifier.filter_query(query)

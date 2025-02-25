@@ -2,12 +2,12 @@ import uuid
 from sqlalchemy.orm.session import Session
 
 from app.services import perchai
-from app.services.perchai.utils import query_filter, query_modifier, media_operator
+import app.services.perchai.utils as services_utils
 from app import model
 
 
-def get_media(filter: query_filter.MediaFilter) -> list[model.Media]:
-    modifier = query_modifier.MediaQueryModifier(filter)
+def get_media(filter: services_utils.MediaFilter) -> list[model.Media]:
+    modifier = services_utils.MediaQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.Media)
         query = modifier.options(query)
@@ -30,7 +30,7 @@ def get_medium_by_id(medium_id: str) -> model.Media:
 def add_uploaded_media(
     uploaded_media: list[dict],
 ):
-    media = [media_operator.UploadedMedia(**medium) for medium in uploaded_media]
+    media = [services_utils.UploadedMedia(**medium) for medium in uploaded_media]
     model_media = [
         model.Media(
             section_id=medium.section_id,
@@ -58,7 +58,7 @@ def add_uploaded_media(
 def add_detected_media(
     detected_media: list[dict],
 ):
-    media = [media_operator.DetectedMedia(**medium) for medium in detected_media]
+    media = [services_utils.DetectedMedia(**medium) for medium in detected_media]
     detected_contents = [
         model.MediaDetectedContents(medium_id=medium.id) for medium in media
     ]
@@ -99,7 +99,7 @@ def add_detected_media(
 
 
 def add_checked_media(checked_media: list[dict]):
-    media = [media_operator.CheckedMedia(**medium) for medium in checked_media]
+    media = [services_utils.CheckedMedia(**medium) for medium in checked_media]
     unreviewed_media = [
         model.UnreviewedMediaContents(medium_id=medium.id)
         for medium in media.media_to_unreviewed
@@ -118,7 +118,7 @@ def add_checked_media(checked_media: list[dict]):
 
 
 def add_reviewed_media(reviewed_media: list[dict]):
-    media = [media_operator.ReviewedMedia(**medium) for medium in reviewed_media]
+    media = [services_utils.ReviewedMedia(**medium) for medium in reviewed_media]
     accidental_media = [
         model.AccidentalMediaContents(medium_id=medium.id)
         for medium in media.media_to_accidenal
@@ -150,14 +150,14 @@ def add_reviewed_media(reviewed_media: list[dict]):
 
 def _add_reviewed_new_individuals(
     session: Session,
-    media: media_operator.ReviewedMedia,
+    media: services_utils.ReviewedMedia,
 ):
     new_individuals = []
     new_reviewed_individuals = []
     new_marked_prey_individuals = []
     new_tagged_individuals = []
     for medium in media:
-        medium: media_operator.ReviewedMedium = medium
+        medium: services_utils.ReviewedMedium = medium
         for individual in medium.individuals:
             if not individual.is_ai_detected:
                 continue
@@ -200,14 +200,14 @@ def _add_reviewed_new_individuals(
 
 def _add_reviewed_insist_individuals(
     session: Session,
-    media: media_operator.ReviewedMedia,
+    media: services_utils.ReviewedMedia,
 ):
     individuals = []
     reviewed_individuals = []
     marked_prey_individuals = []
     tagged_individuals = []
     for medium in media:
-        medium: media_operator.ReviewedMedium = medium
+        medium: services_utils.ReviewedMedium = medium
         for individual in medium.individuals:
             if individual.is_ai_detected:
                 individuals.append(
