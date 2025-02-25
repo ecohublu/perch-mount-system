@@ -55,4 +55,24 @@ ROUTES = [
             )
         ],
     ),
+    Route(
+        route="projects",
+        resources=[perchai.Projects],
+    ),
+    Route(
+        route="cameras",
+        resources=[perchai.Cameras],
+    ),
+    Route(
+        route="event",
+        resources=[perchai.Event],
+    ),
+    Route(
+        route="mount_types",
+        resources=[perchai.MountTypes],
+    ),
+    Route(
+        route="behaviors",
+        resources=[perchai.Behaviors],
+    ),
 ]
