@@ -13,6 +13,7 @@ from app.services.perchai import (
     projects,
     sections,
     species,
+    members
 )
 
 

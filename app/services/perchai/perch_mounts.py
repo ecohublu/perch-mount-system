@@ -17,8 +17,7 @@ def get_perch_mounts_by_filter(
     return perch_mounts
 
 
-def get_perch_mount_by_id(perch_mount_id: str):
-    perch_mount_id = uuid.UUID(perch_mount_id)
+def get_perch_mount_by_id(perch_mount_id: uuid.UUID):
     with perchai.session.begin() as session:
         perch_mount = (
             session.query(model.PerchMounts)

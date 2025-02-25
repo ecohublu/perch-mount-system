@@ -6,7 +6,7 @@ import app.services.perchai.utils as services_utils
 from app import model
 
 
-def get_media(filter: services_utils.MediaFilter) -> list[model.Media]:
+def get_media_by_filter(filter: services_utils.MediaFilter) -> list[model.Media]:
     modifier = services_utils.MediaQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.Media)

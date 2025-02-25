@@ -27,13 +27,20 @@ class RouteVar:
 taxon_order = RouteVar(name="taxon_order", type_="int")
 section_id = RouteVar(name="section_id", type_="uuid")
 perch_mount_id = RouteVar(name="perch_mount_id", type_="uuid")
-
+member_id = RouteVar(name="member_id", type_="uuid")
+medium_id = RouteVar(name="medium_id", type_="uuid")
+individual_id = RouteVar(name="individual_id", type_="uuid")
 
 ROUTES = [
     Route(
-        route="species",
-        resources=[perchai.Species],
-        children=[Route(route=taxon_order.param, resources=[perchai.ASpecies])],
+        route="perch_mounts",
+        resources=[perchai.PerchMounts],
+        children=[
+            Route(
+                route=perch_mount_id.param,
+                resources=[perchai.PerchMount],
+            )
+        ],
     ),
     Route(
         route="sections",
@@ -46,14 +53,24 @@ ROUTES = [
         ],
     ),
     Route(
-        route="perch_mounts",
-        resources=[perchai.PerchMounts],
+        route="media",
+        resources=[perchai.Media],
         children=[
             Route(
-                route=perch_mount_id.param,
-                resources=[perchai.PerchMount],
+                route=medium_id.param,
+                resources=[perchai.Medium]
             )
-        ],
+        ]
+    ),
+    Route(
+        route="individuals",
+        resources=[],
+        children=[
+            Route(
+                route=individual_id.param,
+                resources=[perchai.Individual]
+            )
+        ]
     ),
     Route(
         route="projects",
@@ -75,4 +92,15 @@ ROUTES = [
         route="behaviors",
         resources=[perchai.Behaviors],
     ),
+    Route(
+        route="members",
+        resources=[perchai.Members],
+        children=[
+            Route(
+                route=member_id.param,
+                resources=[perchai.Member]
+            )
+        ]
+    ),
+
 ]

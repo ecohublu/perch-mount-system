@@ -1,0 +1,1 @@
+from app.error_handler.handlers import blueprint
