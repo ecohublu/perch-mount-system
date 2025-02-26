@@ -2,7 +2,7 @@ import flask_restful
 import uuid
 
 from app.services import perchai as perchai_service
-import app.resources.perchai.string_query_converters as sq_converters
+import app.resources.perchai.string_query_funcs as sq_converters
 import app.resources.utils as res_utils
 from app.error_handler import errors
 from app import model
@@ -15,6 +15,8 @@ class Sections(flask_restful.Resource):
         sections = perchai_service.sections.get_sections_by_filter(filter)
         return [section.to_dict() for section in sections]
 
+    def post(self):
+        return
 
 class Section(flask_restful.Resource):
     def get(self, section_id: uuid.UUID):
