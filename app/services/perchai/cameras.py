@@ -10,8 +10,7 @@ def get_cameras() -> list[model.Cameras]:
     return cameras
 
 
-def get_camera_by_id(camera_id: str) -> model.Cameras | None:
-    camera_id = uuid.UUID(camera_id)
+def get_camera_by_id(camera_id: uuid.UUID) -> model.Cameras | None:
     with perchai.session.begin() as session:
         camera = (
             session.query(model.Cameras).filter(model.Cameras.id == camera_id).first()

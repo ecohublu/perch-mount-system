@@ -9,19 +9,17 @@ def get_mount_types() -> list[model.MountTypes]:
     return mount_types
 
 
-def get_mount_type_by_id(mount_type_id: str) -> model.MountTypes | None:
-    mount_type_id = uuid.UUID(mount_type_id)
+def get_mount_type_by_id(mount_type_id: uuid.UUID) -> model.MountTypes | None:
     with perchai.session.begin() as session:
         mount_type = (
             session.query(model.MountTypes)
             .filter(model.MountTypes.id == mount_type_id)
-            .first()
+            .one_or_none()
         )
     return mount_type
 
 
-def get_mount_types_by_ids(ids: list[str]) -> list[model.MountTypes]:
-    ids = list(map(uuid.UUID, ids))
+def get_mount_types_by_ids(ids: list[uuid.UUID]) -> list[model.MountTypes]:
     with perchai.session.begin() as session:
         mount_types = (
             session.query(model.MountTypes).filter(model.MountTypes.id.in_(ids)).all()
@@ -29,7 +27,7 @@ def get_mount_types_by_ids(ids: list[str]) -> list[model.MountTypes]:
     return mount_types
 
 
-def add_mount_types(name: str) -> str:
+def add_mount_types(name: str) -> uuid.UUID:
     new_mount_type = model.MountTypes(name=name)
     with perchai.session.begin() as session:
         session.add(new_mount_type)

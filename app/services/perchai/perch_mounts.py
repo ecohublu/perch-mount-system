@@ -31,12 +31,11 @@ def add_perch_mount(
     perch_mount_name: str,
     latitude: float,
     longitude: float,
-    project_id: str,
+    project_id: uuid.UUID,
     habitat: str | enums.Habitats,
     mount_layer: str | enums.MountLayers,
     note: str = None,
 ) -> int:
-    project_id = uuid.UUID(project_id)
 
     new_perch_mount = model.PerchMounts(
         perch_mount_name=perch_mount_name,
@@ -54,8 +53,7 @@ def add_perch_mount(
     return new_id
 
 
-def update_perch_mount(perch_mount_id: str, arg: dict):
-    perch_mount_id = uuid.UUID(perch_mount_id)
+def update_perch_mount(perch_mount_id: uuid.UUID, arg: dict):
     with perchai.session.begin() as session:
         session.query(model.PerchMounts).filter(
             model.PerchMounts.id == perch_mount_id

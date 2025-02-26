@@ -29,7 +29,6 @@ def add_member(
     last_name: str,
     position: enums.Positions,
 ) -> uuid.UUID:
-    project_id = uuid.UUID(project_id)
 
     new_member = model.Members(
         gmail=gmail,

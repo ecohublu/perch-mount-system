@@ -9,10 +9,9 @@ def get_events() -> list[model.Events]:
     return events
 
 
-def get_event_by_id(event_id: str) -> model.Events | None:
-    event_id = uuid.UUID(event_id)
+def get_event_by_id(event_id: uuid.UUID) -> model.Events | None:
     with perchai.session.begin() as session:
-        event = session.query(model.Events).filter(model.Events.id == event_id).one()
+        event = session.query(model.Events).filter(model.Events.id == event_id).one_or_none()
     return event
 
 

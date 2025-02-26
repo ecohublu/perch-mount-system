@@ -12,7 +12,7 @@ class Sections(flask_restful.Resource):
     @res_utils.parse_args(sq_converters.section)
     def get(self, parsed_args):
         filter = perchai_service.utils.query_filter.SectionFilter(**parsed_args)
-        sections = perchai_service.sections.get_sections(filter)
+        sections = perchai_service.sections.get_sections_by_filter(filter)
         return [section.to_dict() for section in sections]
 
 

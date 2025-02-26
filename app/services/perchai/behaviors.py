@@ -9,8 +9,7 @@ def get_behaviors() -> list[model.Behaviors]:
     return behaviors
 
 
-def get_behavior_by_id(behavior_id: str) -> model.Behaviors | None:
-    behavior_id = uuid.UUID(behavior_id)
+def get_behavior_by_id(behavior_id: uuid.UUID) -> model.Behaviors | None:
     with perchai.session.begin() as session:
         behavior = (
             session.query(model.Behaviors)
