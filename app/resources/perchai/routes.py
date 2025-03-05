@@ -55,22 +55,12 @@ ROUTES = [
     Route(
         route="media",
         resources=[perchai.Media],
-        children=[
-            Route(
-                route=medium_id.param,
-                resources=[perchai.Medium]
-            )
-        ]
+        children=[Route(route=medium_id.param, resources=[perchai.Medium])],
     ),
     Route(
         route="individuals",
         resources=[],
-        children=[
-            Route(
-                route=individual_id.param,
-                resources=[perchai.Individual]
-            )
-        ]
+        children=[Route(route=individual_id.param, resources=[perchai.Individual])],
     ),
     Route(
         route="projects",
@@ -82,7 +72,7 @@ ROUTES = [
     ),
     Route(
         route="event",
-        resources=[perchai.Event],
+        resources=[perchai.Events],
     ),
     Route(
         route="mount_types",
@@ -95,22 +85,11 @@ ROUTES = [
     Route(
         route="members",
         resources=[perchai.Members],
-        children=[
-            Route(
-                route=member_id.param,
-                resources=[perchai.Member]
-            )
-        ]
+        children=[Route(route=member_id.param, resources=[perchai.Member])],
     ),
     Route(
         route="species",
         resources=[perchai.Species],
-        children=[
-            Route(
-                route=taxon_order.param,
-                resources=[perchai.ASpecies]
-            )
-        ]
-    )
-
+        children=[Route(route=taxon_order.param, resources=[perchai.ASpecies])],
+    ),
 ]

@@ -15,7 +15,7 @@ class Cameras(flask_restx.Resource):
         return [camera.to_dict() for camera in cameras]
 
 
-class Event(flask_restx.Resource):
+class Events(flask_restx.Resource):
     def get(self):
         events = perchai_service.events.get_events()
         return [event.to_dict() for event in events]

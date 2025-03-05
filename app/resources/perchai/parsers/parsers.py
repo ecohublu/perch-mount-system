@@ -60,3 +60,28 @@ class Media(parser.Parser):
         "taxon_orders_by_human", type=type_funcs.int_split, location="args"
     )
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")
+
+
+class Projects(parser.Parser):
+    post = reqparse.RequestParser()
+    post.add_argument("name", required=True, type=str)
+
+
+class Cameras(parser.Parser):
+    post = reqparse.RequestParser()
+    post.add_argument("name", required=True, type=str)
+
+
+class Events(parser.Parser):
+    post = reqparse.RequestParser()
+    post.add_argument("name", required=True, type=str)
+
+
+class MountTypes(parser.Parser):
+    post = reqparse.RequestParser()
+    post.add_argument("name", required=True, type=str)
+
+
+class Behaviors(parser.Parser):
+    post = reqparse.RequestParser()
+    post.add_argument("name", required=True, type=str)
