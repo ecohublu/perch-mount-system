@@ -3,6 +3,7 @@ import uuid
 
 from app.services import perchai as perchai_service
 from app.resources.perchai import parsers
+import app.resources.perchai.utils as perchai_utils
 import app.resources.utils as resource_utils
 from app.error_handler import errors
 from app import model
@@ -18,7 +19,7 @@ class PerchMounts(flask_restx.Resource):
     @resource_utils.parse_args(parsers.PerchMounts.post)
     def post(self, parsed_args):
         new_perch_mount_id = perchai_service.perch_mounts.add_perch_mount(**parsed_args)
-        return {"prech_mount_id": str(new_perch_mount_id)}
+        return perchai_utils.id_json(new_perch_mount_id)
 
 
 class PerchMount(flask_restx.Resource):
