@@ -1,11 +1,15 @@
-
 from typing import List
 from collections import defaultdict
-import flask_restful
+import flask_restx
 
 
 class Route:
-    def __init__(self, route: str,resources: List[flask_restful.Resource], children: List["Route"] = []):
+    def __init__(
+        self,
+        route: str,
+        resources: List[flask_restx.Resource],
+        children: List["Route"] = [],
+    ):
         self.route = route
         self.resources = resources
         self.children = children
@@ -17,7 +21,7 @@ class Routes:
     def __init__(self, routes: list[Route]):
         self.routes = routes
 
-    def init_api(self, api: flask_restful.Api):
+    def init_api(self, api: flask_restx.Api):
         self._route_map.clear()
         self._find_route_map(self.routes)
         self._add_resources(api, self._route_map)
@@ -33,7 +37,6 @@ class Routes:
 
             self._find_route_map(route.children, parent=endpoint)
 
-    def _add_resources(self, api: flask_restful.Api, route_map: dict):
+    def _add_resources(self, api: flask_restx.Api, route_map: dict):
         for resource, endpoints in route_map.items():
             api.add_resource(resource, *endpoints)
-

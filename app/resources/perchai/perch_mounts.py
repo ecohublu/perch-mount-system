@@ -1,22 +1,22 @@
-import flask_restful
+import flask_restx
 import uuid
 
 from app.services import perchai as perchai_service
-import app.resources.perchai.string_query_funcs as sq_converters
-import app.resources.utils as res_utils
+from app.resources.perchai import parsers
+import app.resources.utils as resource_utils
 from app.error_handler import errors
 from app import model
 
 
-class PerchMounts(flask_restful.Resource):
-    @res_utils.parse_args(sq_converters.perch_mount)
+class PerchMounts(flask_restx.Resource):
+    @resource_utils.parse_args(parsers.PerchMounts.get)
     def get(self, parsed_args):
         filter = perchai_service.utils.query_filter.PerchMountFilter(**parsed_args)
         perch_mounts = perchai_service.perch_mounts.get_perch_mounts_by_filter(filter)
         return [perch_mount.to_dict() for perch_mount in perch_mounts]
 
 
-class PerchMount(flask_restful.Resource):
+class PerchMount(flask_restx.Resource):
     def get(self, perch_mount_id: uuid.UUID):
         perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
 

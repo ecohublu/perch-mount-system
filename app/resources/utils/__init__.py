@@ -1,1 +1,1 @@
-from app.resources.utils.query_string_parser import parse_args, StringQueryTypeCoverter
+from app.resources.utils.parser import parse_args

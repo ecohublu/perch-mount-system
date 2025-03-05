@@ -1,4 +1,4 @@
-import flask_restful
+import flask_restx
 from app import resources
 
 from app.resources.perchai.species import *
@@ -11,6 +11,6 @@ from app.resources.perchai.individuals import *
 from app.resources.perchai.routes import ROUTES
 
 
-api = flask_restful.Api()
+api = flask_restx.Api()
 routes = resources.Routes(ROUTES)
 routes.init_api(api)

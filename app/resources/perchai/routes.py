@@ -102,5 +102,9 @@ ROUTES = [
             )
         ]
     ),
+    Route(
+        route="species",
+        resources=[perchai.Species]
+    )
 
 ]
