@@ -1,7 +1,10 @@
 import flask_restx
 import uuid
 
-from app.services import perchai as perchai_service
+from app.resources.perchai import parsers
+import app.services.perchai as perchai_service
+import app.resources.perchai.utils as perchai_utils
+import app.resources.utils as resource_utils
 from app.error_handler import errors
 from app import model
 
@@ -10,6 +13,11 @@ class Members(flask_restx.Resource):
     def get(self):
         members = perchai_service.members.get_members()
         return [member.to_dict() for member in members]
+
+    @resource_utils.parse_args(parsers.Members.post)
+    def post(self, parsed_args):
+        new_member_id = perchai_service.members.add_member(**parsed_args)
+        return perchai_utils.id_json(new_member_id)
 
 
 class Member(flask_restx.Resource):

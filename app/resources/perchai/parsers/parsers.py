@@ -62,6 +62,15 @@ class Media(parser.Parser):
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")
 
 
+class Members(parser.Parser):
+    post = reqparse.RequestParser()
+    post.add_argument("gmail", required=True, type=type_funcs.email)
+    post.add_argument("user_name", required=True, type=str)
+    post.add_argument("first_name", required=True, type=str)
+    post.add_argument("last_name", required=True, type=str)
+    post.add_argument("position", required=True, type=str)
+
+
 class Projects(parser.Parser):
     post = reqparse.RequestParser()
     post.add_argument("name", required=True, type=str)
