@@ -104,7 +104,13 @@ ROUTES = [
     ),
     Route(
         route="species",
-        resources=[perchai.Species]
+        resources=[perchai.Species],
+        children=[
+            Route(
+                route=taxon_order.param,
+                resources=[perchai.ASpecies]
+            )
+        ]
     )
 
 ]
