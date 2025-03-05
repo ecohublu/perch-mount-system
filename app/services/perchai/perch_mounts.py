@@ -35,15 +35,15 @@ def add_perch_mount(
     habitat: str | enums.Habitats,
     mount_layer: str | enums.MountLayers,
     note: str = None,
-) -> int:
+) -> uuid.UUID:
 
     new_perch_mount = model.PerchMounts(
         perch_mount_name=perch_mount_name,
         latitude=latitude,
         longitude=longitude,
-        habitat=habitat,
+        habitat=habitat.upper(),
         project_id=project_id,
-        mount_layer=mount_layer,
+        mount_layer=mount_layer.upper(),
         note=note,
     )
     with perchai.session.begin() as session:

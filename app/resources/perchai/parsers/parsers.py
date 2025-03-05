@@ -2,6 +2,7 @@ from app.resources.utils import type_funcs
 from app.resources.utils import parser
 from datetime import datetime
 from flask_restx import reqparse
+import uuid
 
 
 class Species(parser.Parser):
@@ -16,6 +17,7 @@ class Species(parser.Parser):
     get.add_argument("orders", type=type_funcs.str_split, location="args")
     get.add_argument("families", type=type_funcs.str_split, location="args")
     get.add_argument("codes", type=type_funcs.str_split, location="args")
+
 
 class Sections(parser.Parser):
     get = reqparse.RequestParser()
@@ -32,6 +34,15 @@ class PerchMounts(parser.Parser):
     get.add_argument("habitats", type=type_funcs.str_split, location="args")
     get.add_argument("terminated", type=type_funcs.bool_, location="args")
 
+    post = reqparse.RequestParser()
+    post.add_argument("perch_mount_name", required=True, type=str)
+    post.add_argument("longitude", required=True, type=float)
+    post.add_argument("latitude", required=True, type=float)
+    post.add_argument("habitat", required=True, type=str)
+    post.add_argument("project_id", required=True, type=uuid.UUID)
+    post.add_argument("mount_layer", required=True, type=str)
+    post.add_argument("note", type=str)
+
 
 class Media(parser.Parser):
     get = reqparse.RequestParser()
@@ -42,6 +53,10 @@ class Media(parser.Parser):
     get.add_argument("ring_number_search", type=str, location="args")
     get.add_argument("prey_status", type=str, location="args")
     get.add_argument("has_prey", type=str, location="args")
-    get.add_argument("prey_inaturalist_taxa_ids", type=type_funcs.int_split, location="args")
-    get.add_argument("taxon_orders_by_human", type=type_funcs.int_split, location="args")
+    get.add_argument(
+        "prey_inaturalist_taxa_ids", type=type_funcs.int_split, location="args"
+    )
+    get.add_argument(
+        "taxon_orders_by_human", type=type_funcs.int_split, location="args"
+    )
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")

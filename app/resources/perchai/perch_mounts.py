@@ -15,6 +15,11 @@ class PerchMounts(flask_restx.Resource):
         perch_mounts = perchai_service.perch_mounts.get_perch_mounts_by_filter(filter)
         return [perch_mount.to_dict() for perch_mount in perch_mounts]
 
+    @resource_utils.parse_args(parsers.PerchMounts.post)
+    def post(self, parsed_args):
+        new_perch_mount_id = perchai_service.perch_mounts.add_perch_mount(**parsed_args)
+        return {"prech_mount_id": str(new_perch_mount_id)}
+
 
 class PerchMount(flask_restx.Resource):
     def get(self, perch_mount_id: uuid.UUID):
