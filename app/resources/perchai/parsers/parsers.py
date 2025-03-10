@@ -1,6 +1,6 @@
 from app.resources.utils import type_funcs
 from app.resources.utils import parser
-from datetime import datetime
+from datetime import datetime, date
 from flask_restx import reqparse
 import uuid
 
@@ -26,6 +26,15 @@ class Sections(parser.Parser):
     get.add_argument("swapped_date_to", type=datetime.fromisoformat, location="args")
     get.add_argument("swapper_ids", type=type_funcs.str_split, location="args")
 
+    post = reqparse.RequestParser()
+    post.add_argument("perch_mount_id", required=True, type=uuid.UUID)
+    post.add_argument("mount_type_id", required=True, type=uuid.UUID)
+    post.add_argument("camera_id", required=True, type=uuid.UUID)
+    post.add_argument("swapped_date", required=True, type=date.fromisoformat)
+    post.add_argument("start_time", required=True, type=datetime.fromisoformat)
+    post.add_argument("end_time", required=True, type=datetime.fromisoformat)
+    post.add_argument("valid", type=type_funcs.bool_)
+    post.add_argument("note", type=str)
 
 class PerchMounts(parser.Parser):
     get = reqparse.RequestParser()
@@ -60,6 +69,8 @@ class Media(parser.Parser):
         "taxon_orders_by_human", type=type_funcs.int_split, location="args"
     )
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")
+
+
 
 
 class Members(parser.Parser):
