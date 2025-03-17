@@ -62,14 +62,10 @@ class ReviewedIndividual:
 class UploadedMedium:
     def __init__(
         self,
-        id_: str,
-        section_id: str,
         medium_datetime: str,
         medium_type: enums.MediaTypes,
         nas_path: str,
     ):
-        self.id = uuid.UUID(id_)
-        self.section_id = uuid.UUID(section_id)
         self.medium_datetime = datetime.fromisoformat(medium_datetime)
         self.medium_type = medium_type
         self.nas_path = nas_path
@@ -108,12 +104,12 @@ class CheckedMedium:
         self,
         id_: str,
         empty_cheked_at: str,
-        empty_checked_id: str,
+        empty_checker_id: str,
         has_individual: bool,
     ):
         self.id: uuid.UUID = uuid.UUID(id_)
         self.empty_checked_at: datetime = datetime.fromisoformat(empty_cheked_at)
-        self.empty_checker_id: uuid.UUID = uuid.UUID(empty_checked_id)
+        self.empty_checker_id: uuid.UUID = uuid.UUID(empty_checker_id)
         self.has_individual: bool = has_individual
 
     @property

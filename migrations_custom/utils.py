@@ -62,7 +62,7 @@ def upgrade_ext():
 
     op.execute(
         """
-        SELECT cron.schedule('refresh_section_counts_job', '0 22 * * *', 'CALL refresh_section_counts()');
+        SELECT cron.schedule('refresh_section_counts_job', '0 22 * * *', $$CALL refresh_section_counts();$$);
         """
     )
 

@@ -4,6 +4,7 @@ import uuid
 from app.services import perchai as perchai_service
 from app.resources.perchai import parsers
 import app.resources.utils as resource_utils
+import app.resources.perchai.utils as perchai_utils
 from app.error_handler import errors
 from app import model
 
@@ -15,8 +16,10 @@ class Sections(flask_restx.Resource):
         sections = perchai_service.sections.get_sections_by_filter(filter)
         return [section.to_dict() for section in sections]
 
-    def post(self):
-        return
+    @resource_utils.parse_args(parsers.Sections.post)
+    def post(self, parsed_args):
+        new_section_id = perchai_service.sections.add_section(**parsed_args)
+        return perchai_utils.id_json(new_section_id)
 
 
 class Section(flask_restx.Resource):

@@ -1,3 +1,4 @@
+from datetime import date, datetime
 import uuid
 from sqlalchemy.orm.session import Session
 
@@ -7,31 +8,51 @@ from app import model
 
 
 def add_uploaded_media(
-    uploaded_media: list[dict],
+    perch_mount_id: uuid.UUID,
+    mount_type_id: uuid.UUID,
+    camera_id: uuid.UUID,
+    start_time: datetime,
+    end_time: datetime,
+    swapped_date: date,
+    swapper_ids: list[uuid.UUID],
+    valid: bool,
+    media: list[dict],
+    note: str | None = None,
 ):
-    uploaded_media = [services_utils.UploadedMedia(**medium) for medium in uploaded_media]
-    model_media = [
-        model.Media(
-            section_id=medium.section_id,
-            medium_datetime=medium.medium_datetime,
-            medium_type=medium.medium_type,
-            nas_path=medium.nas_path,
-        )
-        for medium in uploaded_media
-    ]
+    section = model.Sections(
+        perch_mount_id=perch_mount_id,
+        mount_type_id=mount_type_id,
+        camera_id=camera_id,
+        start_time=start_time,
+        end_time=end_time,
+        swapped_date=swapped_date,
+        valid=valid,
+        note=note,
+    )
+
+    model_media = [model.Media(**medium) for medium in media]
     with perchai.session.begin() as session:
         try:
-            session.add_all(model_media)
+            session.add(section)
             session.flush()
-            undetected_contents = [
-                model.UndetectedMediaContents(medium_id=medium.id)
-                for medium in model_media
-            ]
-            session.add_all(undetected_contents)
+            _find_media_section_id(model_media, section.id)
+
+            for swapper_id in swapper_ids:
+                stat = model.sections_swappers.insert().values(
+                    section_id=section.id, swapper_id=swapper_id
+                )
+                session.execute(stat)
+
+            session.add_all(model_media)
             session.commit()
         except:
             session.rollback()
     return
+
+
+def _find_media_section_id(media: list[model.Media], section_id: uuid.UUID):
+    for medium in media:
+        medium.section_id = section_id
 
 
 def add_detected_media(

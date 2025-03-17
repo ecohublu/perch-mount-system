@@ -36,6 +36,7 @@ class Sections(parser.Parser):
     post.add_argument("valid", type=type_funcs.bool_)
     post.add_argument("note", type=str)
 
+
 class PerchMounts(parser.Parser):
     get = reqparse.RequestParser()
     get.add_argument("project_ids", type=type_funcs.uuid_split, location="args")
@@ -69,8 +70,6 @@ class Media(parser.Parser):
         "taxon_orders_by_human", type=type_funcs.int_split, location="args"
     )
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")
-
-
 
 
 class Members(parser.Parser):

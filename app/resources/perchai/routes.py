@@ -92,4 +92,20 @@ ROUTES = [
         resources=[perchai.Species],
         children=[Route(route=taxon_order.param, resources=[perchai.ASpecies])],
     ),
+    Route(
+        route="uploaded_media",
+        resources=[perchai.UploadedMedia],
+    ),
+    Route(
+        route="detected_media",
+        resources=[perchai.DetectedMedia],
+    ),
+    Route(
+        route="checked_media",
+        resources=[perchai.CheckedMedia],
+    ),
+    Route(
+        route="reviewed_media",
+        resources=[perchai.ReviewedMedia],
+    ),
 ]
