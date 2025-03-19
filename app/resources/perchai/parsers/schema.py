@@ -10,7 +10,7 @@ class DetectedIndividualSchema(marshmallow.Schema):
 
 
 class ReviewedIndividualSchema(marshmallow.Schema):
-    id = marshmallow.fields.UUID(required=True)
+    id = marshmallow.fields.UUID()
     taxon_order_by_human = marshmallow.fields.Integer(required=True)
     box_xmin = marshmallow.fields.Float()
     box_xmax = marshmallow.fields.Float()
@@ -64,6 +64,7 @@ class CheckedMediumSchema(MediumSchema):
 
 
 class ReviewedMediumSchema(MediumSchema):
+    id = marshmallow.fields.UUID(required=True)
     reviewed_at = marshmallow.fields.DateTime(format="iso", required=True)
     reviewer_id = marshmallow.fields.UUID(required=True)
     featured_by_id = marshmallow.fields.UUID()

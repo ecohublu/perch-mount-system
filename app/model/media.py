@@ -39,22 +39,22 @@ class Media(extensions.db.Model, SerializerMixin):
         default="UNDETECTED",
         server_default="UNDETECTED",
     )
-    individuals = sqlalchemy.orm.relationship("Individuals", lazy="immediate")
+    individuals = sqlalchemy.orm.relationship("Individuals", lazy="selectin")
 
     unchecked_contents = sqlalchemy.orm.relationship(
-        "UncheckedMediaContents", uselist=False, lazy="immediate"
+        "UncheckedMediaContents", uselist=False, lazy="selectin"
     )
     detected_contents = sqlalchemy.orm.relationship(
-        "MediaDetectedContents", uselist=False, lazy="immediate"
+        "MediaDetectedContents", uselist=False, lazy="selectin"
     )
     checked_contents = sqlalchemy.orm.relationship(
-        "MediaCheckedContents", uselist=False, lazy="immediate"
+        "MediaCheckedContents", uselist=False, lazy="selectin"
     )
     unreviewued_contents = sqlalchemy.orm.relationship(
-        "UnreviewedMediaContents", uselist=False, lazy="immediate"
+        "UnreviewedMediaContents", uselist=False, lazy="selectin"
     )
     reviewed_contents = sqlalchemy.orm.relationship(
-        "ReviewedMediaContents", uselist=False, lazy="immediate"
+        "ReviewedMediaContents", uselist=False, lazy="selectin"
     )
 
 
@@ -145,8 +145,8 @@ class ReviewedMediaContents(extensions.db.Model, SerializerMixin):
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.BEHAVIORS_ID),
     )
-    behavior = sqlalchemy.orm.relationship("Behaviors", lazy="immediate")
-    event = sqlalchemy.orm.relationship("Events", lazy="immediate")
+    behavior = sqlalchemy.orm.relationship("Behaviors", lazy="selectin")
+    event = sqlalchemy.orm.relationship("Events", lazy="selectin")
 
 
 class AccidentalMediaContents(extensions.db.Model, SerializerMixin):

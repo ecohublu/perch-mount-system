@@ -56,5 +56,5 @@ class PerchMounts(extensions.db.Model, SerializerMixin):
     )
     note = extensions.db.Column(sqlalchemy.Text)
 
-    claimer = sqlalchemy.orm.relationship("Members", lazy="immediate")
-    project = sqlalchemy.orm.relationship("Projects", lazy="immediate")
+    claimer = sqlalchemy.orm.relationship("Members", lazy="selectin")
+    project = sqlalchemy.orm.relationship("Projects", lazy="selectin")

@@ -33,27 +33,27 @@ class Individuals(extensions.db.Model, SerializerMixin):
     unreviewed_contents = sqlalchemy.orm.relationship(
         "UnreviewedIndividualsContents",
         uselist=False,
-        lazy="immediate",
+        lazy="selectin",
     )
     reviewed_contents = sqlalchemy.orm.relationship(
         "ReviewedIndividualsContents",
         uselist=False,
-        lazy="immediate",
+        lazy="selectin",
     )
     marked_prey_contents = sqlalchemy.orm.relationship(
         "MarkedPreyIndividualsContents",
         uselist=False,
-        lazy="immediate",
+        lazy="selectin",
     )
     identified_prey_contents = sqlalchemy.orm.relationship(
         "IdentifiedPreyIndividualsContents",
         uselist=False,
-        lazy="immediate",
+        lazy="selectin",
     )
     tagged_contents = sqlalchemy.orm.relationship(
         "TaggedIndividualsContents",
         uselist=False,
-        lazy="immediate",
+        lazy="selectin",
     )
 
 
@@ -81,7 +81,7 @@ class UnreviewedIndividualsContents(extensions.db.Model, SerializerMixin):
         "box_ymin >= 0 AND box_ymin <= 1",
         "box_ymax >= 0 AND box_ymax <= 1",
     )
-    species_by_ai = sqlalchemy.orm.relationship("Species", lazy="immediate")
+    species_by_ai = sqlalchemy.orm.relationship("Species", lazy="selectin")
 
 
 class ReviewedIndividualsContents(extensions.db.Model, SerializerMixin):
@@ -109,7 +109,7 @@ class ReviewedIndividualsContents(extensions.db.Model, SerializerMixin):
         "box_ymax >= 0 AND box_ymax <= 1",
     )
 
-    species_by_human = sqlalchemy.orm.relationship("Species", lazy="immediate")
+    species_by_human = sqlalchemy.orm.relationship("Species", lazy="selectin")
 
 
 class MarkedPreyIndividualsContents(extensions.db.Model, SerializerMixin):

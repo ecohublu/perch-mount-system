@@ -28,14 +28,14 @@ class ReviewedIndividual:
         has_prey: bool,
         is_tagged: bool,
         has_ring: bool,
-        id_: str | None = None,
+        id: str | None = None,
         box_xmin: float | None = None,
         box_xmax: float | None = None,
         box_ymin: float | None = None,
         box_ymax: float | None = None,
         ring_number: str | None = None,
     ):
-        self.id = id_
+        self.id = id
         self.taxon_order_by_human = taxon_order_by_human
         self.box_xmin = box_xmin
         self.box_xmax = box_xmax
@@ -48,7 +48,7 @@ class ReviewedIndividual:
 
     @property
     def is_ai_detected(self) -> bool:
-        return not None
+        return self.id is not None
 
     @property
     def is_to_marked_prey_contents(self) -> bool:
@@ -74,12 +74,12 @@ class UploadedMedium:
 class DetectedMedium:
     def __init__(
         self,
-        id_: str,
+        id: str,
         detected_at: datetime,
         individuals: list[dict] = [],
     ):
-        self.id = uuid.UUID(id_)
-        self.detected_at: datetime = datetime.fromisoformat(detected_at)
+        self.id = id
+        self.detected_at = detected_at
         self.individuals: list[DetectedIndividual] = [
             DetectedIndividual(**individual) for individual in individuals
         ]
@@ -102,15 +102,15 @@ class DetectedMedium:
 class CheckedMedium:
     def __init__(
         self,
-        id_: str,
-        empty_cheked_at: str,
-        empty_checker_id: str,
+        id: uuid.UUID,
+        empty_checked_at: datetime,
+        empty_checker_id: uuid.UUID,
         has_individual: bool,
     ):
-        self.id: uuid.UUID = uuid.UUID(id_)
-        self.empty_checked_at: datetime = datetime.fromisoformat(empty_cheked_at)
-        self.empty_checker_id: uuid.UUID = uuid.UUID(empty_checker_id)
-        self.has_individual: bool = has_individual
+        self.id = id
+        self.empty_checked_at = empty_checked_at
+        self.empty_checker_id = empty_checker_id
+        self.has_individual = has_individual
 
     @property
     def no_individual(self) -> bool:
@@ -126,27 +126,20 @@ class CheckedMedium:
 class ReviewedMedium:
     def __init__(
         self,
-        id_: str,
-        reviewed_at: str,
+        id: str,
+        reviewed_at: datetime,
         reviewer_id: str,
         featured_by_id: str | None = None,
         event_id: str | None = None,
         behavior_id: str | None = None,
         individuals: list[dict] = [],
     ):
-        self.id: uuid.UUID = uuid.UUID(id_)
-        self.reviewed_at: datetime = datetime.fromisoformat(reviewed_at)
-        self.reviewer_id: uuid.UUID = uuid.UUID(reviewer_id)
-
-        self.featured_by_id: uuid.UUID | None = (
-            uuid.UUID(featured_by_id) if featured_by_id else None
-        )
-        self.event_id: uuid.UUID | None = (
-            uuid.UUID(event_id) if featured_by_id else None
-        )
-        self.behavior_id: uuid.UUID | None = (
-            uuid.UUID(behavior_id) if featured_by_id else None
-        )
+        self.id = id
+        self.reviewed_at = reviewed_at
+        self.reviewer_id = reviewer_id
+        self.featured_by_id = featured_by_id
+        self.event_id = event_id
+        self.behavior_id = behavior_id
         self.individuals: list[ReviewedIndividual] = [
             ReviewedIndividual(**individual) for individual in individuals
         ]

@@ -47,6 +47,7 @@ def add_uploaded_media(
             session.commit()
         except:
             session.rollback()
+            raise
     return
 
 
@@ -58,9 +59,14 @@ def _find_media_section_id(media: list[model.Media], section_id: uuid.UUID):
 def add_detected_media(
     detected_media: list[dict],
 ):
-    media = [services_utils.DetectedMedia(**medium) for medium in detected_media]
+    media = [services_utils.DetectedMedium(**medium) for medium in detected_media]
+    media = services_utils.DetectedMedia(media)
     detected_contents = [
-        model.MediaDetectedContents(medium_id=medium.id) for medium in media
+        model.MediaDetectedContents(
+            medium_id=medium.id,
+            detected_at=medium.detected_at,
+        )
+        for medium in media
     ]
     unchecked_contents = [
         model.UncheckedMediaContents(medium_id=medium.id)
@@ -95,11 +101,13 @@ def add_detected_media(
             session.commit()
         except:
             session.rollback()
+            raise
     return
 
 
 def add_checked_media(checked_media: list[dict]):
-    media = [services_utils.CheckedMedia(**medium) for medium in checked_media]
+    media = [services_utils.CheckedMedium(**medium) for medium in checked_media]
+    media = services_utils.CheckedMedia(media)
     unreviewed_media = [
         model.UnreviewedMediaContents(medium_id=medium.id)
         for medium in media.media_to_unreviewed
@@ -115,10 +123,12 @@ def add_checked_media(checked_media: list[dict]):
             session.commit()
         except:
             session.rollback()
+            raise
 
 
 def add_reviewed_media(reviewed_media: list[dict]):
-    media = [services_utils.ReviewedMedia(**medium) for medium in reviewed_media]
+    media = [services_utils.ReviewedMedium(**medium) for medium in reviewed_media]
+    media = services_utils.ReviewedMedia(media)
     accidental_media = [
         model.AccidentalMediaContents(medium_id=medium.id)
         for medium in media.media_to_accidenal
@@ -146,6 +156,7 @@ def add_reviewed_media(reviewed_media: list[dict]):
             session.commit()
         except:
             session.rollback()
+            raise
 
 
 def _add_reviewed_new_individuals(
@@ -202,7 +213,7 @@ def _add_reviewed_insist_individuals(
     session: Session,
     media: services_utils.ReviewedMedia,
 ):
-    individuals = []
+
     reviewed_individuals = []
     marked_prey_individuals = []
     tagged_individuals = []
@@ -210,9 +221,6 @@ def _add_reviewed_insist_individuals(
         medium: services_utils.ReviewedMedium = medium
         for individual in medium.individuals:
             if individual.is_ai_detected:
-                individuals.append(
-                    model.Individuals(id=individual.id, medium_id=medium.id)
-                )
                 reviewed_individuals.append(
                     model.ReviewedIndividualsContents(
                         individual_id=individual.id,
@@ -236,7 +244,7 @@ def _add_reviewed_insist_individuals(
                         ring_number=individual.ring_number,
                     )
                 )
-    session.add_all(individuals)
+
     session.add_all(reviewed_individuals)
     session.add_all(marked_prey_individuals)
     session.add_all(tagged_individuals)

@@ -69,9 +69,9 @@ class Sections(extensions.db.Model, SerializerMixin):
     reviewed_count = extensions.db.Column(sqlalchemy.Integer, default=0)
     accidental_count = extensions.db.Column(sqlalchemy.Integer, default=0)
 
-    camera = sqlalchemy.orm.relationship("Cameras", lazy="immediate")
-    mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="immediate")
+    camera = sqlalchemy.orm.relationship("Cameras", lazy="selectin")
+    mount_type = sqlalchemy.orm.relationship("MountTypes", lazy="selectin")
     swappers = sqlalchemy.orm.relationship(
-        "Members", secondary=sections_swappers, lazy="immediate"
+        "Members", secondary=sections_swappers, lazy="selectin"
     )
     __table_arg__ = sqlalchemy.CheckConstraint("start_time <= end_time")
