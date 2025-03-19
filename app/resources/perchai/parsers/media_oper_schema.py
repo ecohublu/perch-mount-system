@@ -73,9 +73,3 @@ class ReviewedMediumSchema(MediumSchema):
     individuals = marshmallow.fields.List(
         marshmallow.fields.Nested(ReviewedIndividualSchema), required=True
     )
-
-
-uploaded_schema = UploadedData()
-detected_schema = DetectedMediumSchema(many=True)
-checked_schema = CheckedMediumSchema(many=True)
-reviewed_schema = ReviewedMediumSchema(many=True)

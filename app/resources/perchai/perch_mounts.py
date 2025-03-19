@@ -30,3 +30,6 @@ class PerchMount(flask_restx.Resource):
             raise errors.ResourceNotFoundError(model.PerchMounts.__name__)
 
         return perch_mount.to_dict()
+
+    def patch(self, perch_mount_id: uuid.UUID):
+        return

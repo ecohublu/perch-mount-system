@@ -1,5 +1,6 @@
 from app.resources.utils import type_funcs
 from app.resources.utils import parser
+from app.resources.perchai.parsers import media_oper_schema, schemas
 from datetime import datetime, date
 from flask_restx import reqparse
 import uuid
@@ -37,6 +38,10 @@ class Sections(parser.Parser):
     post.add_argument("note", type=str)
 
 
+class Section(parser.Parser):
+    patch = schemas.SectionPatchSchema()
+
+
 class PerchMounts(parser.Parser):
     get = reqparse.RequestParser()
     get.add_argument("project_ids", type=type_funcs.uuid_split, location="args")
@@ -52,6 +57,10 @@ class PerchMounts(parser.Parser):
     post.add_argument("project_id", required=True, type=uuid.UUID)
     post.add_argument("mount_layer", required=True, type=str)
     post.add_argument("note", type=str)
+
+
+class PerchMount(parser.Parser):
+    patch = schemas.PerchMountPatchSchema()
 
 
 class Media(parser.Parser):
@@ -70,6 +79,22 @@ class Media(parser.Parser):
         "taxon_orders_by_human", type=type_funcs.int_split, location="args"
     )
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")
+
+
+class UploadedMedia(parser.Parser):
+    post = media_oper_schema.UploadedData()
+
+
+class DetectedMedia(parser.Parser):
+    post = media_oper_schema.DetectedMediumSchema(many=True)
+
+
+class CheckedMedia(parser.Parser):
+    post = media_oper_schema.CheckedMediumSchema(many=True)
+
+
+class ReviewedMedia(parser.Parser):
+    post = media_oper_schema.ReviewedMediumSchema(many=True)
 
 
 class Members(parser.Parser):

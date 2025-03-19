@@ -25,7 +25,7 @@ def parse_args(parser: reqparse.RequestParser):
     return decorator
 
 
-def parse_oper_media(schema: marshmallow.Schema):
+def parse_json_body_args(schema: marshmallow.Schema):
 
     def decorator(func):
         @functools.wraps(func)

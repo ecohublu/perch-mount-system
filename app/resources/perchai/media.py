@@ -27,24 +27,24 @@ class Medium(flask_restx.Resource):
 
 
 class UploadedMedia(flask_restx.Resource):
-    @resource_utils.parse_oper_media(parsers.uploaded_schema)
+    @resource_utils.parse_json_body_args(parsers.UploadedMedia.post)
     def post(self, media):
         perchai_service.media_operation.add_uploaded_media(**media)
 
 
 class DetectedMedia(flask_restx.Resource):
-    @resource_utils.parse_oper_media(parsers.detected_schema)
+    @resource_utils.parse_json_body_args(parsers.DetectedMedia.post)
     def post(self, media):
         perchai_service.media_operation.add_detected_media(media)
 
 
 class CheckedMedia(flask_restx.Resource):
-    @resource_utils.parse_oper_media(parsers.checked_schema)
+    @resource_utils.parse_json_body_args(parsers.CheckedMedia.post)
     def post(self, media):
         perchai_service.media_operation.add_checked_media(media)
 
 
 class ReviewedMedia(flask_restx.Resource):
-    @resource_utils.parse_oper_media(parsers.reviewed_schema)
+    @resource_utils.parse_json_body_args(parsers.ReviewedMedia.post)
     def post(self, media):
         perchai_service.media_operation.add_reviewed_media(media)

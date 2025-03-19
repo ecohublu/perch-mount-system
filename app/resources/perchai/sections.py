@@ -30,3 +30,7 @@ class Section(flask_restx.Resource):
             raise errors.ResourceNotFoundError(model.Sections.__name__)
 
         return section.to_dict()
+
+    def patch(self, section_id: uuid.UUID):
+        section = perchai_service.sections.get_section_by_id(section_id)
+        return section.to_dict()
