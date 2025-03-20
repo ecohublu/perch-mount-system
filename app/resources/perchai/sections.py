@@ -31,6 +31,8 @@ class Section(flask_restx.Resource):
 
         return section.to_dict()
 
-    def patch(self, section_id: uuid.UUID):
+    @resource_utils.parse_json_body_args(parsers.Section.patch)
+    def patch(self, section_id: uuid.UUID, parsed_args):
+        perchai_service.sections.update_section(section_id, parsed_args)
         section = perchai_service.sections.get_section_by_id(section_id)
         return section.to_dict()

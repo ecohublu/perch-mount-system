@@ -6,7 +6,9 @@ import app.services.perchai.utils as services_utils
 from app import model
 
 
-def get_sections_by_filter(filter: services_utils.SectionFilter) -> list[model.Sections]:
+def get_sections_by_filter(
+    filter: services_utils.SectionFilter,
+) -> list[model.Sections]:
     modifier = services_utils.SectionQueryModifier(filter)
     with perchai.session.begin() as session:
         query = session.query(model.Sections)
@@ -18,7 +20,9 @@ def get_sections_by_filter(filter: services_utils.SectionFilter) -> list[model.S
 def get_section_by_id(section_id: uuid.UUID) -> model.Sections | None:
     with perchai.session.begin() as session:
         section = (
-            session.query(model.Sections).filter(model.Sections.id == section_id).one_or_none()
+            session.query(model.Sections)
+            .filter(model.Sections.id == section_id)
+            .one_or_none()
         )
     return section
 
@@ -53,3 +57,11 @@ def add_section(
         new_id = new_section.id
 
     return new_id
+
+
+def update_section(section_id: uuid.UUID, arg: dict):
+    with perchai.session.begin() as session:
+        session.query(model.Sections).filter(model.Sections.id == section_id).update(
+            arg
+        )
+        session.commit()

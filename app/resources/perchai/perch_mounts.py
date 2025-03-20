@@ -31,5 +31,16 @@ class PerchMount(flask_restx.Resource):
 
         return perch_mount.to_dict()
 
-    def patch(self, perch_mount_id: uuid.UUID):
-        return
+    @resource_utils.parse_json_body_args(parsers.PerchMount.patch)
+    def patch(self, perch_mount_id: uuid.UUID, parsed_args):
+        perchai_service.perch_mounts.update_perch_mount(perch_mount_id, parsed_args)
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
+
+
+class PerchMountActivation(flask_restx.Resource):
+    def post(self, perch_mount_id: uuid.UUID):
+        perchai_service.perch_mounts.activate_perch_mount(perch_mount_id)
+
+    def delete(self, perch_mount_id: uuid.UUID):
+        perchai_service.perch_mounts.terminate_perch_mount(perch_mount_id)

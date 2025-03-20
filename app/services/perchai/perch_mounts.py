@@ -59,3 +59,19 @@ def update_perch_mount(perch_mount_id: uuid.UUID, arg: dict):
             model.PerchMounts.id == perch_mount_id
         ).update(arg)
         session.commit()
+
+
+def terminate_perch_mount(perch_mount_id: uuid.UUID):
+    with perchai.session.begin() as session:
+        session.query(model.PerchMounts).filter(
+            model.PerchMounts.id == perch_mount_id
+        ).update({"terminated": True})
+        session.commit()
+
+
+def activate_perch_mount(perch_mount_id: uuid.UUID):
+    with perchai.session.begin() as session:
+        session.query(model.PerchMounts).filter(
+            model.PerchMounts.id == perch_mount_id
+        ).update({"terminated": False})
+        session.commit()

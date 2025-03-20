@@ -39,6 +39,12 @@ ROUTES = [
             Route(
                 route=perch_mount_id.param,
                 resources=[perchai.PerchMount],
+                children=[
+                    Route(
+                        route="activation",
+                        resources=[perchai.PerchMountActivation],
+                    ),
+                ],
             )
         ],
     ),
