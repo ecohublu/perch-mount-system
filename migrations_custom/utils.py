@@ -84,13 +84,38 @@ def upgrade_ext():
             """
         )
 
+    for table_name, status in INDIVIDUALS_PREY_TABLES_STATUS:
+        op.execute(
+            f"""
+            CREATE OR REPLACE FUNCTION update_prey_status_as_{status.lower()}()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                UPDATE individuals SET prey_status = '{status.upper()}' WHERE individuals.id = NEW.individual_id;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+
+            CREATE TRIGGER trigger_update_prey_status_as_{status.lower()}
+            AFTER INSERT ON {table_name}
+            FOR EACH ROW
+            EXECUTE FUNCTION update_prey_status_as_{status.lower()}();
+            """
+        )
+
 
 def downgrade_ext():
     for table_name, status in TABLES_STATUS:
         op.execute(
             f"""
-            DROP TRIGGER IF EXISTS trigger_update_media_status_as_{status.lower()} ON {table_name};
-            DROP FUNCTION IF EXISTS update_media_status_as_{status.lower()} CASCADE;
+            DROP TRIGGER IF EXISTS trigger_update_prey_status_as_{status.lower()} ON {table_name};
+            DROP FUNCTION IF EXISTS update_prey_status_as_{status.lower()} CASCADE;
+            """
+        )
+    for table_name, status in INDIVIDUALS_PREY_TABLES_STATUS:
+        op.execute(
+            f"""
+            DROP TRIGGER IF EXISTS trigger_update_prey_status_as_{status.lower()} ON {table_name};
+            DROP FUNCTION IF EXISTS update_prey_status_as_{status.lower()} CASCADE;
             """
         )
 
