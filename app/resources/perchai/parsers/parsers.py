@@ -82,11 +82,11 @@ class Media(parser.Parser):
 
 
 class MediumFeature(parser.Parser):
-    post = schemas.MediumFeaturePatchSchema()
+    patch = schemas.MediumFeaturePatchSchema()
 
 
 class Individual(parser.Parser):
-    post = schemas.IndividualPatchSchema()
+    patch = schemas.IndividualPatchSchema()
 
 
 class UploadedMedia(parser.Parser):

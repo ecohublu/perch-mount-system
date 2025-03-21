@@ -15,6 +15,7 @@ from app.services.perchai import (
     species,
     members,
     media_operation,
+    individuals,
 )
 
 

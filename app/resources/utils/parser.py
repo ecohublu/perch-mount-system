@@ -31,8 +31,8 @@ def parse_json_body_args(schema: marshmallow.Schema):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             json_data = flask.request.get_json(force=True)
-            media = schema.load(json_data)
-            return func(*args, **kwargs, media=media)
+            parsed_args = schema.load(json_data)
+            return func(*args, **kwargs, parsed_args=parsed_args)
 
         return wrapper
 

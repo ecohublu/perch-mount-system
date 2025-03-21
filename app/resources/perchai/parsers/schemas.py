@@ -31,7 +31,7 @@ class MediaPatchSchema(marshmallow.Schema):
     event_id = marshmallow.fields.UUID()
 
 
-class MediumFeaturePatchSchema(marshmallow.schema):
+class MediumFeaturePatchSchema(marshmallow.Schema):
     featured_by = marshmallow.fields.UUID()
     event_id = marshmallow.fields.UUID()
 

@@ -44,6 +44,12 @@ class StringQueryMissingError(BadRequestError):
         super().__init__(message)
 
 
+class StatusError(BadRequestError):
+    def __init__(self, status: str):
+        message = f"this operation is not allowed in '{status}' status."
+        super().__init__(message)
+
+
 class ResourceNotFoundError(NotFoundError):
     def __init__(self, resource_name: str):
         message = f"{resource_name} not found."

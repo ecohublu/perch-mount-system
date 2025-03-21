@@ -66,7 +66,12 @@ ROUTES = [
     Route(
         route="individuals",
         resources=[],
-        children=[Route(route=_individual_id.param, resources=[perchai.Individual])],
+        children=[
+            Route(
+                route=_individual_id.param,
+                resources=[perchai.Individual],
+            ),
+        ],
     ),
     Route(
         route="projects",
