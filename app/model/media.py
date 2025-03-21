@@ -133,7 +133,7 @@ class ReviewedMediaContents(extensions.db.Model, SerializerMixin):
         sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
         nullable=False,
     )
-    fearured_by_id = extensions.db.Column(
+    featured_by_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
         sqlalchemy.ForeignKey(fk_names.MEMBERS_ID),
     )

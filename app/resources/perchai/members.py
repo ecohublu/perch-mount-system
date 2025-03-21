@@ -28,3 +28,26 @@ class Member(flask_restx.Resource):
             raise errors.ResourceNotFoundError(model.Members.__name__)
 
         return member.to_dict()
+
+    @resource_utils.parse_json_body_args(parsers.Member.post)
+    def post(self, member_id: uuid.UUID, parsed_args: dict):
+        perchai_service.members.update_member(member_id, parsed_args)
+        member = perchai_service.members.get_member_by_id(member_id)
+        return member.to_dict()
+
+class MemberBlock(flask_restx.Resource):
+    def get(self, member_id: uuid.UUID):
+        return
+    def post(self, member_id: uuid.UUID):
+        return
+    def delete(self, member_id: uuid.UUID):
+        return
+
+
+class MemberActivation(flask_restx.Resource):
+    def get(self, member_id: uuid.UUID):
+        return
+    def post(self, member_id: uuid.UUID):
+        return
+    def delete(self, member_id: uuid.UUID):
+        return

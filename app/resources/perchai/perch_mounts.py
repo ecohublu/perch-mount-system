@@ -39,6 +39,12 @@ class PerchMount(flask_restx.Resource):
 
 
 class PerchMountActivation(flask_restx.Resource):
+    def get(self, perch_mount_id: uuid.UUID):
+        terminated = perchai_service.perch_mounts.is_perch_mount_activated(perch_mount_id)
+        if terminated is None:
+            raise errors.ResourceNotFoundError(model.PerchMounts.__name__)
+        return
+    
     def post(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.activate_perch_mount(perch_mount_id)
 

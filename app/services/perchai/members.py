@@ -42,3 +42,8 @@ def add_member(
         session.commit()
         new_id = new_member.id
     return new_id
+
+def update_member(member_id: uuid.UUID, args: dict):
+    with perchai.session.begin() as session:
+        session.query(model.Members).filter(member_id).update(args)
+        session.commit()

@@ -24,12 +24,12 @@ class RouteVar:
         return f"<{self.type}:{self.name}>"
 
 
-taxon_order = RouteVar(name="taxon_order", type_="int")
-section_id = RouteVar(name="section_id", type_="uuid")
-perch_mount_id = RouteVar(name="perch_mount_id", type_="uuid")
-member_id = RouteVar(name="member_id", type_="uuid")
-medium_id = RouteVar(name="medium_id", type_="uuid")
-individual_id = RouteVar(name="individual_id", type_="uuid")
+_taxon_order = RouteVar(name="taxon_order", type_="int")
+_section_id = RouteVar(name="section_id", type_="uuid")
+_perch_mount_id = RouteVar(name="perch_mount_id", type_="uuid")
+_member_id = RouteVar(name="member_id", type_="uuid")
+_medium_id = RouteVar(name="medium_id", type_="uuid")
+_individual_id = RouteVar(name="individual_id", type_="uuid")
 
 ROUTES = [
     Route(
@@ -37,7 +37,7 @@ ROUTES = [
         resources=[perchai.PerchMounts],
         children=[
             Route(
-                route=perch_mount_id.param,
+                route=_perch_mount_id.param,
                 resources=[perchai.PerchMount],
                 children=[
                     Route(
@@ -53,7 +53,7 @@ ROUTES = [
         resources=[perchai.Sections],
         children=[
             Route(
-                route=section_id.param,
+                route=_section_id.param,
                 resources=[perchai.Section],
             ),
         ],
@@ -61,12 +61,12 @@ ROUTES = [
     Route(
         route="media",
         resources=[perchai.Media],
-        children=[Route(route=medium_id.param, resources=[perchai.Medium])],
+        children=[Route(route=_medium_id.param, resources=[perchai.Medium])],
     ),
     Route(
         route="individuals",
         resources=[],
-        children=[Route(route=individual_id.param, resources=[perchai.Individual])],
+        children=[Route(route=_individual_id.param, resources=[perchai.Individual])],
     ),
     Route(
         route="projects",
@@ -91,12 +91,12 @@ ROUTES = [
     Route(
         route="members",
         resources=[perchai.Members],
-        children=[Route(route=member_id.param, resources=[perchai.Member])],
+        children=[Route(route=_member_id.param, resources=[perchai.Member])],
     ),
     Route(
         route="species",
         resources=[perchai.Species],
-        children=[Route(route=taxon_order.param, resources=[perchai.ASpecies])],
+        children=[Route(route=_taxon_order.param, resources=[perchai.ASpecies])],
     ),
     Route(
         route="uploaded_media",

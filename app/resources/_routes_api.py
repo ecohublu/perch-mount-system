@@ -28,13 +28,11 @@ class Routes:
 
     def _find_route_map(self, routes: list[Route], parent: str = "/"):
         for route in routes:
-
             endpoint = f"{parent}{route.route}/"
 
             for resource in route.resources:
-
                 self._route_map[resource].append(endpoint)
-
+                
             self._find_route_map(route.children, parent=endpoint)
 
     def _add_resources(self, api: flask_restx.Api, route_map: dict):

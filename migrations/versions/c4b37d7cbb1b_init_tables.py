@@ -1,7 +1,7 @@
 """init tables
 
 Revision ID: c4b37d7cbb1b
-Revises: 
+Revises:
 Create Date: 2025-02-22 10:32:14.888255
 
 """
@@ -309,7 +309,7 @@ def upgrade():
         sa.Column("medium_id", sa.UUID(), nullable=False),
         sa.Column("reviewed_at", sa.DateTime(), nullable=False),
         sa.Column("reviewer_id", sa.UUID(), nullable=False),
-        sa.Column("fearured_by_id", sa.UUID(), nullable=True),
+        sa.Column("featured_by_id", sa.UUID(), nullable=True),
         sa.Column("event_id", sa.UUID(), nullable=True),
         sa.Column("behavior_id", sa.UUID(), nullable=True),
         sa.ForeignKeyConstraint(
@@ -321,7 +321,7 @@ def upgrade():
             ["events.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["fearured_by_id"],
+            ["featured_by_id"],
             ["members.id"],
         ),
         sa.ForeignKeyConstraint(

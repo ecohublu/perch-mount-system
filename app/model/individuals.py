@@ -25,7 +25,7 @@ class Individuals(extensions.db.Model, SerializerMixin):
     )
     note = extensions.db.Column(sqlalchemy.Text)
     prey_status = extensions.db.Column(
-        sqlalchemy.Enum(enums.MediaStatus),
+        sqlalchemy.Enum(enums.PreyStatus),
         default="UNCHECKED",
         server_default="UNCHECKED",
     )

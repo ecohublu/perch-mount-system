@@ -75,3 +75,14 @@ def activate_perch_mount(perch_mount_id: uuid.UUID):
             model.PerchMounts.id == perch_mount_id
         ).update({"terminated": False})
         session.commit()
+
+
+# TODO make sure this function return boolean | None
+def is_perch_mount_activated(perch_mount_id: uuid.UUID) -> bool | None:
+    with perchai.session.begin() as session:
+        terminated = (
+            session.query(model.PerchMounts.terminated)
+            .filter(model.PerchMounts.id == perch_mount_id)
+            .one_or_none()
+        )
+    return terminated

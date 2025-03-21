@@ -1,17 +1,18 @@
 import marshmallow
+import marshmallow.schema
 
 
 class SectionPatchSchema(marshmallow.Schema):
-    mount_type_id = marshmallow.fields.uuid()
-    camera_id = marshmallow.fields.uuid()
+    mount_type_id = marshmallow.fields.UUID()
+    camera_id = marshmallow.fields.UUID()
     note = marshmallow.fields.String()
 
 
 class PerchMountPatchSchema(marshmallow.Schema):
-    longitude = marshmallow.fields.uuid()
-    latitude = marshmallow.fields.uuid()
+    longitude = marshmallow.fields.UUID()
+    latitude = marshmallow.fields.UUID()
     habitat = marshmallow.fields.String()
-    claim_by_id = marshmallow.fields.uuid()
+    claim_by_id = marshmallow.fields.UUID()
     mount_layer = marshmallow.fields.String()
     terminated = marshmallow.fields.String()
     is_priority = marshmallow.fields.Boolean()
@@ -25,21 +26,35 @@ class MemberPatchSchema(marshmallow.Schema):
 
 
 class MediaPatchSchema(marshmallow.Schema):
-    fearured_by_id = marshmallow.fields.uuid()
-    behavior_id = marshmallow.fields.uuid()
-    event_id = marshmallow.fields.uuid()
+    fearured_by_id = marshmallow.fields.UUID()
+    behavior_id = marshmallow.fields.UUID()
+    event_id = marshmallow.fields.UUID()
+
+
+class MediumFeaturePatchSchema(marshmallow.schema):
+    featured_by = marshmallow.fields.UUID()
+    event_id = marshmallow.fields.UUID()
 
 
 class IndividualPatchSchema(marshmallow.Schema):
-    note = marshmallow.fields.String()
     taxon_order_by_human = marshmallow.fields.Integer()
     box_xmin = marshmallow.fields.Float()
     box_xmax = marshmallow.fields.Float()
     box_ymin = marshmallow.fields.Float()
     box_ymax = marshmallow.fields.Float()
+
+
+class IndividualNotePatchSchema(marshmallow.Schema):
+    note = marshmallow.fields.String()
+
+
+class IndividualPreyPatchSchema(marshmallow.Schema):
     has_prey = marshmallow.fields.Boolean()
     inaturalist_taxa_id = marshmallow.fields.Integer()
     identifier_id = marshmallow.fields.Integer()
+
+
+class IndividualTagPatchSchema(marshmallow.Schema):
     is_tagged = marshmallow.fields.Boolean()
     has_ring = marshmallow.fields.Boolean()
     ring_number = marshmallow.fields.String()

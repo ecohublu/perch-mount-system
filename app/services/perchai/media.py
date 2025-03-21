@@ -24,3 +24,10 @@ def get_medium_by_id(medium_id: uuid.UUID) -> model.Media | None:
 
     return medium
 
+
+def update_media_feature(medium_id: uuid.UUID, args: dict):
+    with perchai.session.begin() as session:
+        session.query(model.ReviewedMediaContents).filter(
+            model.ReviewedMediaContents.medium_id == medium_id
+        ).update(args)
+        session.commit()

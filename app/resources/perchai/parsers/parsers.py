@@ -81,6 +81,14 @@ class Media(parser.Parser):
     get.add_argument("taxon_orders_by_ai", type=type_funcs.int_split, location="args")
 
 
+class MediumFeature(parser.Parser):
+    post = schemas.MediumFeaturePatchSchema()
+
+
+class Individual(parser.Parser):
+    post = schemas.IndividualPatchSchema()
+
+
 class UploadedMedia(parser.Parser):
     post = media_oper_schema.UploadedData()
 
@@ -104,6 +112,10 @@ class Members(parser.Parser):
     post.add_argument("first_name", required=True, type=str)
     post.add_argument("last_name", required=True, type=str)
     post.add_argument("position", required=True, type=str)
+
+
+class Member(parser.Parser):
+    patch = schemas.MemberPatchSchema()
 
 
 class Projects(parser.Parser):
