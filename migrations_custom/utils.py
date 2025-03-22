@@ -84,23 +84,50 @@ def upgrade_ext():
             """
         )
 
-    for table_name, status in INDIVIDUALS_PREY_TABLES_STATUS:
-        op.execute(
-            f"""
-            CREATE OR REPLACE FUNCTION update_prey_status_as_{status.lower()}()
-            RETURNS TRIGGER AS $$
-            BEGIN
-                UPDATE individuals SET prey_status = '{status.upper()}' WHERE individuals.id = NEW.individual_id;
-                RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
+    # update prey_status of individual as has or no prey
+    op.execute(
+        """
+        CREATE OR REPLACE FUNCTION update_prey_status_as_no_prey()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF NEW.has_prey = false THEN
+                UPDATE individuals
+                SET prey_status = 'no_prey'
+                WHERE id = NEW.individual_id;
+            ELSIF NEW.has_prey = true THEN
+                UPDATE individuals
+                SET prey_status = 'unidentified'
+                WHERE id = NEW.individual_id;
+            END IF;
 
-            CREATE TRIGGER trigger_update_prey_status_as_{status.lower()}
-            AFTER INSERT ON {table_name}
-            FOR EACH ROW
-            EXECUTE FUNCTION update_prey_status_as_{status.lower()}();
-            """
-        )
+            RETURN NEW;
+        END;
+
+        CREATE TRIGGER trigger_update_prey_status_as_no_prey
+        AFTER INSERT ON marked_prey_individuals_contents
+        FOR EACH ROW
+        EXECUTE FUNCTION update_prey_status_as_no_prey();
+        """
+    )
+
+    # update prey_status of individual after prey identified
+    op.execute(
+        f"""
+        CREATE OR REPLACE FUNCTION update_prey_status_as_identified()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            UPDATE individuals SET prey_status = 'identified'
+            WHERE individuals.id = NEW.individual_id;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_update_prey_status_as_identified
+        AFTER INSERT ON identified_prey_individuals_contents
+        FOR EACH ROW
+        EXECUTE FUNCTION update_prey_status_as_identified();
+        """
+    )
 
 
 def downgrade_ext():

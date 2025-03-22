@@ -25,6 +25,7 @@ class MediaStatus(enum.Enum):
 class PreyStatus(enum.Enum):
     UNCHECKED = "unchecked"
     UNIDENTIFIED = "unidentified"
+    NOPREY = "no_prey"
     IDENTIFIED = "identified"
 
 
