@@ -119,7 +119,7 @@ def upgrade_ext():
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_update_prey_status_as_identified
-        AFTER INSERT ON identified_prey_individuals_contents
+        AFTER INSERT OR UPDATE ON identified_prey_individuals_contents
         FOR EACH ROW
         EXECUTE FUNCTION update_prey_status_as_identified();
         """
