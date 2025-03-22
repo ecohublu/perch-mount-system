@@ -8,11 +8,6 @@ TABLES_STATUS = (
     ("accidental_media_contents", "ACCIDENTAL"),
 )
 
-INDIVIDUALS_PREY_TABLES_STATUS = (
-    ("unidentified_prey_individuals_contents", "unidentified"),
-    ("identified_prey_individuals_contents", "identified"),
-)
-
 
 ENUMS = (
     "positions",
@@ -88,7 +83,7 @@ def upgrade_ext():
     # update prey_status of individual as has or no prey
     op.execute(
         """
-        CREATE OR REPLACE FUNCTION update_prey_status_as_no_prey()
+        CREATE OR REPLACE FUNCTION update_prey_status_as_no_prey_or_unidentified()
         RETURNS TRIGGER AS $$
         BEGIN
             IF NEW.has_prey = false THEN
@@ -104,10 +99,10 @@ def upgrade_ext():
             RETURN NEW;
         END;
 
-        CREATE TRIGGER trigger_update_prey_status_as_no_prey
+        CREATE TRIGGER trigger_update_prey_status_as_no_prey_or_unidentified
         AFTER INSERT ON marked_prey_individuals_contents
         FOR EACH ROW
-        EXECUTE FUNCTION update_prey_status_as_no_prey();
+        EXECUTE FUNCTION update_prey_status_as_no_prey_or_unidentified();
         """
     )
 
@@ -139,13 +134,22 @@ def downgrade_ext():
             DROP FUNCTION IF EXISTS update_prey_status_as_{status.lower()} CASCADE;
             """
         )
-    for table_name, status in INDIVIDUALS_PREY_TABLES_STATUS:
-        op.execute(
-            f"""
-            DROP TRIGGER IF EXISTS trigger_update_prey_status_as_{status.lower()} ON {table_name};
-            DROP FUNCTION IF EXISTS update_prey_status_as_{status.lower()} CASCADE;
-            """
-        )
+
+    op.execute(
+        """
+        DROP TRIGGER IF EXISTS trigger_update_prey_status_as_no_prey_or_unidentified
+        ON marked_prey_individuals_contents;
+        DROP FUNCTION IF EXISTS update_prey_status_as_no_prey_or_unidentified CASCADE;
+        """
+    )
+
+    op.execute(
+        """
+        DROP TRIGGER IF EXISTS trigger_update_prey_status_as_identified
+        ON marked_prey_individuals_contents;
+        DROP FUNCTION IF EXISTS update_prey_status_as_identified CASCADE;
+        """
+    )
 
     for name in ENUMS:
         op.execute(f"DROP TYPE IF EXISTS {name} CASCADE;")
