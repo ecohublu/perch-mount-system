@@ -262,11 +262,10 @@ def upgrade():
         sa.Column(
             "prey_status",
             sa.Enum(
-                "UNDETECTED",
                 "UNCHECKED",
-                "UNREVIEWED",
-                "REVIEWED",
-                "ACCIDENTAL",
+                "UNIDENTIFIED",
+                "NO_PREY",
+                "IDENTIFIED",
                 name="mediastatus",
             ),
             server_default="UNCHECKED",
