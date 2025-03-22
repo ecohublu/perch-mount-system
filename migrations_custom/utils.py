@@ -66,6 +66,7 @@ def upgrade_ext():
         """
     )
 
+    # update media status
     for table_name, status in TABLES_STATUS:
         op.execute(
             f"""
