@@ -11,26 +11,26 @@ from app import model
 class Individual(flask_restx.Resource):
     @resource_utils.parse_json_body_args(parsers.Individual.patch)
     def patch(self, individual_id: uuid.UUID, parsed_args: dict):
-        print(parsed_args)
-
-        individual = perchai_service.individuals.update_individual(
-            individual_id, parsed_args
-        )
-
-        if not individual:
-            raise errors.ResourceNotFoundError(model.Individuals.__name__)
-
+        perchai_service.individuals.update_individual(individual_id, parsed_args)
+        individual = perchai_service.individuals.get_individual_by_id(individual_id)
         return individual.to_dict()
 
 
 class IndividualPrey(flask_restx.Resource):
-    def post(self, individual_id: uuid.UUID):
-        return
+    @resource_utils.parse_json_body_args(parsers.IndividualPrey.post)
+    def post(self, individual_id: uuid.UUID, parsed_args: dict):
+        perchai_service.individuals.add_prey(individual_id, parsed_args)
+        individual = perchai_service.individuals.get_individual_by_id(individual_id)
+        return individual.to_dict()
 
-    def patch(self, individual_id: uuid.UUID):
-        return
+    @resource_utils.parse_json_body_args(parsers.IndividualPrey.patch)
+    def patch(self, individual_id: uuid.UUID, parsed_args: dict):
+        perchai_service.individuals.update_prey(individual_id, parsed_args)
+        individual = perchai_service.individuals.get_individual_by_id(individual_id)
+        return individual.to_dict()
 
     def delete(self, individual_id: uuid.UUID):
+        perchai_service.individuals.delete_prey(individual_id)
         return
 
 

@@ -49,7 +49,11 @@ class IndividualNotePatchSchema(marshmallow.Schema):
 
 
 class IndividualPreyPatchSchema(marshmallow.Schema):
-    has_prey = marshmallow.fields.Boolean()
+    inaturalist_taxa_id = marshmallow.fields.Integer()
+    identifier_id = marshmallow.fields.Integer()
+
+
+class IndividualPreyPostSchema(marshmallow.Schema):
     inaturalist_taxa_id = marshmallow.fields.Integer()
     identifier_id = marshmallow.fields.Integer()
 

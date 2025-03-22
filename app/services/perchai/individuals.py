@@ -6,7 +6,17 @@ from app import model
 from app.error_handler import errors
 
 
-def update_individual(individual_id: uuid.UUID, args: dict) -> model.Individuals | None:
+def get_individual_by_id(individual_id: uuid.UUID) -> model.Individuals | None:
+    with perchai.session.begin() as session:
+        individual = (
+            session.query(model.Individuals)
+            .filter(model.Individuals.id == individual_id)
+            .one_or_none()
+        )
+    return individual
+
+
+def update_individual(individual_id: uuid.UUID, args: dict):
     with perchai.session.begin() as session:
         individual = (
             session.query(model.Individuals.medium_id)
@@ -15,7 +25,7 @@ def update_individual(individual_id: uuid.UUID, args: dict) -> model.Individuals
         )
 
         if not individual:
-            return None
+            raise errors.ResourceNotFoundError(model.Individuals.__name__)
 
         medium = (
             session.query(model.Media.status)
@@ -31,14 +41,92 @@ def update_individual(individual_id: uuid.UUID, args: dict) -> model.Individuals
                 model.ReviewedIndividualsContents.individual_id == individual_id
             ).update(args)
 
-            individual = (
-                session.query(model.Individuals)
-                .filter(model.Individuals.id == individual_id)
-                .one()
-            )
             session.commit()
         except:
             session.rollback()
             raise
 
-    return individual
+
+def add_prey(
+    individual_id: uuid.UUID,
+    args: dict,
+):
+    with perchai.session.begin() as session:
+        individual = (
+            session.query(model.Individuals.prey_status)
+            .filter(model.Individuals.id == individual_id)
+            .one_or_none()
+        )
+
+        if not individual:
+            raise errors.ResourceNotFoundError(model.Individuals.__name__)
+
+        if individual.prey_status != model.enums.PreyStatus.NO_PREY:
+            raise errors.StatusError(individual.prey_status)
+
+        new_prey = model.IdentifiedPreyIndividualsContents(**args)
+        new_prey.individual_id = individual_id
+
+        try:
+            session.query(model.MarkedPreyIndividualsContents).filter(
+                model.MarkedPreyIndividualsContents.individual_id == individual_id
+            ).update({"has_prey": True})
+            session.add(new_prey)
+            session.commit()
+        except:
+            session.rollback()
+            raise
+
+
+def update_prey(
+    individual_id: uuid.UUID,
+    args: dict,
+):
+    with perchai.session.begin() as session:
+        individual = (
+            session.query(model.Individuals.prey_status)
+            .filter(model.Individuals.id == individual_id)
+            .one_or_none()
+        )
+
+        if not individual:
+            raise errors.ResourceNotFoundError(model.Individuals.__name__)
+
+        if individual.prey_status != model.enums.PreyStatus.IDENTIFIED:
+            raise errors.StatusError(individual.prey_status)
+
+        try:
+            session.query(model.IdentifiedPreyIndividualsContents).filter(
+                model.IdentifiedPreyIndividualsContents.individual_id == individual_id
+            ).update(args)
+            session.commit()
+        except:
+            session.rollback()
+            raise
+
+
+def delete_prey(individual_id: uuid.UUID):
+    with perchai.session.begin() as session:
+        individual = (
+            session.query(model.Individuals.prey_status)
+            .filter(model.Individuals.id == individual_id)
+            .one_or_none()
+        )
+
+        if not individual:
+            raise errors.ResourceNotFoundError(model.Individuals.__name__)
+
+        if individual.prey_status != model.enums.PreyStatus.IDENTIFIED:
+            raise errors.StatusError(individual.prey_status)
+
+        try:
+            session.query(model.MarkedPreyIndividualsContents).filter(
+                model.MarkedPreyIndividualsContents.individual_id == individual_id
+            ).update({"has_prey": False})
+            session.query(model.IdentifiedPreyIndividualsContents).filter(
+                model.IdentifiedPreyIndividualsContents.individual_id == individual_id
+            ).delete(synchronize_session=False)
+            session.commit()
+        except:
+            session.rollback()
+            raise
