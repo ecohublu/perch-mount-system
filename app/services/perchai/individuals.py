@@ -130,3 +130,45 @@ def delete_prey(individual_id: uuid.UUID):
         except:
             session.rollback()
             raise
+
+
+def upsert_note(individual_id: uuid.UUID, note: str):
+    with perchai.session.begin() as session:
+        individual = (
+            session.query(model.Individuals)
+            .filter(model.Individuals.id == individual_id)
+            .one_or_none()
+        )
+
+        if not individual:
+            raise errors.ResourceNotFoundError(model.Individuals.__name__)
+
+        try:
+            session.query(model.Individuals).filter(
+                model.Individuals.id == individual_id
+            ).update({"note": note})
+            session.commit()
+        except:
+            session.rollback()
+            raise
+
+
+def remove_note(individual_id: uuid.UUID):
+    with perchai.session.begin() as session:
+        individual = (
+            session.query(model.Individuals)
+            .filter(model.Individuals.id == individual_id)
+            .one_or_none()
+        )
+
+        if not individual:
+            raise errors.ResourceNotFoundError(model.Individuals.__name__)
+
+        try:
+            session.query(model.Individuals).filter(
+                model.Individuals.id == individual_id
+            ).update({"note": None})
+            session.commit()
+        except:
+            session.rollback()
+            raise

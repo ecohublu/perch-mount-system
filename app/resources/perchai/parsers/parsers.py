@@ -94,6 +94,10 @@ class IndividualPrey(parser.Parser):
     patch = schemas.IndividualPreyPostSchema()
 
 
+class IndividualNote(parser.Parser):
+    put = schemas.IndividualNotePutSchema()
+
+
 class UploadedMedia(parser.Parser):
     post = media_oper_schema.UploadedData()
 

@@ -35,8 +35,13 @@ class IndividualPrey(flask_restx.Resource):
 
 
 class IndividualNote(flask_restx.Resource):
-    def put(self, individual_id: uuid.UUID):
-        return
+    @resource_utils.parse_json_body_args(parsers.IndividualNote.put)
+    def put(self, individual_id: uuid.UUID, parsed_args: dict):
+        perchai_service.individuals.upsert_note(individual_id, parsed_args["note"])
+        individual = perchai_service.individuals.get_individual_by_id(individual_id)
+        return individual.to_dict()
 
     def delete(self, individual_id: uuid.UUID):
-        return
+        perchai_service.individuals.remove_note(individual_id)
+        individual = perchai_service.individuals.get_individual_by_id(individual_id)
+        return individual.to_dict()

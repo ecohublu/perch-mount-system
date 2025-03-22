@@ -58,6 +58,10 @@ class IndividualPreyPostSchema(marshmallow.Schema):
     identifier_id = marshmallow.fields.Integer()
 
 
+class IndividualNotePutSchema(marshmallow.Schema):
+    note = marshmallow.fields.String()
+
+
 class IndividualTagPatchSchema(marshmallow.Schema):
     is_tagged = marshmallow.fields.Boolean()
     has_ring = marshmallow.fields.Boolean()
