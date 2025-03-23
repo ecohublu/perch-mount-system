@@ -64,7 +64,9 @@ def add_section(
 
     with perchai.session.begin() as session:
         section = (
-            session.query(model.Sections).filter(model.Sections.id == new_id).one()
+            session.query(model.Sections)
+            .filter(model.Sections.id == new_section.id)
+            .one()
         )
 
     return section
