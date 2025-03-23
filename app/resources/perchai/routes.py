@@ -119,4 +119,8 @@ ROUTES = [
         route="reviewed_media",
         resources=[perchai.ReviewedMedia],
     ),
+    Route(
+        route="identified_preys",
+        resources=[perchai.IdentifiedPreys],
+    ),
 ]

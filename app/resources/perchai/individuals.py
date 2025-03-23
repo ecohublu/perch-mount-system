@@ -34,6 +34,13 @@ class IndividualPrey(flask_restx.Resource):
         return
 
 
+class IdentifiedPreys(flask_restx.Resource):
+    @resource_utils.parse_json_body_args(parsers.IdentifiedPreys.post)
+    def post(self, parsed_args):
+        perchai_service.individuals.add_identified_preys(parsed_args)
+        return
+
+
 class IndividualNote(flask_restx.Resource):
     @resource_utils.parse_json_body_args(parsers.IndividualNote.put)
     def put(self, individual_id: uuid.UUID, parsed_args: dict):

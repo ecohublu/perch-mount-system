@@ -1,6 +1,10 @@
 from app.resources.utils import type_funcs
 from app.resources.utils import parser
-from app.resources.perchai.parsers import media_oper_schema, schemas
+from app.resources.perchai.parsers import (
+    media_oper_schema,
+    prey_oper_schema,
+    schemas,
+)
 from datetime import datetime, date
 from flask_restx import reqparse
 import uuid
@@ -94,12 +98,16 @@ class IndividualPrey(parser.Parser):
     patch = schemas.IndividualPreyPostSchema()
 
 
+class IdentifiedPreys(parser.Parser):
+    post = prey_oper_schema.IdentifiedPreySchema(many=True)
+
+
 class IndividualNote(parser.Parser):
     put = schemas.IndividualNotePutSchema()
 
 
 class UploadedMedia(parser.Parser):
-    post = media_oper_schema.UploadedData()
+    post = media_oper_schema.UploadedMediumSchema(many=True)
 
 
 class DetectedMedia(parser.Parser):

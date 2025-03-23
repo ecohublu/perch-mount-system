@@ -25,31 +25,33 @@ class Medium(flask_restx.Resource):
 
         return medium.to_dict()
 
+
 class MediumFeature(flask_restx.Resource):
     def patch(self, medium_id: uuid.UUID, parsed_args: dict):
         perchai_service.media.update_media_feature(medium_id, parsed_args)
         medium = perchai_service.media.get_medium_by_id(medium_id)
         return medium.to_dict()
 
+
 class UploadedMedia(flask_restx.Resource):
     @resource_utils.parse_json_body_args(parsers.UploadedMedia.post)
-    def post(self, media):
-        perchai_service.media_operation.add_uploaded_media(**media)
+    def post(self, parsed_args):
+        perchai_service.media_operation.add_uploaded_media(**parsed_args)
 
 
 class DetectedMedia(flask_restx.Resource):
     @resource_utils.parse_json_body_args(parsers.DetectedMedia.post)
-    def post(self, media):
-        perchai_service.media_operation.add_detected_media(media)
+    def post(self, parsed_args):
+        perchai_service.media_operation.add_detected_media(parsed_args)
 
 
 class CheckedMedia(flask_restx.Resource):
     @resource_utils.parse_json_body_args(parsers.CheckedMedia.post)
-    def post(self, media):
-        perchai_service.media_operation.add_checked_media(media)
+    def post(self, parsed_args):
+        perchai_service.media_operation.add_checked_media(parsed_args)
 
 
 class ReviewedMedia(flask_restx.Resource):
     @resource_utils.parse_json_body_args(parsers.ReviewedMedia.post)
-    def post(self, media):
-        perchai_service.media_operation.add_reviewed_media(media)
+    def post(self, parsed_args):
+        perchai_service.media_operation.add_reviewed_media(parsed_args)

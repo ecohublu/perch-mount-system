@@ -172,3 +172,16 @@ def remove_note(individual_id: uuid.UUID):
         except:
             session.rollback()
             raise
+
+
+def add_identified_preys(identified_preys: list[dict]):
+    identified_preys = [
+        model.IdentifiedPreyIndividualsContents(**prey) for prey in identified_preys
+    ]
+    with perchai.session.begin() as session:
+        try:
+            session.add_all(identified_preys)
+            session.commit()
+        except:
+            session.rollback()
+            raise
