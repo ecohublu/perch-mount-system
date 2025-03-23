@@ -56,6 +56,12 @@ class UploadMediaCanNotBeEmptyError(BadRequestError):
         super().__init__(message)
 
 
+class SuperAdminUnpatchableError(BadRequestError):
+    def __init__(self, message):
+        message = "attributes of super admin is not able to be updated."
+        super().__init__(message)
+
+
 class ResourceNotFoundError(NotFoundError):
     def __init__(self, resource_name: str):
         message = f"{resource_name} not found."

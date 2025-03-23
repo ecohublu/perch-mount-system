@@ -70,6 +70,10 @@ ROUTES = [
             Route(
                 route=_individual_id.param,
                 resources=[perchai.Individual],
+                children=[
+                    Route(route="prey", resources=[perchai.IndividualPrey]),
+                    Route(route="note", resources=[perchai.IndividualNote]),
+                ],
             ),
         ],
     ),
@@ -96,7 +100,16 @@ ROUTES = [
     Route(
         route="members",
         resources=[perchai.Members],
-        children=[Route(route=_member_id.param, resources=[perchai.Member])],
+        children=[
+            Route(
+                route=_member_id.param,
+                resources=[perchai.Member],
+                children=[
+                    Route(route="block", resources=[perchai.MemberBlock]),
+                    Route(route="activation", resources=[perchai.MemberActivation]),
+                ],
+            ),
+        ],
     ),
     Route(
         route="species",

@@ -35,19 +35,26 @@ class Member(flask_restx.Resource):
         member = perchai_service.members.get_member_by_id(member_id)
         return member.to_dict()
 
+
 class MemberBlock(flask_restx.Resource):
-    def get(self, member_id: uuid.UUID):
-        return
     def post(self, member_id: uuid.UUID):
-        return
+        perchai_service.members.block_member(member_id)
+        member = perchai_service.members.get_member_by_id(member_id)
+        return member.to_dict()
+
     def delete(self, member_id: uuid.UUID):
-        return
+        member = perchai_service.members.get_member_by_id(member_id)
+        perchai_service.members.unblock_member(member_id)
+        return member.to_dict()
 
 
 class MemberActivation(flask_restx.Resource):
-    def get(self, member_id: uuid.UUID):
-        return
     def post(self, member_id: uuid.UUID):
-        return
+        member = perchai_service.members.get_member_by_id(member_id)
+        perchai_service.members.activate_member(member_id)
+        return member.to_dict()
+
     def delete(self, member_id: uuid.UUID):
-        return
+        perchai_service.members.deactivate_member(member_id)
+        member = perchai_service.members.get_member_by_id(member_id)
+        return member.to_dict()
