@@ -1,48 +1,41 @@
-from datetime import date, datetime
+import datetime
 import uuid
 from sqlalchemy.orm.session import Session
 
 from app.services import perchai
 import app.services.perchai.utils as services_utils
+from app.error_handler import errors
 from app import model
 
 
 def add_uploaded_media(
-    perch_mount_id: uuid.UUID,
-    mount_type_id: uuid.UUID,
-    camera_id: uuid.UUID,
-    start_time: datetime,
-    end_time: datetime,
-    swapped_date: date,
-    swapper_ids: list[uuid.UUID],
-    valid: bool,
+    section_id: uuid.UUID,
     media: list[dict],
-    note: str | None = None,
 ):
-    section = model.Sections(
-        perch_mount_id=perch_mount_id,
-        mount_type_id=mount_type_id,
-        camera_id=camera_id,
-        start_time=start_time,
-        end_time=end_time,
-        swapped_date=swapped_date,
-        valid=valid,
-        note=note,
-    )
+    if not media:
+        raise errors.UploadMediaCanNotBeEmptyError()
 
-    model_media = [model.Media(**medium) for medium in media]
+    start_time = datetime.datetime(datetime.MAXYEAR, 1, 1, tzinfo=None)
+    end_time = datetime.datetime(datetime.MINYEAR, 1, 1, tzinfo=None)
+    model_media = []
+
+    for medium in media:
+        model_medium = model.Media(**medium)
+        model_media.append(model_medium)
+        start_time = min(model_medium.medium_datetime)
+        end_time = max(model_medium.medium_datetime)
+
+    _find_media_section_id(model_media, section_id)
     with perchai.session.begin() as session:
         try:
-            session.add(section)
-            session.flush()
-            _find_media_section_id(model_media, section.id)
-
-            for swapper_id in swapper_ids:
-                stat = model.sections_swappers.insert().values(
-                    section_id=section.id, swapper_id=swapper_id
-                )
-                session.execute(stat)
-
+            session.query(model.Sections).filter(
+                model.Sections.id == section_id
+            ).update(
+                {
+                    "start_time": start_time,
+                    "end_time": end_time,
+                }
+            )
             session.add_all(model_media)
             session.commit()
         except:

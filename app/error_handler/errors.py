@@ -50,6 +50,12 @@ class StatusError(BadRequestError):
         super().__init__(message)
 
 
+class UploadMediaCanNotBeEmptyError(BadRequestError):
+    def __init__(self, message):
+        message = "uploaded media can not be empty."
+        super().__init__(message)
+
+
 class ResourceNotFoundError(NotFoundError):
     def __init__(self, resource_name: str):
         message = f"{resource_name} not found."

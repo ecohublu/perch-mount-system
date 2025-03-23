@@ -32,31 +32,42 @@ def add_section(
     mount_type_id: uuid.UUID,
     camera_id: uuid.UUID,
     swapped_date: date,
-    start_time: datetime,
-    end_time: datetime,
     swapper_ids: list[uuid.UUID],
     valid: bool,
     note: str | None = None,
-) -> int:
+) -> model.Sections:
 
     new_section = model.Sections(
         perch_mount_id=perch_mount_id,
         mount_type=mount_type_id,
         camera=camera_id,
         swapped_date=swapped_date,
-        start_time=start_time,
-        end_time=end_time,
         swapper_ids=swapper_ids,
         valid=valid,
         note=note,
     )
 
     with perchai.session.begin() as session:
-        session.add(new_section)
-        session.commit()
-        new_id = new_section.id
+        try:
+            session.add(section)
+            session.flush()
+            for swapper_id in swapper_ids:
+                stat = model.sections_swappers.insert().values(
+                    section_id=new_section.id, swapper_id=swapper_id
+                )
+                session.execute(stat)
 
-    return new_id
+            session.commit()
+        except:
+            session.rollback()
+            raise
+
+    with perchai.session.begin() as session:
+        section = (
+            session.query(model.Sections).filter(model.Sections.id == new_id).one()
+        )
+
+    return section
 
 
 def update_section(section_id: uuid.UUID, arg: dict):

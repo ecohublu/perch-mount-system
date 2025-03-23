@@ -18,8 +18,8 @@ class Sections(flask_restx.Resource):
 
     @resource_utils.parse_args(parsers.Sections.post)
     def post(self, parsed_args):
-        new_section_id = perchai_service.sections.add_section(**parsed_args)
-        return perchai_utils.id_json(new_section_id)
+        new_section = perchai_service.sections.add_section(**parsed_args)
+        return new_section.to_dict()
 
 
 class Section(flask_restx.Resource):
