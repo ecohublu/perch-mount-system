@@ -32,6 +32,10 @@ class Members(extensions.db.Model, SerializerMixin):
     )
     gmail = extensions.db.Column(postgresql.CITEXT, nullable=False, unique=True)
     display_name = extensions.db.Column(sqlalchemy.String(ColumnSize.DISPLAY_NAME))
+    user_name = extensions.db.Column(
+        sqlalchemy.String(ColumnSize.USER_NAME),
+        unique=True,
+    )
     first_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.FIRST_NAME),
         nullable=False,
