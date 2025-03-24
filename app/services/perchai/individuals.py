@@ -47,6 +47,20 @@ def update_individual(individual_id: uuid.UUID, args: dict):
             raise
 
 
+def get_prey_by_individual_id(
+    individual_id: uuid.UUID,
+) -> model.IdentifiedPreyIndividualsContents | None:
+    with perchai.session.begin() as session:
+        prey = (
+            session.query(model.IdentifiedPreyIndividualsContents.individual_id)
+            .filter(
+                model.IdentifiedPreyIndividualsContents.individual_id == individual_id
+            )
+            .one_or_none()
+        )
+    return prey
+
+
 def add_prey(
     individual_id: uuid.UUID,
     args: dict,

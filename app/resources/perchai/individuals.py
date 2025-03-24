@@ -3,9 +3,8 @@ import uuid
 
 from app.services import perchai as perchai_service
 from app.resources.perchai import parsers
+import app.resources.perchai.utils as perchai_utils
 import app.resources.utils as resource_utils
-from app.error_handler import errors
-from app import model
 
 
 class Individual(flask_restx.Resource):
@@ -31,7 +30,7 @@ class IndividualPrey(flask_restx.Resource):
 
     def delete(self, individual_id: uuid.UUID):
         perchai_service.individuals.delete_prey(individual_id)
-        return
+        return perchai_utils.delete_successed(individual_id)
 
 
 class IdentifiedPreys(flask_restx.Resource):
