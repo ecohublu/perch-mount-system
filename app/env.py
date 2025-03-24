@@ -46,6 +46,8 @@ class EnvKeys(enum.StrEnum):
 
     EXPORT_DATA_RETAIN_DAYS = enum.auto()
 
+    GOOGLE_OAUTH2_CLIENT_ID = enum.auto()
+
 
 def get_env(key: EnvKeys) -> str:
     return os.environ.get(f"{PREFIX}_{key.upper()}")
