@@ -1,4 +1,6 @@
+import sqlalchemy
 import uuid
+
 
 from app import model
 from app.services import perchai
@@ -18,6 +20,21 @@ def get_member_by_id(member_id: uuid.UUID) -> model.Members | None:
         member = (
             session.query(model.Members)
             .filter(model.Members.id == member_id)
+            .one_or_none()
+        )
+    return member
+
+
+def get_member_by_sub_and_gmail(sub: str, email: str) -> model.Members | None:
+    with perchai.session.begin() as session:
+        member = (
+            session.query(model.Members)
+            .filter(
+                sqlalchemy.or_(
+                    model.Members.oidc_sub == sub,
+                    model.Members.gmail == email,
+                )
+            )
             .one_or_none()
         )
     return member
@@ -48,6 +65,25 @@ def add_member(
 def update_member(member_id: uuid.UUID, args: dict):
     with perchai.session.begin() as session:
         session.query(model.Members).filter(model.Members.id == member_id).update(args)
+        session.commit()
+
+
+def update_member_sso_info(id_token_info: dict):
+    with perchai.session.begin() as session:
+        session.query(model.Members).filter(
+            sqlalchemy.or_(
+                model.Members.oidc_sub == id_token_info["sub"],
+                model.Members.gmail == id_token_info["email"],
+            )
+        ).update(
+            {
+                "oidc_usb": id_token_info["sub"],
+                "display_name": id_token_info["name"],
+                "first_name": id_token_info["given_name"],
+                "last_name": id_token_info["family_name"],
+                "profile_picture_url": id_token_info["picture"],
+            }
+        )
         session.commit()
 
 

@@ -24,6 +24,13 @@ class _ServerError(_HTTPError):
         super().__init__(message)
 
 
+class Unauthorized(_ClientError):
+    status_code = http.HTTPStatus.UNAUTHORIZED
+
+    def __init__(self, message):
+        super().__init__(message)
+
+
 class NotFoundError(_ClientError):
     status_code = http.HTTPStatus.NOT_FOUND
 

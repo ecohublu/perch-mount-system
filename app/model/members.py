@@ -12,6 +12,7 @@ class ColumnSize:
     OIDC_SUB = 255
     PROFILE_PICTURE_URL = 255
     USER_NAME = 50
+    DISPLAY_NAME = 50
     FIRST_NAME = 50
     LAST_NAME = 50
 
@@ -30,11 +31,7 @@ class Members(extensions.db.Model, SerializerMixin):
         sqlalchemy.String(ColumnSize.PROFILE_PICTURE_URL)
     )
     gmail = extensions.db.Column(postgresql.CITEXT, nullable=False, unique=True)
-    user_name = extensions.db.Column(
-        sqlalchemy.String(ColumnSize.USER_NAME),
-        unique=True,
-        nullable=False,
-    )
+    display_name = extensions.db.Column(sqlalchemy.String(ColumnSize.DISPLAY_NAME))
     first_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.FIRST_NAME),
         nullable=False,
