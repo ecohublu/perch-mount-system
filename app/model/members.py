@@ -9,6 +9,8 @@ from app.model import enums
 
 
 class ColumnSize:
+    OIDC_SUB = 255
+    PROFILE_PICTURE_URL = 255
     USER_NAME = 50
     FIRST_NAME = 50
     LAST_NAME = 50
@@ -22,6 +24,10 @@ class Members(extensions.db.Model, SerializerMixin):
         default=uuid.uuid4,
         unique=True,
         nullable=False,
+    )
+    oidc_sub = extensions.db.Column(sqlalchemy.String(ColumnSize.OIDC_SUB), unigue=True)
+    profile_picture_url = extensions.db.Column(
+        sqlalchemy.String(ColumnSize.PROFILE_PICTURE_URL)
     )
     gmail = extensions.db.Column(postgresql.CITEXT, nullable=False, unique=True)
     user_name = extensions.db.Column(
