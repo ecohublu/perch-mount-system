@@ -105,8 +105,14 @@ ROUTES = [
                 route=_member_id.param,
                 resources=[perchai.Member],
                 children=[
-                    Route(route="block", resources=[perchai.MemberBlock]),
-                    Route(route="activation", resources=[perchai.MemberActivation]),
+                    Route(
+                        route="block",
+                        resources=[perchai.MemberBlock],
+                    ),
+                    Route(
+                        route="activation",
+                        resources=[perchai.MemberActivation],
+                    ),
                 ],
             ),
         ],
