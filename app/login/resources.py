@@ -1,17 +1,19 @@
 import flask
+import flask_jwt_extended
+import http
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
 from app import env
 from app.login import user
+from app.login import jwt
 import app.services.perchai as perchai_service
 
 blueprint = flask.Blueprint("login", __name__)
 
 
-# TODO finish add new user and create jwt token
-@blueprint.route("/google_sso_login", methods=["POST"])
-def google_login():
+@blueprint.route("/login", methods=[http.HTTPMethod.POST])
+def login_by_google_sso_id_token():
     google_id_token = flask.request.get_json()["id_token"]
 
     id_info = id_token.verify_oauth2_token(
@@ -26,6 +28,19 @@ def google_login():
         raise
 
     if signin_user.is_new_user:
-        pass
+        perchai_service.members.add_member_with_sso_info(id_info)
+
     elif not signin_user.with_sub:
         perchai_service.members.update_member_sso_info(id_info)
+
+    signin_user.refresh_member_info()
+    access_token = jwt.create_token_for_signing_user(signin_user)
+
+    return flask.jsonify({"token": access_token})
+
+
+@blueprint.route("/logout", method=[http.HTTPMethod.DELETE])
+def logout():
+    jti = flask_jwt_extended.get_jwt()["jti"]
+    jwt.jwt_redis_blocklist.set(jti, "", ex=env.get_jwt_access_token_expires())
+    return flask.jsonify(msg="Access token revoked")

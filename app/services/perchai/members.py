@@ -40,29 +40,25 @@ def get_member_by_sub_and_gmail(sub: str, email: str) -> model.Members | None:
     return member
 
 
-def add_member(
-    gmail: str,
-    user_name: str,
-    first_name: str,
-    last_name: str,
-    position: enums.Positions,
-) -> uuid.UUID:
+def add_member_with_sso_info(id_token_info: dict) -> uuid.UUID:
 
     new_member = model.Members(
-        gmail=gmail,
-        user_name=user_name,
-        first_name=first_name,
-        last_name=last_name,
-        position=position,
+        oidc_sub=id_token_info["sub"],
+        profile_picture_url=id_token_info["picture"],
+        gmail=id_token_info["gmail"],
+        display_name=id_token_info["name"],
+        first_name=id_token_info["family_name"],
+        last_name=id_token_info["given_name"],
     )
     with perchai.session.begin() as session:
         session.add(new_member)
         session.commit()
         new_id = new_member.id
+
     return new_id
 
 
-def update_member(member_id: uuid.UUID, args: dict):
+def update_member_by_id(member_id: uuid.UUID, args: dict):
     with perchai.session.begin() as session:
         session.query(model.Members).filter(model.Members.id == member_id).update(args)
         session.commit()
@@ -88,48 +84,43 @@ def update_member_sso_info(id_token_info: dict):
 
 
 def block_member(member_id: uuid.UUID):
-    with perchai.session.begin() as session:
-        member: model.Members = (
-            session.query(model.Members.is_super_admin)
-            .filter(model.Members.id == member_id)
-            .one_or_none()
-        )
+    is_super_admin = _is_member_super_admin(member_id)
 
-        if member.is_super_admin:
-            raise errors.SuperAdminUnpatchableError
+    if is_super_admin is None:
+        raise errors.ResourceNotFoundError()
+    if is_super_admin:
+        raise errors.SuperAdminUnpatchableError()
 
-        session.query(model.Members).filter(model.Members.id == member_id).update(
-            {"blocked": True}
-        )
-        session.commit()
+    update_member_by_id(member_id, {"blocked": True})
 
 
 def unblock_member(member_id: uuid.UUID):
-    with perchai.session.begin() as session:
-        session.query(model.Members).filter(model.Members.id == member_id).update(
-            {"blocked": False}
-        )
-        session.commit()
+    update_member_by_id(member_id, {"blocked": False})
 
 
 def activate_member(member_id: uuid.UUID):
-    with perchai.session.begin() as session:
-        member: model.Members = (
-            session.query(model.Members.is_super_admin)
-            .filter(model.Members.id == member_id)
-            .one_or_none()
-        )
+    is_super_admin = _is_member_super_admin(member_id)
 
-        if member.is_super_admin:
-            raise errors.SuperAdminUnpatchableError
+    if is_super_admin is None:
+        raise errors.ResourceNotFoundError()
+    if is_super_admin:
+        raise errors.SuperAdminUnpatchableError()
 
-        session.query(model.Members).filter(model.Members.id == member_id).update(
-            {"activated": True}
-        )
-        session.commit()
+    update_member_by_id(member_id, {"activated": True})
 
 
 def deactivate_member(member_id: uuid.UUID):
+    is_super_admin = _is_member_super_admin(member_id)
+
+    if is_super_admin is None:
+        raise errors.ResourceNotFoundError()
+    if is_super_admin:
+        raise errors.SuperAdminUnpatchableError()
+
+    update_member_by_id(member_id, {"activated": False})
+
+
+def _is_member_super_admin(member_id: uuid.UUID) -> bool | None:
     with perchai.session.begin() as session:
         member: model.Members = (
             session.query(model.Members.is_super_admin)
@@ -137,10 +128,7 @@ def deactivate_member(member_id: uuid.UUID):
             .one_or_none()
         )
 
-        if member.is_super_admin:
-            raise errors.SuperAdminUnpatchableError
+    if member is None:
+        return
 
-        session.query(model.Members).filter(model.Members.id == member_id).update(
-            {"activated": False}
-        )
-        session.commit()
+    return member.is_super_admin

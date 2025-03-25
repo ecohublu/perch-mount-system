@@ -28,6 +28,9 @@ class SigningUpGoogleUser:
     def is_valid_aud(self) -> bool:
         return self.audience == env.get_env(env.EnvKeys.GOOGLE_OAUTH2_CLIENT_ID)
 
+    def refresh_member_info(self):
+        self.member_info = self._get_member()
+
     def _get_member(self) -> model.Members | None:
         member = perchai_service.members.get_member_by_sub_and_gmail(
             self.oidc_sub, self.email

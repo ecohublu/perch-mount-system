@@ -14,11 +14,6 @@ class Members(flask_restx.Resource):
         members = perchai_service.members.get_members()
         return [member.to_dict() for member in members]
 
-    @resource_utils.parse_args(parsers.Members.post)
-    def post(self, parsed_args):
-        new_member_id = perchai_service.members.add_member(**parsed_args)
-        return perchai_utils.id_json(new_member_id)
-
 
 class Member(flask_restx.Resource):
     def get(self, perch_mount_id: uuid.UUID):
@@ -31,7 +26,7 @@ class Member(flask_restx.Resource):
 
     @resource_utils.parse_json_body_args(parsers.Member.post)
     def post(self, member_id: uuid.UUID, parsed_args: dict):
-        perchai_service.members.update_member(member_id, parsed_args)
+        perchai_service.members.update_member_by_id(member_id, parsed_args)
         member = perchai_service.members.get_member_by_id(member_id)
         return member.to_dict()
 

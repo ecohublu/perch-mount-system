@@ -16,3 +16,12 @@ services:
     command: >
       bash -c "apt-get update && apt-get install -y postgresql-17-cron && docker-entrypoint.sh postgres"
     restart: always
+  redis:
+    image: docker.io/redis:7
+    container_name: flask_redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    restart: always
