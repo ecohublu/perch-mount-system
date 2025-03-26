@@ -1,4 +1,5 @@
 import flask_restx
+import flask_jwt_extended
 import uuid
 
 from app.resources.perchai import parsers
@@ -24,6 +25,7 @@ class Member(flask_restx.Resource):
 
         return member.to_dict()
 
+    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_json_body_args(parsers.Member.post)
     def post(self, member_id: uuid.UUID, parsed_args: dict):
         perchai_service.members.update_member_by_id(member_id, parsed_args)
@@ -32,11 +34,13 @@ class Member(flask_restx.Resource):
 
 
 class MemberBlock(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
     def post(self, member_id: uuid.UUID):
         perchai_service.members.block_member(member_id)
         member = perchai_service.members.get_member_by_id(member_id)
         return member.to_dict()
 
+    @flask_jwt_extended.jwt_required()
     def delete(self, member_id: uuid.UUID):
         member = perchai_service.members.get_member_by_id(member_id)
         perchai_service.members.unblock_member(member_id)
@@ -44,11 +48,13 @@ class MemberBlock(flask_restx.Resource):
 
 
 class MemberActivation(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
     def post(self, member_id: uuid.UUID):
         member = perchai_service.members.get_member_by_id(member_id)
         perchai_service.members.activate_member(member_id)
         return member.to_dict()
 
+    @flask_jwt_extended.jwt_required()
     def delete(self, member_id: uuid.UUID):
         perchai_service.members.deactivate_member(member_id)
         member = perchai_service.members.get_member_by_id(member_id)

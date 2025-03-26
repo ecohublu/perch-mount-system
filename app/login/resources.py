@@ -40,6 +40,7 @@ def login_by_google_sso_id_token():
 
 
 @blueprint.route("/logout", method=[http.HTTPMethod.DELETE])
+@flask_jwt_extended.jwt_required()
 def logout():
     jti = flask_jwt_extended.get_jwt()["jti"]
     jwt.jwt_redis_blocklist.set(jti, "", ex=env.get_jwt_access_token_expires())

@@ -1,4 +1,5 @@
 import flask_restx
+import flask_jwt_extended
 
 from app.resources.perchai import parsers
 import app.services.perchai as perchai_service
@@ -7,10 +8,12 @@ import app.resources.utils as resource_utils
 
 
 class Projects(flask_restx.Resource):
+
     def get(self):
         projects = perchai_service.projects.get_projects()
         return [project.to_dict() for project in projects]
 
+    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.Projects.post)
     def post(self, parsed_args):
         new_project_id = perchai_service.projects.add_project(**parsed_args)
@@ -22,6 +25,7 @@ class Cameras(flask_restx.Resource):
         cameras = perchai_service.cameras.get_cameras()
         return [camera.to_dict() for camera in cameras]
 
+    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.Cameras.post)
     def post(self, parsed_args):
         new_camera_id = perchai_service.cameras.add_camera(**parsed_args)
@@ -33,6 +37,7 @@ class Events(flask_restx.Resource):
         events = perchai_service.events.get_events()
         return [event.to_dict() for event in events]
 
+    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.Events.post)
     def post(self, parsed_args):
         new_event_id = perchai_service.events.add_event(**parsed_args)
@@ -44,6 +49,7 @@ class MountTypes(flask_restx.Resource):
         mount_types = perchai_service.mount_types.get_mount_types()
         return [mount_type.to_dict() for mount_type in mount_types]
 
+    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.MountTypes.post)
     def post(self, parsed_args):
         new_mount_type_id = perchai_service.mount_types.add_mount_types(**parsed_args)
@@ -55,6 +61,7 @@ class Behaviors(flask_restx.Resource):
         behaviors = perchai_service.cameras.get_cameras()
         return [behavior.to_dict() for behavior in behaviors]
 
+    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.Behaviors.post)
     def post(self, parsed_args):
         new_behavior_id = perchai_service.behaviors.add_behavior(**parsed_args)
