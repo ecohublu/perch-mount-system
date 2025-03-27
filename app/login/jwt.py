@@ -25,6 +25,6 @@ def _get_additional_claim_from_user(user: user.SigningUpGoogleUser) -> dict:
 
 def create_token_for_signing_user(user: user.SigningUpGoogleUser) -> str:
     return flask_jwt_extended.create_access_token(
-        identity=user.member_info.id,
+        identity=str(user.member_info.id),
         additional_claims=_get_additional_claim_from_user(user),
     )

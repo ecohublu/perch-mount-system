@@ -3,6 +3,7 @@ import flask_jwt_extended
 import http
 from google.auth.transport import requests
 from google.oauth2 import id_token
+import uuid
 
 from app import env
 from app.login import user
@@ -45,3 +46,11 @@ def logout():
     jti = flask_jwt_extended.get_jwt()["jti"]
     jwt.jwt_redis_blocklist.set(jti, "", ex=env.get_jwt_access_token_expires())
     return flask.jsonify(msg="Access token revoked")
+
+
+@blueprint.route("/me", method=[http.HTTPMethod.DELETE])
+@flask_jwt_extended.jwt_required()
+def me():
+    identity = flask_jwt_extended.get_jwt_identity()
+    member = perchai_service.members.get_member_by_id(uuid.UUID(identity))
+    return flask.jsonify(member.to_dict())
