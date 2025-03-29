@@ -26,7 +26,7 @@ class Members(extensions.db.Model, SerializerMixin):
         unique=True,
         nullable=False,
     )
-    oidc_sub = extensions.db.Column(sqlalchemy.String(ColumnSize.OIDC_SUB), unigue=True)
+    oidc_sub = extensions.db.Column(sqlalchemy.String(ColumnSize.OIDC_SUB), unique=True)
     profile_picture_url = extensions.db.Column(
         sqlalchemy.String(ColumnSize.PROFILE_PICTURE_URL)
     )

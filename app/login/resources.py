@@ -40,7 +40,7 @@ def login_by_google_sso_id_token():
     return flask.jsonify({"token": access_token})
 
 
-@blueprint.route("/logout", method=[http.HTTPMethod.DELETE])
+@blueprint.route("/logout", methods=[http.HTTPMethod.DELETE])
 @flask_jwt_extended.jwt_required()
 def logout():
     jti = flask_jwt_extended.get_jwt()["jti"]
@@ -48,7 +48,7 @@ def logout():
     return flask.jsonify(msg="Access token revoked")
 
 
-@blueprint.route("/me", method=[http.HTTPMethod.DELETE])
+@blueprint.route("/me", methods=[http.HTTPMethod.DELETE])
 @flask_jwt_extended.jwt_required()
 def me():
     identity = flask_jwt_extended.get_jwt_identity()
