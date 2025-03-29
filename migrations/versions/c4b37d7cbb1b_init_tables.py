@@ -48,7 +48,10 @@ def upgrade():
     op.create_table(
         "members",
         sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("oidc_sub", sa.String(length=255)),
+        sa.Column("profile_picture_url", sa.String(length=255)),
         sa.Column("gmail", postgresql.CITEXT(), nullable=False),
+        sa.Column("display_name", sa.String(length=50)),
         sa.Column("user_name", sa.String(length=50), nullable=False),
         sa.Column("first_name", sa.String(length=50), nullable=False),
         sa.Column("last_name", sa.String(length=50), nullable=False),

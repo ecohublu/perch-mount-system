@@ -28,8 +28,9 @@ def upgrade_ext():
 
     op.execute(
         """
-        CREATE OR REPLACE FUNCTION refresh_section_counts()
-        RETURNS VOID AS $$
+        CREATE OR REPLACE PROCEDURE refresh_section_counts()
+        LANGUAGE plpgsql
+        AS $$
         BEGIN
             UPDATE sections s
             SET 
@@ -51,13 +52,17 @@ def upgrade_ext():
             ) AS m
             WHERE s.id = m.section_id;
         END;
-        $$ LANGUAGE plpgsql;
+        $$;
         """
     )
 
     op.execute(
         """
-        SELECT cron.schedule('refresh_section_counts_job', '0 22 * * *', $$CALL refresh_section_counts();$$);
+        SELECT cron.schedule(
+            'refresh_section_counts_job',
+            '* */1 * * *',
+            $$CALL refresh_section_counts();$$
+        );
         """
     )
 
@@ -98,6 +103,7 @@ def upgrade_ext():
 
             RETURN NEW;
         END;
+        $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_update_prey_status_as_no_prey_or_unidentified
         AFTER INSERT ON marked_prey_individuals_contents
@@ -154,5 +160,5 @@ def downgrade_ext():
     for name in ENUMS:
         op.execute(f"DROP TYPE IF EXISTS {name} CASCADE;")
 
-    op.execute("DROP FUNCTION IF EXISTS refresh_section_counts CASCADE;")
+    op.execute("DROP PROCEDURE IF EXISTS refresh_section_counts CASCADE;")
     op.execute("SELECT cron.unschedule('refresh_section_counts_job');")
