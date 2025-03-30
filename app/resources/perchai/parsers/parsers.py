@@ -132,6 +132,8 @@ class Members(parser.Parser):
 
 
 class Member(parser.Parser):
+    get = reqparse.RequestParser()
+    get.add_argument("activated", type=type_funcs.bool_)
     patch = schemas.MemberPatchSchema()
 
 

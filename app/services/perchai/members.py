@@ -15,6 +15,18 @@ def get_members() -> list[model.Members]:
     return members
 
 
+def get_unactivated_members() -> list[model.Members]:
+    with perchai.session.begin() as session:
+        query = session.query(model.Members).filter(
+            sqlalchemy.and_(
+                model.Members.activated == False,
+                model.Members.blocked == False,
+            )
+        )
+        members = query.all()
+    return members
+
+
 def get_member_by_id(member_id: uuid.UUID) -> model.Members | None:
     with perchai.session.begin() as session:
         member = (
