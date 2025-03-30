@@ -10,7 +10,6 @@ from app import model
 
 
 class Sections(flask_restx.Resource):
-    @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.Sections.get)
     def get(self, parsed_args):
         filter = perchai_service.utils.query_filter.SectionFilter(**parsed_args)
