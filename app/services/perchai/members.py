@@ -45,7 +45,7 @@ def add_member_with_sso_info(id_token_info: dict) -> uuid.UUID:
     new_member = model.Members(
         oidc_sub=id_token_info["sub"],
         profile_picture_url=id_token_info["picture"],
-        gmail=id_token_info["gmail"],
+        gmail=id_token_info["email"],
         display_name=id_token_info["name"],
         first_name=id_token_info["family_name"],
         last_name=id_token_info["given_name"],
@@ -73,7 +73,7 @@ def update_member_sso_info(id_token_info: dict):
             )
         ).update(
             {
-                "oidc_usb": id_token_info["sub"],
+                "oidc_sub": id_token_info["sub"],
                 "display_name": id_token_info["name"],
                 "first_name": id_token_info["given_name"],
                 "last_name": id_token_info["family_name"],

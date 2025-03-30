@@ -39,8 +39,8 @@ class SigningUpGoogleUser:
 
     @property
     def is_new_user(self) -> bool:
-        return self.member_info is not None
+        return self.member_info is None
 
     @property
     def with_sub(self) -> bool:
-        return self.member_info.oidc_sub is not None
+        return not self.is_new_user and self.member_info.oidc_sub is not None

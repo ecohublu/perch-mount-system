@@ -34,7 +34,7 @@ def login_by_google_sso_id_token():
     elif not signin_user.with_sub:
         perchai_service.members.update_member_sso_info(id_info)
 
-    signin_user.refresh_member_info()
+    signin_user.refresh_member_info()ㄑ
     access_token = jwt.create_token_for_signing_user(signin_user)
 
     return flask.jsonify({"token": access_token})
@@ -48,7 +48,7 @@ def logout():
     return flask.jsonify(msg="Access token revoked")
 
 
-@blueprint.route("/me", methods=[http.HTTPMethod.DELETE])
+@blueprint.route("/me", methods=[http.HTTPMethod.GET])
 @flask_jwt_extended.jwt_required()
 def me():
     identity = flask_jwt_extended.get_jwt_identity()

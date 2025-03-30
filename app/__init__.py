@@ -1,4 +1,5 @@
 from flask import Flask
+import flask_cors
 from app import model
 from app.extensions import db, migrate, jwt
 from app.error_handler import blueprint as error_handler_blueprint
@@ -10,6 +11,7 @@ def create_app(config_object="config.Config") -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_object)
 
+    flask_cors.CORS(app)
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
