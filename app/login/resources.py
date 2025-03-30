@@ -1,3 +1,4 @@
+import datetime
 import flask
 import flask_jwt_extended
 import http
@@ -54,3 +55,31 @@ def me():
     identity = flask_jwt_extended.get_jwt_identity()
     member = perchai_service.members.get_member_by_id(uuid.UUID(identity))
     return flask.jsonify(member.to_dict())
+
+
+@blueprint.before_request
+def check_token_expiry():
+    try:
+        token_data = flask_jwt_extended.get_jwt()
+        exp_timestamp = token_data["exp"]
+        now = datetime.datetime.now(datetime.timezone.utc)
+        expire_time = datetime.datetime.fromtimestamp(
+            exp_timestamp, tz=datetime.timezone.utc
+        )
+        remaining_time = expire_time - now
+
+        if remaining_time.total_seconds() <= 86400:
+            new_token = flask_jwt_extended.create_access_token(
+                identity=token_data["sub"]
+            )
+            flask.g.new_token = new_token
+
+    except Exception:
+        pass
+
+
+@blueprint.after_request
+def add_new_token_if_exist(response):
+    if hasattr(flask.g, "new_token"):
+        response.headers["X-New-Token"] = flask.g.new_token
+    return response
