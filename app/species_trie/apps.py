@@ -1,7 +1,7 @@
 import flask
 
 from app.services.perchai import species
-from species_trie import trie
+from app.species_trie import trie
 
 
 trier = trie.SpeciesTrie(species.get_species())
