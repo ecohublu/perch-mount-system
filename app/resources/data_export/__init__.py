@@ -1,6 +1,6 @@
 import flask_restx
 from app.resources import routing
-
+from app.resources.data_export.data import *
 from app.resources.data_export.routes import ROUTES
 
 

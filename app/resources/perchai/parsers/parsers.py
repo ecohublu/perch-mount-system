@@ -1,3 +1,7 @@
+from datetime import datetime, date
+from flask_restx import reqparse
+import uuid
+
 from app.resources.utils import type_funcs
 from app.resources.utils import parser
 from app.resources.perchai.parsers import (
@@ -5,9 +9,6 @@ from app.resources.perchai.parsers import (
     prey_oper_schema,
     schemas,
 )
-from datetime import datetime, date
-from flask_restx import reqparse
-import uuid
 
 
 class Species(parser.Parser):
@@ -29,7 +30,7 @@ class Sections(parser.Parser):
     get.add_argument("perch_mount_ids", type=type_funcs.str_split, location="args")
     get.add_argument("swapped_date_from", type=datetime.fromisoformat, location="args")
     get.add_argument("swapped_date_to", type=datetime.fromisoformat, location="args")
-    get.add_argument("swapper_ids", type=type_funcs.str_split, location="args")
+    get.add_argument("swapper_ids", type=type_funcs.uuid_split, location="args")
 
     post = reqparse.RequestParser()
     post.add_argument("perch_mount_id", required=True, type=uuid.UUID)
