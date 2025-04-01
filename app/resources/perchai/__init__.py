@@ -1,5 +1,5 @@
 import flask_restx
-from app import resources
+from app.resources import routing
 
 from app.resources.perchai.species import *
 from app.resources.perchai.sections import *
@@ -12,5 +12,5 @@ from app.resources.perchai.routes import ROUTES
 
 
 api = flask_restx.Api(prefix="/api/perchai")
-routes = resources.Routes(ROUTES)
+routes = routing.Routes(ROUTES)
 routes.init_api(api)
