@@ -1,14 +1,35 @@
-from typing import List
 from collections import defaultdict
+import enum
 import flask_restx
+import typing
+
+
+_VAR_TYPES = typing.Literal["int", "string", "float", "uuid"]
+
+
+class VarTypes(enum.Enum):
+    INT = "int"
+    STRING = "string"
+    FLOAT = "float"
+    UUID = "uuid"
+
+
+class RouteVar:
+    def __init__(self, name: str, type_: _VAR_TYPES):
+        self.name = name
+        self.type = type_
+
+    @property
+    def param(self) -> str:
+        return f"<{self.type}:{self.name}>"
 
 
 class Route:
     def __init__(
         self,
         route: str,
-        resources: List[flask_restx.Resource],
-        children: List["Route"] = [],
+        resources: typing.List[flask_restx.Resource],
+        children: typing.List["Route"] = [],
     ):
         self.route = route
         self.resources = resources
@@ -32,7 +53,7 @@ class Routes:
 
             for resource in route.resources:
                 self._route_map[resource].append(endpoint)
-                
+
             self._find_route_map(route.children, parent=endpoint)
 
     def _add_resources(self, api: flask_restx.Api, route_map: dict):

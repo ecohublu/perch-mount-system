@@ -1,46 +1,24 @@
-import enum
-import typing
-
 from app.resources import perchai
-from app.resources import Route
-
-_VAR_TYPES = typing.Literal["int", "string", "float", "uuid"]
+from app.resources import routing
 
 
-class VarTypes(enum.Enum):
-    INT = "int"
-    STRING = "string"
-    FLOAT = "float"
-    UUID = "uuid"
-
-
-class RouteVar:
-    def __init__(self, name: str, type_: _VAR_TYPES):
-        self.name = name
-        self.type = type_
-
-    @property
-    def param(self) -> str:
-        return f"<{self.type}:{self.name}>"
-
-
-_taxon_order = RouteVar(name="taxon_order", type_="int")
-_section_id = RouteVar(name="section_id", type_="uuid")
-_perch_mount_id = RouteVar(name="perch_mount_id", type_="uuid")
-_member_id = RouteVar(name="member_id", type_="uuid")
-_medium_id = RouteVar(name="medium_id", type_="uuid")
-_individual_id = RouteVar(name="individual_id", type_="uuid")
+_taxon_order = routing.RouteVar(name="taxon_order", type_="int")
+_section_id = routing.RouteVar(name="section_id", type_="uuid")
+_perch_mount_id = routing.RouteVar(name="perch_mount_id", type_="uuid")
+_member_id = routing.RouteVar(name="member_id", type_="uuid")
+_medium_id = routing.RouteVar(name="medium_id", type_="uuid")
+_individual_id = routing.RouteVar(name="individual_id", type_="uuid")
 
 ROUTES = [
-    Route(
+    routing.Route(
         route="perch_mounts",
         resources=[perchai.PerchMounts],
         children=[
-            Route(
+            routing.Route(
                 route=_perch_mount_id.param,
                 resources=[perchai.PerchMount],
                 children=[
-                    Route(
+                    routing.Route(
                         route="activation",
                         resources=[perchai.PerchMountActivation],
                     ),
@@ -48,68 +26,68 @@ ROUTES = [
             )
         ],
     ),
-    Route(
+    routing.Route(
         route="sections",
         resources=[perchai.Sections],
         children=[
-            Route(
+            routing.Route(
                 route=_section_id.param,
                 resources=[perchai.Section],
             ),
         ],
     ),
-    Route(
+    routing.Route(
         route="media",
         resources=[perchai.Media],
-        children=[Route(route=_medium_id.param, resources=[perchai.Medium])],
+        children=[routing.Route(route=_medium_id.param, resources=[perchai.Medium])],
     ),
-    Route(
+    routing.Route(
         route="individuals",
         resources=[],
         children=[
-            Route(
+            routing.Route(
                 route=_individual_id.param,
                 resources=[perchai.Individual],
                 children=[
-                    Route(route="prey", resources=[perchai.IndividualPrey]),
-                    Route(route="note", resources=[perchai.IndividualNote]),
+                    routing.Route(route="prey", resources=[perchai.IndividualPrey]),
+                    routing.Route(route="note", resources=[perchai.IndividualNote]),
                 ],
             ),
         ],
     ),
-    Route(
+    routing.Route(
         route="projects",
         resources=[perchai.Projects],
     ),
-    Route(
+    routing.Route(
         route="cameras",
         resources=[perchai.Cameras],
     ),
-    Route(
+    routing.Route(
         route="event",
         resources=[perchai.Events],
     ),
-    Route(
+    routing.Route(
         route="mount_types",
         resources=[perchai.MountTypes],
     ),
-    Route(
+    routing.Route(
         route="behaviors",
         resources=[perchai.Behaviors],
     ),
-    Route(
+    routing.Route(
         route="members",
         resources=[perchai.Members],
         children=[
-            Route(
+            routing.Route(
                 route=_member_id.param,
                 resources=[perchai.Member],
                 children=[
-                    Route(
+                    routing.Route(
                         route="block",
                         resources=[perchai.MemberBlock],
                     ),
-                    Route(
+                    routing.Route(
                         route="activation",
                         resources=[perchai.MemberActivation],
                     ),
@@ -117,28 +95,30 @@ ROUTES = [
             ),
         ],
     ),
-    Route(
+    routing.Route(
         route="species",
         resources=[perchai.Species],
-        children=[Route(route=_taxon_order.param, resources=[perchai.ASpecies])],
+        children=[
+            routing.Route(route=_taxon_order.param, resources=[perchai.ASpecies])
+        ],
     ),
-    Route(
+    routing.Route(
         route="uploaded_media",
         resources=[perchai.UploadedMedia],
     ),
-    Route(
+    routing.Route(
         route="detected_media",
         resources=[perchai.DetectedMedia],
     ),
-    Route(
+    routing.Route(
         route="checked_media",
         resources=[perchai.CheckedMedia],
     ),
-    Route(
+    routing.Route(
         route="reviewed_media",
         resources=[perchai.ReviewedMedia],
     ),
-    Route(
+    routing.Route(
         route="identified_preys",
         resources=[perchai.IdentifiedPreys],
     ),
