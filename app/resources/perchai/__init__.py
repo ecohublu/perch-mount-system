@@ -11,6 +11,6 @@ from app.resources.perchai.individuals import *
 from app.resources.perchai.routes import ROUTES
 
 
-api = flask_restx.Api()
+api = flask_restx.Api(prefix="/api/perchai")
 routes = resources.Routes(ROUTES)
 routes.init_api(api)

@@ -1,1 +1,1 @@
-from app.login.resources import blueprint
+from app.login.apps import blueprint
