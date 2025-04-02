@@ -1,16 +1,16 @@
-from app.services import perchai
+from app.services import db
 from app import model
 import uuid
 
 
 def get_behaviors() -> list[model.Behaviors]:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         behaviors = session.query(model.Behaviors).all()
     return behaviors
 
 
 def get_behavior_by_id(behavior_id: uuid.UUID) -> model.Behaviors | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         behavior = (
             session.query(model.Behaviors)
             .filter(model.Behaviors.id == behavior_id)
@@ -21,7 +21,7 @@ def get_behavior_by_id(behavior_id: uuid.UUID) -> model.Behaviors | None:
 
 def add_behavior(name: str) -> str:
     new_behavior = model.Behaviors(name=name)
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.add(new_behavior)
         session.commit()
     return new_behavior.id

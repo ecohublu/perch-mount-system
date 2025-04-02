@@ -1,7 +1,7 @@
 from datetime import date
 import uuid
 
-from app.services import perchai
+from app.services import db
 import app.services.perchai.utils as services_utils
 from app import model
 
@@ -10,7 +10,7 @@ def get_sections_by_filter(
     filter: services_utils.SectionFilter,
 ) -> list[model.Sections]:
     modifier = services_utils.SectionQueryModifier(filter)
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         query = session.query(model.Sections)
         query = modifier.filter_query(query)
         sections = query.all()
@@ -18,7 +18,7 @@ def get_sections_by_filter(
 
 
 def get_section_by_id(section_id: uuid.UUID) -> model.Sections | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         section = (
             session.query(model.Sections)
             .filter(model.Sections.id == section_id)
@@ -47,7 +47,7 @@ def add_section(
         note=note,
     )
 
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         try:
             session.add(section)
             session.flush()
@@ -62,7 +62,7 @@ def add_section(
             session.rollback()
             raise
 
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         section = (
             session.query(model.Sections)
             .filter(model.Sections.id == new_section.id)
@@ -73,7 +73,7 @@ def add_section(
 
 
 def update_section(section_id: uuid.UUID, arg: dict):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.query(model.Sections).filter(model.Sections.id == section_id).update(
             arg
         )

@@ -1,6 +1,6 @@
 import uuid
 
-from app.services import perchai
+from app.services import db
 import app.services.perchai.utils as services_utils
 from app import model
 from app.model import enums
@@ -10,7 +10,7 @@ def get_perch_mounts_by_filter(
     filter: services_utils.PerchMountFilter,
 ) -> list[model.PerchMounts]:
     modifier = services_utils.PerchMountQueryModifier(filter)
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         query = session.query(model.PerchMounts)
         query = modifier.filter_query(query)
         perch_mounts = query.all()
@@ -18,7 +18,7 @@ def get_perch_mounts_by_filter(
 
 
 def get_perch_mount_by_id(perch_mount_id: uuid.UUID) -> model.PerchMounts | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         perch_mount = (
             session.query(model.PerchMounts)
             .filter(model.PerchMounts.id == perch_mount_id)
@@ -46,7 +46,7 @@ def add_perch_mount(
         mount_layer=mount_layer.upper(),
         note=note,
     )
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.add(new_perch_mount)
         session.commit()
         new_id = new_perch_mount.id
@@ -54,7 +54,7 @@ def add_perch_mount(
 
 
 def update_perch_mount(perch_mount_id: uuid.UUID, arg: dict):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.query(model.PerchMounts).filter(
             model.PerchMounts.id == perch_mount_id
         ).update(arg)
@@ -62,7 +62,7 @@ def update_perch_mount(perch_mount_id: uuid.UUID, arg: dict):
 
 
 def terminate_perch_mount(perch_mount_id: uuid.UUID):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.query(model.PerchMounts).filter(
             model.PerchMounts.id == perch_mount_id
         ).update({"terminated": True})
@@ -70,7 +70,7 @@ def terminate_perch_mount(perch_mount_id: uuid.UUID):
 
 
 def activate_perch_mount(perch_mount_id: uuid.UUID):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.query(model.PerchMounts).filter(
             model.PerchMounts.id == perch_mount_id
         ).update({"terminated": False})
@@ -79,7 +79,7 @@ def activate_perch_mount(perch_mount_id: uuid.UUID):
 
 # TODO make sure this function return boolean | None
 def is_perch_mount_activated(perch_mount_id: uuid.UUID) -> bool | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         terminated = (
             session.query(model.PerchMounts.terminated)
             .filter(model.PerchMounts.id == perch_mount_id)

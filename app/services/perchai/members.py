@@ -3,20 +3,19 @@ import uuid
 
 
 from app import model
-from app.services import perchai
-from app.model import enums
+from app.services import db
 from app.error_handler import errors
 
 
 def get_members() -> list[model.Members]:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         query = session.query(model.Members)
         members = query.all()
     return members
 
 
 def get_unactivated_members() -> list[model.Members]:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         query = session.query(model.Members).filter(
             sqlalchemy.and_(
                 model.Members.activated == False,
@@ -28,7 +27,7 @@ def get_unactivated_members() -> list[model.Members]:
 
 
 def get_member_by_id(member_id: uuid.UUID) -> model.Members | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         member = (
             session.query(model.Members)
             .filter(model.Members.id == member_id)
@@ -38,7 +37,7 @@ def get_member_by_id(member_id: uuid.UUID) -> model.Members | None:
 
 
 def get_member_by_sub_and_gmail(sub: str, email: str) -> model.Members | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         member = (
             session.query(model.Members)
             .filter(
@@ -62,7 +61,7 @@ def add_member_with_sso_info(id_token_info: dict) -> uuid.UUID:
         first_name=id_token_info["family_name"],
         last_name=id_token_info["given_name"],
     )
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.add(new_member)
         session.commit()
         new_id = new_member.id
@@ -71,13 +70,13 @@ def add_member_with_sso_info(id_token_info: dict) -> uuid.UUID:
 
 
 def update_member_by_id(member_id: uuid.UUID, args: dict):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.query(model.Members).filter(model.Members.id == member_id).update(args)
         session.commit()
 
 
 def update_member_sso_info(id_token_info: dict):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         session.query(model.Members).filter(
             sqlalchemy.or_(
                 model.Members.oidc_sub == id_token_info["sub"],
@@ -133,7 +132,7 @@ def deactivate_member(member_id: uuid.UUID):
 
 
 def _is_member_super_admin(member_id: uuid.UUID) -> bool | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         member: model.Members = (
             session.query(model.Members.is_super_admin)
             .filter(model.Members.id == member_id)

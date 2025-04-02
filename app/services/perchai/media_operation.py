@@ -2,7 +2,7 @@ import datetime
 import uuid
 from sqlalchemy.orm.session import Session
 
-from app.services import perchai
+from app.services import db
 import app.services.perchai.utils as services_utils
 from app.error_handler import errors
 from app import model
@@ -26,7 +26,7 @@ def add_uploaded_media(
         end_time = max(model_medium.medium_datetime)
 
     _find_media_section_id(model_media, section_id)
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         try:
             session.query(model.Sections).filter(
                 model.Sections.id == section_id
@@ -81,7 +81,7 @@ def add_detected_media(
                     box_ymax=individual.box_ymax,
                 )
             )
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         try:
             session.add_all(individuals)
             session.flush()
@@ -109,7 +109,7 @@ def add_checked_media(checked_media: list[dict]):
         model.AccidentalMediaContents(medium_id=medium.id)
         for medium in media.media_to_accidenal
     ]
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         try:
             session.add_all(unreviewed_media)
             session.add_all(accidental_media)
@@ -140,7 +140,7 @@ def add_reviewed_media(reviewed_media: list[dict]):
             )
         )
 
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         try:
             session.add_all(accidental_media)
             session.add_all(reviewed_media)

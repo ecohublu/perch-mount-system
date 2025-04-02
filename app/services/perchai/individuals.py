@@ -1,13 +1,13 @@
 import uuid
 
-from app.services import perchai
+from app.services import db
 import app.services.perchai.utils as services_utils
 from app import model
 from app.error_handler import errors
 
 
 def get_individual_by_id(individual_id: uuid.UUID) -> model.Individuals | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals)
             .filter(model.Individuals.id == individual_id)
@@ -17,7 +17,7 @@ def get_individual_by_id(individual_id: uuid.UUID) -> model.Individuals | None:
 
 
 def update_individual(individual_id: uuid.UUID, args: dict):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals.medium_id)
             .filter(model.Individuals.id == individual_id)
@@ -50,7 +50,7 @@ def update_individual(individual_id: uuid.UUID, args: dict):
 def get_prey_by_individual_id(
     individual_id: uuid.UUID,
 ) -> model.IdentifiedPreyIndividualsContents | None:
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         prey = (
             session.query(model.IdentifiedPreyIndividualsContents.individual_id)
             .filter(
@@ -65,7 +65,7 @@ def add_prey(
     individual_id: uuid.UUID,
     args: dict,
 ):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals.prey_status)
             .filter(model.Individuals.id == individual_id)
@@ -96,7 +96,7 @@ def update_prey(
     individual_id: uuid.UUID,
     args: dict,
 ):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals.prey_status)
             .filter(model.Individuals.id == individual_id)
@@ -120,7 +120,7 @@ def update_prey(
 
 
 def delete_prey(individual_id: uuid.UUID):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals.prey_status)
             .filter(model.Individuals.id == individual_id)
@@ -147,7 +147,7 @@ def delete_prey(individual_id: uuid.UUID):
 
 
 def upsert_note(individual_id: uuid.UUID, note: str):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals)
             .filter(model.Individuals.id == individual_id)
@@ -168,7 +168,7 @@ def upsert_note(individual_id: uuid.UUID, note: str):
 
 
 def remove_note(individual_id: uuid.UUID):
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         individual = (
             session.query(model.Individuals)
             .filter(model.Individuals.id == individual_id)
@@ -192,7 +192,7 @@ def add_identified_preys(identified_preys: list[dict]):
     identified_preys = [
         model.IdentifiedPreyIndividualsContents(**prey) for prey in identified_preys
     ]
-    with perchai.session.begin() as session:
+    with db.session.begin() as session:
         try:
             session.add_all(identified_preys)
             session.commit()
