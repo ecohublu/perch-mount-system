@@ -1,3 +1,5 @@
+from datetime import datetime
+import uuid
 import sqlalchemy
 import sqlalchemy.orm
 
@@ -68,16 +70,138 @@ _FIELDS_SETS = {
 }
 
 
-def get_data(additional_field_sets: list[str], offset: int = 0, limit: int = 100):
-    additional_fields = _get_fields_by_sets(additional_field_sets)
+class DataExportQueryHelper:
+    def __init__(
+        self,
+        field_sets: list[str] = None,
+        projects: list[uuid.UUID] = None,
+        perch_mounts: list[uuid.UUID] = None,
+        habitats: list[str] = None,
+        cameras: list[uuid.UUID] = None,
+        mount_types: list[uuid.UUID] = None,
+        medium_datetime_from: datetime = None,
+        medium_datetime_to: datetime = None,
+        taxon_orders_by_ai: list[int] = None,
+        taxon_orders_by_human: list[int] = None,
+        has_prey: bool = None,
+        inaturalist_taxa_ids: list[int] = None,
+        tagged: bool = None,
+        included_unreviewed: bool = None,
+    ):
+        self.field_sets = field_sets
+        self.projects = projects
+        self.perch_mounts = perch_mounts
+        self.habitats = habitats
+        self.cameras = cameras
+        self.mount_types = mount_types
+        self.medium_datetime_from = medium_datetime_from
+        self.medium_datetime_to = medium_datetime_to
+        self.taxon_orders_by_ai = taxon_orders_by_ai
+        self.taxon_orders_by_human = taxon_orders_by_human
+        self.has_prey = has_prey
+        self.inaturalist_taxa_ids = inaturalist_taxa_ids
+        self.tagged = tagged
+        self.included_unreviewed = included_unreviewed
 
-    return
+    def get_fields_by_sets(self) -> list:
+        fields = []
+        for s in self.field_sets:
+            if s not in _FIELDS_SETS:
+                continue
+            fields.extend(_FIELDS_SETS[s])
+        return fields
+
+    def join_query(self, query: sqlalchemy.orm.Query) -> sqlalchemy.orm.Query:
+
+        query = (
+            query.join(
+                model.MarkedPreyIndividualsContents,
+                model.Individuals.id
+                == model.MarkedPreyIndividualsContents.individual_id,
+            )
+            .join(
+                model.IdentifiedPreyIndividualsContents,
+                model.Individuals.id
+                == model.IdentifiedPreyIndividualsContents.individual_id,
+            )
+            .join(
+                model.TaggedIndividualsContents,
+                model.Individuals.id == model.TaggedIndividualsContents.individual_id,
+            )
+            .join(
+                model.UnreviewedIndividualsContents,
+                model.Individuals.id
+                == model.UnreviewedIndividualsContents.individual_id,
+            )
+            .join(
+                model.ReviewedIndividualsContents,
+                model.Individuals.id == model.ReviewedIndividualsContents.individual_id,
+            )
+            .join(model.Media, model.Individuals.medium_id == model.Media.id)
+            .join(model.Sections, model.Media.section_id == model.Sections.id)
+            .join(model.Cameras, model.Sections.camera_id == model.Cameras.id)
+            .join(model.MountTypes, model.Sections.mount_type_id == model.MountTypes.id)
+            .join(
+                model.PerchMounts,
+                model.Sections.perch_mount_id == model.PerchMounts.id,
+            )
+            .join(model.Projects, model.PerchMounts.project_id == model.Projects.id)
+        )
+
+        return query
+
+    def filter_query(self, query: sqlalchemy.orm.Query) -> sqlalchemy.orm.Query:
+        if self.projects:
+            query = query.filter(model.Projects.id.in_(self.projects))
+        if self.perch_mounts:
+            query = query.filter(model.PerchMounts.id.in_(self.perch_mounts))
+        if self.habitats:
+            query = query.filter(model.PerchMounts.habitat.in_(self.habitats))
+        if self.cameras:
+            query = query.filter(model.Cameras.id.in_(self.cameras))
+        if self.mount_types:
+            query = query.filter(model.MountTypes.id.in_(self.mount_types))
+        if self.medium_datetime_from:
+            query = query.filter(
+                model.Media.medium_datetime >= self.medium_datetime_from
+            )
+        if self.medium_datetime_to:
+            query = query.filter(model.Media.medium_datetime < self.medium_datetime_to)
+
+        if self.taxon_orders_by_ai:
+            query = query.filter(
+                model.UnreviewedIndividualsContents.taxon_order_by_ai.in_(
+                    self.taxon_orders_by_ai
+                )
+            )
+        if self.taxon_orders_by_human:
+            query = query.filter(
+                model.ReviewedIndividualsContents.taxon_order_by_human.in_(
+                    self.taxon_orders_by_human
+                )
+            )
+        if self.has_prey is not None:
+            query = query.filter(
+                model.MarkedPreyIndividualsContents.has_prey == self.has_prey
+            )
+        if self.inaturalist_taxa_ids:
+            query = query.filter(
+                model.IdentifiedPreyIndividualsContents.inaturalist_taxa_id.in_(
+                    self.inaturalist_taxa_ids
+                )
+            )
+        return query
 
 
-def _get_fields_by_sets(sets: list[str]) -> list:
-    fields = []
-    for s in sets:
-        if s not in _FIELDS_SETS:
-            continue
-        fields.extend(_FIELDS_SETS[s])
-    return fields
+def get_data(parsed_args, offset: int = 0, limit: int = None):
+    helper = DataExportQueryHelper(**parsed_args)
+    additional_fields = helper.get_fields_by_sets()
+    with db.session.begin() as session:
+        query = session.query(*_DEFAULT_FIELDS, *additional_fields)
+        query = helper.join_query(query)
+        query = helper.filter_query(query)
+        query = query.offset(offset)
+        if limit:
+            query = query.limit(limit)
+        data = query.all()
+    return data
