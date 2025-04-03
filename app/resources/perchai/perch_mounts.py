@@ -35,7 +35,7 @@ class PerchMount(flask_restx.Resource):
         return perch_mount.to_dict()
 
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.PerchMount.patch)
+    @resource_utils.parse_args(parsers.PerchMount.patch)
     def patch(self, perch_mount_id: uuid.UUID, parsed_args):
         perchai_service.perch_mounts.update_perch_mount(perch_mount_id, parsed_args)
         perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)

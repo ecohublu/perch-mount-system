@@ -26,8 +26,8 @@ class Member(flask_restx.Resource):
         return member.to_dict()
 
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.Member.post)
-    def post(self, member_id: uuid.UUID, parsed_args: dict):
+    @resource_utils.parse_args(parsers.Member.patch)
+    def patch(self, member_id: uuid.UUID, parsed_args: dict):
         perchai_service.members.update_member_by_id(member_id, parsed_args)
         member = perchai_service.members.get_member_by_id(member_id)
         return member.to_dict()

@@ -10,7 +10,7 @@ import app.resources.utils as resource_utils
 
 class Individual(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.Individual.patch)
+    @resource_utils.parse_args(parsers.Individual.patch)
     def patch(self, individual_id: uuid.UUID, parsed_args: dict):
         perchai_service.individuals.update_individual(individual_id, parsed_args)
         individual = perchai_service.individuals.get_individual_by_id(individual_id)
@@ -19,14 +19,14 @@ class Individual(flask_restx.Resource):
 
 class IndividualPrey(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.IndividualPrey.post)
+    @resource_utils.parse_args(parsers.IndividualPrey.post)
     def post(self, individual_id: uuid.UUID, parsed_args: dict):
         perchai_service.individuals.add_prey(individual_id, parsed_args)
         individual = perchai_service.individuals.get_individual_by_id(individual_id)
         return individual.to_dict()
 
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.IndividualPrey.patch)
+    @resource_utils.parse_args(parsers.IndividualPrey.patch)
     def patch(self, individual_id: uuid.UUID, parsed_args: dict):
         perchai_service.individuals.update_prey(individual_id, parsed_args)
         individual = perchai_service.individuals.get_individual_by_id(individual_id)
@@ -40,7 +40,7 @@ class IndividualPrey(flask_restx.Resource):
 
 class IdentifiedPreys(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.IdentifiedPreys.post)
+    @resource_utils.parse_args(parsers.IdentifiedPreys.post)
     def post(self, parsed_args):
         perchai_service.individuals.add_identified_preys(parsed_args)
         return
@@ -48,7 +48,7 @@ class IdentifiedPreys(flask_restx.Resource):
 
 class IndividualNote(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
-    @resource_utils.parse_json_body_args(parsers.IndividualNote.put)
+    @resource_utils.parse_args(parsers.IndividualNote.put)
     def put(self, individual_id: uuid.UUID, parsed_args: dict):
         perchai_service.individuals.upsert_note(individual_id, parsed_args["note"])
         individual = perchai_service.individuals.get_individual_by_id(individual_id)

@@ -4,22 +4,31 @@ from app.resources.utils import parser
 from app.resources.utils import type_funcs
 
 
-class Previews(parser.Parser):
-    get = reqparse.RequestParser()
-    get.add_argument(
-        "field_sets",
-        type=type_funcs.str_split,
-        location="args",
-        required=True,
+class PreviewsGetSchmea(parser.SchemaByRequestParser):
+    arguments = (
+        reqparse.Argument(
+            "field_sets",
+            type=type_funcs.str_split,
+            location="args",
+            required=True,
+        ),
     )
+
+
+class EmailExportPostSchmea(parser.SchemaByRequestParser):
+    arguments = (
+        reqparse.Argument(
+            "field_sets",
+            type=type_funcs.str_split,
+            location="args",
+            required=True,
+        ),
+    )
+
+
+class Previews(parser.Parser):
+    get = PreviewsGetSchmea()
 
 
 class EmailExport(parser.Parser):
-    post = reqparse.RequestParser()
-    post.add_argument(
-        "field_sets",
-        type=type_funcs.str_split,
-        location="args",
-        required=True,
-    )
-    post.add_argument("mail_to", type=type_funcs.email, location="args")
+    post = EmailExportPostSchmea()
