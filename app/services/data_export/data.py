@@ -37,19 +37,17 @@ _FIELDS_SETS = {
         model.Sections.end_time,
     ),
     "species": (
-        model.Species.english_common_name,
-        model.Species.scientific_name,
-        model.Species.family_name,
-        model.Species.category,
-        model.Species.order,
-        model.Species.taiwan_status,
-        model.Species.endemism,
-        model.Species.conservation_status,
+        _AI_SPECIES.c.taxon_order.label("taxon_order_by_ai"),
+        _HUMAN_SPECIES.c.taxon_order.label("taxon_order_by_human"),
+        _AI_SPECIES.c.english_common_name.label("english_common_name_by_ai"),
+        _HUMAN_SPECIES.c.english_common_name.label("english_common_name_by_human"),
+        _AI_SPECIES.c.scientific_name.label("scientific_name_by_ai"),
+        _HUMAN_SPECIES.c.scientific_name.label("scientific_name_by_human"),
     ),
     "prey": (
         model.MarkedPreyIndividualsContents.has_prey,
         model.IdentifiedPreyIndividualsContents.inaturalist_taxa_id.label(
-            "prey_inat_taxa_id"
+            "prey_inat_id"
         ),
     ),
     "tag": (
@@ -81,8 +79,7 @@ class DataExportQueryHelper:
         mount_types: list[uuid.UUID] = None,
         medium_datetime_from: datetime = None,
         medium_datetime_to: datetime = None,
-        taxon_orders_by_ai: list[int] = None,
-        taxon_orders_by_human: list[int] = None,
+        taxon_orders: list[int] = None,
         has_prey: bool = None,
         inaturalist_taxa_ids: list[int] = None,
         tagged: bool = None,
@@ -96,8 +93,7 @@ class DataExportQueryHelper:
         self.mount_types = mount_types
         self.medium_datetime_from = medium_datetime_from
         self.medium_datetime_to = medium_datetime_to
-        self.taxon_orders_by_ai = taxon_orders_by_ai
-        self.taxon_orders_by_human = taxon_orders_by_human
+        self.taxon_orders = taxon_orders
         self.has_prey = has_prey
         self.inaturalist_taxa_ids = inaturalist_taxa_ids
         self.tagged = tagged
@@ -137,6 +133,16 @@ class DataExportQueryHelper:
                 model.ReviewedIndividualsContents,
                 model.Individuals.id == model.ReviewedIndividualsContents.individual_id,
             )
+            .join(
+                _AI_SPECIES,
+                _AI_SPECIES.c.taxon_order
+                == model.UnreviewedIndividualsContents.taxon_order_by_ai,
+            )
+            .join(
+                _HUMAN_SPECIES,
+                _HUMAN_SPECIES.c.taxon_order
+                == model.ReviewedIndividualsContents.taxon_order_by_human,
+            )
             .join(model.Media, model.Individuals.medium_id == model.Media.id)
             .join(model.Sections, model.Media.section_id == model.Sections.id)
             .join(model.Cameras, model.Sections.camera_id == model.Cameras.id)
@@ -168,18 +174,27 @@ class DataExportQueryHelper:
         if self.medium_datetime_to:
             query = query.filter(model.Media.medium_datetime < self.medium_datetime_to)
 
-        if self.taxon_orders_by_ai:
+        if self.included_unreviewed:
             query = query.filter(
-                model.UnreviewedIndividualsContents.taxon_order_by_ai.in_(
-                    self.taxon_orders_by_ai
+                sqlalchemy.or_(
+                    model.ReviewedIndividualsContents.taxon_order_by_human.in_(
+                        self.taxon_orders
+                    ),
+                    sqlalchemy.and_(
+                        model.UnreviewedIndividualsContents.taxon_order_by_ai.in_(
+                            self.taxon_orders
+                        ),
+                        model.ReviewedIndividualsContents.taxon_order_by_human == None,
+                    ),
                 )
             )
-        if self.taxon_orders_by_human:
+        else:
             query = query.filter(
                 model.ReviewedIndividualsContents.taxon_order_by_human.in_(
-                    self.taxon_orders_by_human
+                    self.taxon_orders
                 )
             )
+
         if self.has_prey is not None:
             query = query.filter(
                 model.MarkedPreyIndividualsContents.has_prey == self.has_prey

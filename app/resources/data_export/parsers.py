@@ -28,12 +28,7 @@ _SHARE_DATA_ARGUMENTS = [
         location="args",
     ),
     reqparse.Argument(
-        "taxon_orders_by_ai",
-        type=type_funcs.int_split,
-        location="args",
-    ),
-    reqparse.Argument(
-        "taxon_orders_by_human",
+        "taxon_orders",
         type=type_funcs.int_split,
         location="args",
     ),
