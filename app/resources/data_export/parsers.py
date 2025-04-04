@@ -10,7 +10,6 @@ _SHARE_DATA_ARGUMENTS = [
         "field_sets",
         type=type_funcs.str_split,
         location="args",
-        required=True,
     ),
     reqparse.Argument("projects", type=type_funcs.uuid_split, location="args"),
     reqparse.Argument("perch_mounts", type=type_funcs.uuid_split, location="args"),

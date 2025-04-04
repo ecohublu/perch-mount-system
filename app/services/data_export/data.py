@@ -12,6 +12,7 @@ _HUMAN_SPECIES = sqlalchemy.alias(model.Species)
 
 
 _DEFAULT_FIELDS = (
+    model.Individuals.id,
     model.Projects.name,
     model.PerchMounts.perch_mount_name,
     model.Sections.swapped_date,
@@ -101,10 +102,11 @@ class DataExportQueryHelper:
 
     def get_fields_by_sets(self) -> list:
         fields = []
-        for s in self.field_sets:
-            if s not in _FIELDS_SETS:
-                continue
-            fields.extend(_FIELDS_SETS[s])
+        if self.field_sets:
+            for s in self.field_sets:
+                if s not in _FIELDS_SETS:
+                    continue
+                fields.extend(_FIELDS_SETS[s])
         return fields
 
     def join_query(self, query: sqlalchemy.orm.Query) -> sqlalchemy.orm.Query:
@@ -174,7 +176,7 @@ class DataExportQueryHelper:
         if self.medium_datetime_to:
             query = query.filter(model.Media.medium_datetime < self.medium_datetime_to)
 
-        if self.included_unreviewed:
+        if self.included_unreviewed and self.taxon_orders:
             query = query.filter(
                 sqlalchemy.or_(
                     model.ReviewedIndividualsContents.taxon_order_by_human.in_(
@@ -188,7 +190,7 @@ class DataExportQueryHelper:
                     ),
                 )
             )
-        else:
+        elif self.taxon_orders:
             query = query.filter(
                 model.ReviewedIndividualsContents.taxon_order_by_human.in_(
                     self.taxon_orders
@@ -208,9 +210,9 @@ class DataExportQueryHelper:
         return query
 
 
-def get_data(parsed_args, offset: int = 0, limit: int = None):
-    helper = DataExportQueryHelper(**parsed_args)
+def get_data(helper: DataExportQueryHelper, offset: int = 0, limit: int = None):
     additional_fields = helper.get_fields_by_sets()
+    print(additional_fields)
     with db.session.begin() as session:
         query = session.query(*_DEFAULT_FIELDS, *additional_fields)
         query = helper.join_query(query)
