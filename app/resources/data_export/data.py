@@ -12,10 +12,11 @@ from app.resources.data_export import marshals
 
 class Data(flask_restx.Resource):
     @resource_utils.parse_args(parsers.Previews.get)
-    @flask_restx.marshal_with(marshals.data_model, skip_none=True)
+    @flask_restx.marshal_with(marshals.data_model)
     def get(self, parsed_args):
         helper = data_services.DataExportQueryHelper(**parsed_args)
         data = data_services.get_data(helper, limit=100)
+
         return [row._asdict() for row in data]
 
 
@@ -30,7 +31,7 @@ class EmailExports(flask_restx.Resource):
         parsed_args.pop("mail_to")
 
         data = data_services.get_data(**parsed_args)
-        csv_data = csv.json_to_csv(data.to_dict())
+        csv_data = csv.json_to_csv([row._asdict() for row in data])
 
         # TODO send email
         print(csv_data)

@@ -212,11 +212,11 @@ class DataExportQueryHelper:
 
 def get_data(helper: DataExportQueryHelper, offset: int = 0, limit: int = None):
     additional_fields = helper.get_fields_by_sets()
-    print(additional_fields)
     with db.session.begin() as session:
-        query = session.query(*_DEFAULT_FIELDS, *additional_fields)
-        query = helper.join_query(query)
-        query = helper.filter_query(query)
+        query = session.query(model.Individuals.id, model.Individuals.note)
+        # query = session.query(*_DEFAULT_FIELDS, *additional_fields)
+        # query = helper.join_query(query)
+        # query = helper.filter_query(query)
         query = query.offset(offset)
         if limit:
             query = query.limit(limit)
