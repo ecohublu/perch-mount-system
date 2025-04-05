@@ -12,14 +12,12 @@ _HUMAN_SPECIES = sqlalchemy.alias(model.Species)
 
 
 _DEFAULT_FIELDS = (
-    model.Individuals.id,
-    model.Projects.name,
+    model.Projects.name.label("project"),
     model.PerchMounts.perch_mount_name,
     model.Sections.swapped_date,
     model.Media.medium_datetime,
     model.UnreviewedIndividualsContents.taxon_order_by_ai,
     model.ReviewedIndividualsContents.taxon_order_by_human,
-    model.Species.chinese_common_name,
     _AI_SPECIES.c.chinese_common_name.label("chinese_common_name_by_ai"),
     _HUMAN_SPECIES.c.chinese_common_name.label("chinese_common_name_by_human"),
 )
@@ -213,10 +211,10 @@ class DataExportQueryHelper:
 def get_data(helper: DataExportQueryHelper, offset: int = 0, limit: int = None):
     additional_fields = helper.get_fields_by_sets()
     with db.session.begin() as session:
-        query = session.query(model.Individuals.id, model.Individuals.note)
-        # query = session.query(*_DEFAULT_FIELDS, *additional_fields)
-        # query = helper.join_query(query)
-        # query = helper.filter_query(query)
+        # query = session.query(model.Individuals.id, model.Individuals.note)
+        query = session.query(*_DEFAULT_FIELDS, *additional_fields)
+        query = helper.join_query(query)
+        query = helper.filter_query(query)
         query = query.offset(offset)
         if limit:
             query = query.limit(limit)

@@ -23,6 +23,7 @@ class Data(flask_restx.Resource):
 class EmailExports(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.EmailExport.post)
+    @flask_restx.marshal_with(marshals.data_model)
     def post(self, parsed_args: dict):
         identity = flask_jwt_extended.get_jwt_identity()
         member = perchai_service.members.get_member_by_id(uuid.UUID(identity))
