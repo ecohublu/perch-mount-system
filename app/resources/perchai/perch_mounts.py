@@ -8,6 +8,7 @@ import app.resources.perchai.utils as perchai_utils
 import app.resources.utils as resource_utils
 from app.error_handler import errors
 from app import model
+from app.auth import admin_authorized
 
 
 class PerchMounts(flask_restx.Resource):
@@ -35,6 +36,7 @@ class PerchMount(flask_restx.Resource):
         return perch_mount.to_dict()
 
     @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
     @resource_utils.parse_args(parsers.PerchMount.patch)
     def patch(self, perch_mount_id: uuid.UUID, parsed_args):
         perchai_service.perch_mounts.update_perch_mount(perch_mount_id, parsed_args)
@@ -52,9 +54,11 @@ class PerchMountActivation(flask_restx.Resource):
         return
 
     @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
     def post(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.activate_perch_mount(perch_mount_id)
 
     @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
     def delete(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.terminate_perch_mount(perch_mount_id)

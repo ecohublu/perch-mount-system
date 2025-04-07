@@ -1,6 +1,6 @@
 import flask_jwt_extended
 from app import env
-from app.login import user
+from app.auth import user
 import redis
 
 jwt = flask_jwt_extended.JWTManager()

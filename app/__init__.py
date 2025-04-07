@@ -4,7 +4,7 @@ import flask_cors
 from app import model
 from app.extensions import db, migrate, jwt
 from app.error_handler import blueprint as error_handler_blueprint
-from app.login import blueprint as login_blueprint
+from app.auth import blueprint as login_blueprint
 from app.taxa import blueprint as taxa_blueprint
 from app.resources.perchai import blueprint as perchai_blueprint
 from app.resources.data_export import blueprint as data_export_blueprint

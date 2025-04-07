@@ -7,8 +7,8 @@ from google.oauth2 import id_token
 import uuid
 
 from app import env
-from app.login import user
-from app.login import jwt
+from app.auth import user
+from app.auth import jwt
 import app.services.perchai as perchai_service
 
 blueprint = flask.Blueprint("login", __name__)
