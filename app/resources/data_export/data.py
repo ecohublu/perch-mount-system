@@ -31,7 +31,8 @@ class EmailExports(flask_restx.Resource):
         mail_to = parsed_args["mail_to"] if "mail_to" in parsed_args else member.gmail
         parsed_args.pop("mail_to")
 
-        data = data_services.get_data(**parsed_args)
+        helper = data_services.DataExportQueryHelper(**parsed_args)
+        data = data_services.get_data(helper)
         csv_data = csv.json_to_csv([row._asdict() for row in data])
 
         # TODO send email
