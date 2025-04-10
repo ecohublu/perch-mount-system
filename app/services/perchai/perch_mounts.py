@@ -1,4 +1,6 @@
+import sqlalchemy
 import uuid
+
 
 from app.services import db
 import app.services.perchai.utils as services_utils
@@ -77,7 +79,6 @@ def activate_perch_mount(perch_mount_id: uuid.UUID):
         session.commit()
 
 
-# TODO make sure this function return boolean | None
 def is_perch_mount_activated(perch_mount_id: uuid.UUID) -> bool | None:
     with db.session.begin() as session:
         terminated = (
@@ -86,3 +87,39 @@ def is_perch_mount_activated(perch_mount_id: uuid.UUID) -> bool | None:
             .one_or_none()
         )
     return terminated
+
+
+def get_perch_mounts_pending_counts() -> list:
+    with db.session.begin() as session:
+        counts = (
+            session.query(
+                model.PerchMounts.id,
+                model.PerchMounts.perch_mount_name,
+                sqlalchemy.func.coalesce(
+                    sqlalchemy.func.sum(model.Sections.undetected_count), 0
+                ).label("undetected_count"),
+                sqlalchemy.func.coalesce(
+                    sqlalchemy.func.sum(model.Sections.unchecked_count), 0
+                ).label("unchecked_count"),
+                sqlalchemy.func.coalesce(
+                    sqlalchemy.func.sum(model.Sections.unreviewed_count), 0
+                ).label("unreviewed_count"),
+                sqlalchemy.func.coalesce(
+                    sqlalchemy.func.sum(model.Sections.reviewed_count), 0
+                ).label("reviewed_count"),
+                sqlalchemy.func.coalesce(
+                    sqlalchemy.func.sum(model.Sections.accidental_count), 0
+                ).label("accidental_count"),
+            )
+            .select_from(model.PerchMounts)
+            .outerjoin(
+                model.Sections,
+                model.PerchMounts.id == model.Sections.perch_mount_id,
+            )
+            .group_by(
+                model.PerchMounts.id,
+                model.PerchMounts.perch_mount_name,
+            )
+            .order_by(model.PerchMounts.perch_mount_name)
+        )
+    return counts

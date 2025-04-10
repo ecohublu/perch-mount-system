@@ -9,6 +9,7 @@ import app.resources.utils as resource_utils
 from app.error_handler import errors
 from app import model
 from app.auth import admin_authorized
+import app.resources.perchai.marshals.perch_mounts_pending_counts as pending_counts_marshals
 
 
 class PerchMounts(flask_restx.Resource):
@@ -62,3 +63,15 @@ class PerchMountActivation(flask_restx.Resource):
     @admin_authorized.admin_required()
     def delete(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.terminate_perch_mount(perch_mount_id)
+
+
+class PerchMountsPendingCounts(flask_restx.Resource):
+    @flask_restx.marshal_with(pending_counts_marshals.COUNTS_MODEL)
+    def get(self):
+        counts = perchai_service.perch_mounts.get_perch_mounts_pending_counts()
+        return [count._asdict() for count in counts]
+
+
+class PerchMountPendingCounts(flask_restx.Resource):
+    def get(self):
+        return

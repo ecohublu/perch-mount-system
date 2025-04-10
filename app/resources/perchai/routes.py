@@ -22,8 +22,16 @@ ROUTES = [
                         route="activation",
                         resources=[perchai.PerchMountActivation],
                     ),
+                    routing.Route(
+                        route="pending_counts",
+                        resources=[perchai.PerchMountPendingCounts],
+                    ),
                 ],
-            )
+            ),
+            routing.Route(
+                route="pending_counts",
+                resources=[perchai.PerchMountsPendingCounts],
+            ),
         ],
     ),
     routing.Route(
