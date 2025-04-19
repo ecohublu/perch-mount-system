@@ -73,5 +73,9 @@ class PerchMountsPendingCounts(flask_restx.Resource):
 
 
 class PerchMountPendingCounts(flask_restx.Resource):
-    def get(self):
-        return
+    @flask_restx.marshal_with(pending_counts_marshals.COUNTS_MODEL)
+    def get(self, perch_mount_id: uuid.UUID):
+        count = perchai_service.perch_mounts.get_perch_mount_pending_counts_by_id(
+            perch_mount_id
+        )
+        return count._asdict()

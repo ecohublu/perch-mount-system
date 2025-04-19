@@ -7,9 +7,9 @@ class SpeciesTrie:
         self.trie = self._trie_init(self.species)
 
     def search(self, word: str) -> list:
-        results = []
+        search_results = []
         if not word:
-            return results
+            return search_results
 
         trie = self.trie
         word = word.lower()
@@ -18,21 +18,22 @@ class SpeciesTrie:
             if w in trie:
                 trie = trie[w]
             else:
-                return results
+                return search_results
 
         tasks = [trie]
         while tasks:
             task = tasks.pop()
             for key, value in task.items():
                 if key == "end":
-                    results.extend(value)
+                    search_results.extend(value)
                 else:
                     tasks.append(value)
+        return self._search_results_as_dict(search_results)
 
-        answer = {}
-        for result in results:
-            answer[result[0]] = result[1]
-        return answer
+    def _search_results_as_dict(self, search_results: list[tuple[int, str]]):
+        return [
+            {"code": code, "chinese_common_name": name} for code, name in search_results
+        ]
 
     def _trie_init(self, species: list[model.Species]) -> dict:
         trie = {}

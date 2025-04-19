@@ -9,7 +9,7 @@ trier = trie.SpeciesTrie(species.get_species())
 blueprint = flask.Blueprint("species_trie", __name__)
 
 
-@blueprint.route("/name_predictions")
+@blueprint.route("/predictions")
 def species_prediction():
     phrase = flask.request.args.get("phrase")
-    return {"results": trier.search(phrase)}
+    return trier.search(phrase)

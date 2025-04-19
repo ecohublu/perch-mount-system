@@ -1,4 +1,5 @@
 import sqlalchemy
+import sqlalchemy.orm
 import uuid
 
 
@@ -91,35 +92,73 @@ def is_perch_mount_activated(perch_mount_id: uuid.UUID) -> bool | None:
 
 def get_perch_mounts_pending_counts() -> list:
     with db.session.begin() as session:
-        counts = (
-            session.query(
-                model.PerchMounts.id,
-                model.PerchMounts.perch_mount_name,
-                sqlalchemy.func.coalesce(
-                    sqlalchemy.func.sum(model.Sections.undetected_count), 0
-                ).label("undetected_count"),
-                sqlalchemy.func.coalesce(
-                    sqlalchemy.func.sum(model.Sections.unchecked_count), 0
-                ).label("unchecked_count"),
-                sqlalchemy.func.coalesce(
-                    sqlalchemy.func.sum(model.Sections.unreviewed_count), 0
-                ).label("unreviewed_count"),
-                sqlalchemy.func.coalesce(
-                    sqlalchemy.func.sum(model.Sections.reviewed_count), 0
-                ).label("reviewed_count"),
-                sqlalchemy.func.coalesce(
-                    sqlalchemy.func.sum(model.Sections.accidental_count), 0
-                ).label("accidental_count"),
-            )
-            .select_from(model.PerchMounts)
-            .outerjoin(
-                model.Sections,
-                model.PerchMounts.id == model.Sections.perch_mount_id,
-            )
-            .group_by(
-                model.PerchMounts.id,
-                model.PerchMounts.perch_mount_name,
-            )
-            .order_by(model.PerchMounts.perch_mount_name)
+        query = _perch_mounts_pending_counts_query(session)
+    return query.all()
+
+
+def get_perch_mount_pending_counts_by_id(perch_mount_id: uuid.UUID) -> list:
+    with db.session.begin() as session:
+        query = _perch_mounts_pending_counts_query(
+            session, perch_mount_id=perch_mount_id
         )
-    return counts
+    return query.one_or_none()
+
+
+def _perch_mounts_pending_counts_query(
+    session: sqlalchemy.orm.Session, perch_mount_id: uuid.UUID = None
+) -> sqlalchemy.orm.Query:
+
+    pending_counts_query = (
+        session.query(
+            model.PerchMounts.id,
+            model.PerchMounts.perch_mount_name,
+            model.PerchMounts.claim_by_id,
+            sqlalchemy.func.coalesce(
+                sqlalchemy.func.sum(model.Sections.undetected_count), 0
+            ).label("undetected_count"),
+            sqlalchemy.func.coalesce(
+                sqlalchemy.func.sum(model.Sections.unchecked_count), 0
+            ).label("unchecked_count"),
+            sqlalchemy.func.coalesce(
+                sqlalchemy.func.sum(model.Sections.unreviewed_count), 0
+            ).label("unreviewed_count"),
+            sqlalchemy.func.coalesce(
+                sqlalchemy.func.sum(model.Sections.reviewed_count), 0
+            ).label("reviewed_count"),
+            sqlalchemy.func.coalesce(
+                sqlalchemy.func.sum(model.Sections.accidental_count), 0
+            ).label("accidental_count"),
+        )
+        .select_from(model.PerchMounts)
+        .outerjoin(
+            model.Sections,
+            model.PerchMounts.id == model.Sections.perch_mount_id,
+        )
+        .group_by(
+            model.PerchMounts.id,
+            model.PerchMounts.perch_mount_name,
+        )
+        .subquery()
+    )
+
+    query = session.query(
+        pending_counts_query.c.id,
+        pending_counts_query.c.perch_mount_name,
+        pending_counts_query.c.claim_by_id,
+        model.Members.display_name.label("claimer_name"),
+        model.Members.profile_picture_url.label("claim_picture_url"),
+        pending_counts_query.c.undetected_count,
+        pending_counts_query.c.unchecked_count,
+        pending_counts_query.c.unreviewed_count,
+        pending_counts_query.c.reviewed_count,
+        pending_counts_query.c.accidental_count,
+    ).join(
+        model.Members,
+        model.Members.id == pending_counts_query.c.claim_by_id,
+        isouter=True,
+    )
+
+    if perch_mount_id:
+        query = query.filter(pending_counts_query.c.id == perch_mount_id)
+
+    return query

@@ -40,7 +40,7 @@ class Media(extensions.db.Model, SerializerMixin):
         server_default="UNDETECTED",
     )
     individuals = sqlalchemy.orm.relationship("Individuals", lazy="selectin")
-    section = sqlalchemy.orm.relationship("Sections", lazy="joined")
+    # section = sqlalchemy.orm.relationship("Sections", lazy="joined")
     unchecked_contents = sqlalchemy.orm.relationship(
         "UncheckedMediaContents", uselist=False, lazy="selectin"
     )
