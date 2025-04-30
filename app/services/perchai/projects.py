@@ -18,8 +18,7 @@ def get_projects_by_ids(ids: list[str]) -> list[model.Projects]:
     return projects
 
 
-def get_project_by_id(project_id: str) -> model.Projects | None:
-    project_id = uuid.UUID(project_id)
+def get_project_by_id(project_id: uuid.UUID) -> model.Projects | None:
     with db.session.begin() as session:
         project = (
             session.query(model.Projects)

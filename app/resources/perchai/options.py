@@ -1,5 +1,6 @@
 import flask_restx
 import flask_jwt_extended
+import uuid
 
 from app.resources.perchai import parsers
 import app.services.perchai as perchai_service
@@ -18,6 +19,12 @@ class Projects(flask_restx.Resource):
     def post(self, parsed_args):
         new_project_id = perchai_service.projects.add_project(**parsed_args)
         return perchai_utils.id_json(new_project_id)
+
+
+class Project(flask_restx.Resource):
+    def get(self, project_id: uuid.UUID):
+        project = perchai_service.projects.get_project_by_id(project_id)
+        return project.to_dict()
 
 
 class Cameras(flask_restx.Resource):
@@ -58,7 +65,7 @@ class MountTypes(flask_restx.Resource):
 
 class Behaviors(flask_restx.Resource):
     def get(self):
-        behaviors = perchai_service.cameras.get_cameras()
+        behaviors = perchai_service.behaviors.get_behaviors()
         return [behavior.to_dict() for behavior in behaviors]
 
     @flask_jwt_extended.jwt_required()

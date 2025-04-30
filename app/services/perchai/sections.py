@@ -13,6 +13,7 @@ def get_sections_by_filter(
     with db.session.begin() as session:
         query = session.query(model.Sections)
         query = modifier.filter_query(query)
+        query = query.order_by(model.Sections.swapped_date.desc())
         sections = query.all()
     return sections
 
@@ -39,17 +40,16 @@ def add_section(
 
     new_section = model.Sections(
         perch_mount_id=perch_mount_id,
-        mount_type=mount_type_id,
-        camera=camera_id,
+        mount_type_id=mount_type_id,
+        camera_id=camera_id,
         swapped_date=swapped_date,
-        swapper_ids=swapper_ids,
         valid=valid,
         note=note,
     )
 
     with db.session.begin() as session:
         try:
-            session.add(section)
+            session.add(new_section)
             session.flush()
             for swapper_id in swapper_ids:
                 stat = model.sections_swappers.insert().values(

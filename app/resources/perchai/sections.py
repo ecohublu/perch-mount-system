@@ -9,6 +9,7 @@ from app.error_handler import errors
 from app import model
 from app.auth import admin_authorized
 
+
 class Sections(flask_restx.Resource):
     @resource_utils.parse_args(parsers.Sections.get)
     def get(self, parsed_args):
@@ -31,7 +32,7 @@ class Section(flask_restx.Resource):
             raise errors.ResourceNotFoundError(model.Sections.__name__)
 
         return section.to_dict()
-    
+
     @flask_jwt_extended.jwt_required()
     @admin_authorized.admin_required()
     @resource_utils.parse_args(parsers.Section.patch)

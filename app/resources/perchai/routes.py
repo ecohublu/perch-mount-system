@@ -2,6 +2,7 @@ from app.resources import perchai
 from app.resources import routing
 
 
+_project_id = routing.RouteVar(name="project_id", type_="uuid")
 _taxon_order = routing.RouteVar(name="taxon_order", type_="int")
 _section_id = routing.RouteVar(name="section_id", type_="uuid")
 _perch_mount_id = routing.RouteVar(name="perch_mount_id", type_="uuid")
@@ -66,6 +67,9 @@ ROUTES = [
     routing.Route(
         route="projects",
         resources=[perchai.Projects],
+        children=[
+            routing.Route(route=_project_id.param, resources=[perchai.Project]),
+        ],
     ),
     routing.Route(
         route="cameras",

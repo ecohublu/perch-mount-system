@@ -3,6 +3,8 @@ from flask_restx import reqparse
 import marshmallow
 import uuid
 
+import marshmallow.decorators
+
 from app.resources.utils import parser
 from app.resources.utils import type_funcs
 
@@ -32,17 +34,30 @@ class SectionsGetSchema(parser.SchemaByRequestParser):
     )
 
 
-class SectionPostSchem(parser.SchemaByRequestParser):
-    arguments = (
-        reqparse.Argument("perch_mount_id", required=True, type=uuid.UUID),
-        reqparse.Argument("mount_type_id", required=True, type=uuid.UUID),
-        reqparse.Argument("camera_id", required=True, type=uuid.UUID),
-        reqparse.Argument("swapped_date", required=True, type=date.fromisoformat),
-        reqparse.Argument("start_time", required=True, type=datetime.fromisoformat),
-        reqparse.Argument("end_time", required=True, type=datetime.fromisoformat),
-        reqparse.Argument("valid", type=type_funcs.bool_),
-        reqparse.Argument("note", type=str),
-    )
+class SectionPostSchem(marshmallow.Schema):
+    perch_mount_id = marshmallow.fields.UUID(required=True)
+    mount_type_id = marshmallow.fields.UUID(required=True)
+    camera_id = marshmallow.fields.UUID(required=True)
+    swapped_date = marshmallow.fields.Date(required=True)
+    swapper_ids = marshmallow.fields.List(marshmallow.fields.UUID())
+    start_time = marshmallow.fields.DateTime(allow_none=True)
+    end_time = marshmallow.fields.DateTime(allow_none=True)
+    valid = marshmallow.fields.Boolean(required=True)
+    note = marshmallow.fields.String(allow_none=True)
+
+
+# class SectionPostSchem(parser.SchemaByRequestParser):
+#     arguments = (
+#         reqparse.Argument("perch_mount_id", required=True, type=uuid.UUID),
+#         reqparse.Argument("mount_type_id", required=True, type=uuid.UUID),
+#         reqparse.Argument("camera_id", required=True, type=uuid.UUID),
+#         reqparse.Argument("swapped_date", required=True, type=date.fromisoformat),
+#         reqparse.Argument("swapper_ids", type=type_funcs.uuid_split),
+#         reqparse.Argument("start_time", type=datetime.fromisoformat),
+#         reqparse.Argument("end_time", type=datetime.fromisoformat),
+#         reqparse.Argument("valid", type=type_funcs.bool_),
+#         reqparse.Argument("note", type=str),
+#     )
 
 
 class SectionPatchSchema(marshmallow.Schema):
