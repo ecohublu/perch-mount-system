@@ -1,4 +1,5 @@
 from datetime import date
+import sqlalchemy
 import uuid
 
 from app.services import db
@@ -78,3 +79,19 @@ def update_section(section_id: uuid.UUID, arg: dict):
             arg
         )
         session.commit()
+
+
+def delete_section(section_id: uuid.UUID):
+    stmt = sqlalchemy.delete(model.sections_swappers).where(
+        model.sections_swappers.c.section_id == section_id
+    )
+    with db.session.begin() as session:
+        try:
+            session.execute(stmt)
+            session.query(model.Sections).filter(
+                model.Sections.id == section_id
+            ).delete()
+            session.commit()
+        except:
+            session.rollback()
+            raise

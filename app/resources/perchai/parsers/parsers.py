@@ -30,6 +30,10 @@ class PerchMount(parser.Parser):
     patch = schemas.PerchMountPatchSchema()
 
 
+class PerchMountClaimBy(parser.Parser):
+    post = schemas.PerchMountClaimByPostSchema()
+
+
 class Media(parser.Parser):
     get = schemas.MediaGetSchema()
 

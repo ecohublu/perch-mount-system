@@ -98,6 +98,10 @@ class PerchMountPatchSchema(marshmallow.Schema):
     note = marshmallow.fields.String()
 
 
+class PerchMountClaimByPostSchema(marshmallow.Schema):
+    claim_by_id = marshmallow.fields.UUID()
+
+
 class MembersPostSchema(parser.SchemaByRequestParser):
     arguments = (
         reqparse.Argument("gmail", required=True, type=type_funcs.email),

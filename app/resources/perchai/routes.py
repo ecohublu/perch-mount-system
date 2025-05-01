@@ -27,6 +27,20 @@ ROUTES = [
                         route="pending_counts",
                         resources=[perchai.PerchMountPendingCounts],
                     ),
+                    routing.Route(
+                        route="priority",
+                        resources=[perchai.PerchMountPriority],
+                    ),
+                    routing.Route(
+                        route="claimby",
+                        resources=[perchai.PerchMountClaimBy],
+                        children=[
+                            routing.Route(
+                                route="me",
+                                resources=[perchai.PerchMountClaimByMe],
+                            )
+                        ],
+                    ),
                 ],
             ),
             routing.Route(

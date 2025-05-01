@@ -40,3 +40,7 @@ class Section(flask_restx.Resource):
         perchai_service.sections.update_section(section_id, parsed_args)
         section = perchai_service.sections.get_section_by_id(section_id)
         return section.to_dict()
+
+    @flask_jwt_extended.jwt_required()
+    def delete(self, section_id: uuid.UUID):
+        perchai_service.sections.delete_section(section_id)
