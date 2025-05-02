@@ -18,7 +18,8 @@ class Projects(flask_restx.Resource):
     @resource_utils.parse_args(parsers.Projects.post)
     def post(self, parsed_args):
         new_project_id = perchai_service.projects.add_project(**parsed_args)
-        return perchai_utils.id_json(new_project_id)
+        project = perchai_service.projects.get_project_by_id(new_project_id)
+        return project.to_dict()
 
 
 class Project(flask_restx.Resource):
