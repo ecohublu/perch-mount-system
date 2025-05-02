@@ -24,7 +24,10 @@ class PerchMounts(flask_restx.Resource):
     @resource_utils.parse_args(parsers.PerchMounts.post)
     def post(self, parsed_args):
         new_perch_mount_id = perchai_service.perch_mounts.add_perch_mount(**parsed_args)
-        return perchai_utils.id_json(new_perch_mount_id)
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(
+            new_perch_mount_id
+        )
+        return perch_mount.to_dict()
 
 
 class PerchMount(flask_restx.Resource):
