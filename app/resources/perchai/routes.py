@@ -56,6 +56,9 @@ ROUTES = [
             routing.Route(
                 route=_section_id.param,
                 resources=[perchai.Section],
+                children=[
+                    routing.Route(route="swappers", resources=[perchai.SectionSwappers])
+                ],
             ),
         ],
     ),

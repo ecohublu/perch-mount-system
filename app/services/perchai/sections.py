@@ -95,3 +95,29 @@ def delete_section(section_id: uuid.UUID):
         except:
             session.rollback()
             raise
+
+
+def update_section_swappers_by_id(
+    section_id: uuid.UUID,
+    swapper_ids: list[uuid.UUID],
+):
+    delete_stmt = sqlalchemy.delete(model.sections_swappers).where(
+        model.sections_swappers.c.section_id == section_id
+    )
+    insert_stmt = sqlalchemy.insert(model.sections_swappers)
+    insert_data = [
+        {
+            "section_id": section_id,
+            "swapper_id": swapper_id,
+        }
+        for swapper_id in swapper_ids
+    ]
+
+    with db.session.begin() as session:
+        try:
+            session.execute(delete_stmt)
+            session.execute(insert_stmt, insert_data)
+        except:
+            session.rollback()
+            raise
+    return

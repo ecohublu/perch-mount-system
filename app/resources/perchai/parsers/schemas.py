@@ -13,6 +13,10 @@ class ProjectsPostSchema(parser.SchemaByRequestParser):
     arguments = (reqparse.Argument("name", required=True, type=str),)
 
 
+class ProjectPatchSchema(marshmallow.Schema):
+    name = marshmallow.fields.String()
+
+
 class SectionsGetSchema(parser.SchemaByRequestParser):
     arguments = (
         reqparse.Argument(
@@ -34,7 +38,7 @@ class SectionsGetSchema(parser.SchemaByRequestParser):
     )
 
 
-class SectionPostSchem(marshmallow.Schema):
+class SectionPostSchema(marshmallow.Schema):
     perch_mount_id = marshmallow.fields.UUID(required=True)
     mount_type_id = marshmallow.fields.UUID(required=True)
     camera_id = marshmallow.fields.UUID(required=True)
@@ -61,9 +65,14 @@ class SectionPostSchem(marshmallow.Schema):
 
 
 class SectionPatchSchema(marshmallow.Schema):
+    swapped_date = marshmallow.fields.Date()
     mount_type_id = marshmallow.fields.UUID()
     camera_id = marshmallow.fields.UUID()
-    note = marshmallow.fields.String()
+    note = marshmallow.fields.String(allow_none=True)
+
+
+class SectionSwappersPutSchema(marshmallow.Schema):
+    swapper_ids = marshmallow.fields.List(marshmallow.fields.UUID())
 
 
 class PerchMountsGetSchema(parser.SchemaByRequestParser):
@@ -88,14 +97,15 @@ class PerchMountsPostSchema(parser.SchemaByRequestParser):
 
 
 class PerchMountPatchSchema(marshmallow.Schema):
-    longitude = marshmallow.fields.UUID()
-    latitude = marshmallow.fields.UUID()
+    perch_mount_name = marshmallow.fields.String()
+    longitude = marshmallow.fields.Float()
+    latitude = marshmallow.fields.Float()
     habitat = marshmallow.fields.String()
-    claim_by_id = marshmallow.fields.UUID()
+    claim_by_id = marshmallow.fields.UUID(allow_none=True)
     mount_layer = marshmallow.fields.String()
-    terminated = marshmallow.fields.String()
+    terminated = marshmallow.fields.Boolean()
     is_priority = marshmallow.fields.Boolean()
-    note = marshmallow.fields.String()
+    note = marshmallow.fields.String(allow_none=True)
 
 
 class PerchMountClaimByPostSchema(marshmallow.Schema):

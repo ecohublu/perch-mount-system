@@ -27,6 +27,13 @@ class Project(flask_restx.Resource):
         project = perchai_service.projects.get_project_by_id(project_id)
         return project.to_dict()
 
+    @flask_jwt_extended.jwt_required()
+    @resource_utils.parse_args(parsers.Project.patch)
+    def patch(self, project_id: uuid.UUID, parsed_args):
+        perchai_service.projects.update_project(project_id, parsed_args)
+        project = perchai_service.projects.get_project_by_id(project_id)
+        return project.to_dict()
+
 
 class Cameras(flask_restx.Resource):
     def get(self):

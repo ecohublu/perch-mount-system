@@ -34,3 +34,11 @@ def add_project(name: str) -> str:
         session.add(new_project)
         session.commit()
     return new_project.id
+
+
+def update_project(project_id: uuid.UUID, arg: dict):
+    with db.session.begin() as session:
+        session.query(model.Projects).filter(model.Projects.id == project_id).update(
+            arg
+        )
+        session.commit()

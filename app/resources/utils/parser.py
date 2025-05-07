@@ -40,7 +40,6 @@ def parse_args(parser: reqparse.RequestParser | marshmallow.Schema):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-
             if isinstance(parser, reqparse.RequestParser):
                 parsed_args = parser.parse_args()
 

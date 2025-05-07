@@ -44,3 +44,13 @@ class Section(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
     def delete(self, section_id: uuid.UUID):
         perchai_service.sections.delete_section(section_id)
+
+
+class SectionSwappers(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
+    @resource_utils.parse_args(parsers.SectionSwappers.put)
+    def put(self, section_id: uuid.UUID, parsed_args):
+        perchai_service.sections.update_section_swappers_by_id(
+            section_id, parsed_args["swapper_ids"]
+        )

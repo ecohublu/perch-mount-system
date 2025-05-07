@@ -13,11 +13,15 @@ class Species(parser.Parser):
 class Sections(parser.Parser):
     get = schemas.SectionsGetSchema()
 
-    post = schemas.SectionPostSchem()
+    post = schemas.SectionPostSchema()
 
 
 class Section(parser.Parser):
     patch = schemas.SectionPatchSchema()
+
+
+class SectionSwappers(parser.Parser):
+    put = schemas.SectionSwappersPutSchema()
 
 
 class PerchMounts(parser.Parser):
@@ -81,6 +85,10 @@ class Member(parser.Parser):
 
 class Members(parser.Parser):
     post = schemas.MembersPostSchema()
+
+
+class Project(parser.Parser):
+    patch = schemas.ProjectPatchSchema()
 
 
 class Projects(parser.Parser):
