@@ -51,6 +51,16 @@ class SectionSwappers(flask_restx.Resource):
     @admin_authorized.admin_required()
     @resource_utils.parse_args(parsers.SectionSwappers.put)
     def put(self, section_id: uuid.UUID, parsed_args):
-        perchai_service.sections.update_section_swappers_by_id(
+        perchai_service.sections.update_section_swappers(
             section_id, parsed_args["swapper_ids"]
+        )
+
+
+class SectionTime(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
+    @resource_utils.parse_args(parsers.SectionTime.patch)
+    def patch(self, section_id: uuid.UUID, parsed_args):
+        perchai_service.sections.shift_section_times(
+            section_id, parsed_args["start_time"]
         )

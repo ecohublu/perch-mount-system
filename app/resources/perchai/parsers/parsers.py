@@ -24,6 +24,10 @@ class SectionSwappers(parser.Parser):
     put = schemas.SectionSwappersPutSchema()
 
 
+class SectionTime(parser.Parser):
+    patch = schemas.SectionTimePatchSchema()
+
+
 class PerchMounts(parser.Parser):
     get = schemas.PerchMountsGetSchema()
 

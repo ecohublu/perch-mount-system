@@ -75,6 +75,10 @@ class SectionSwappersPutSchema(marshmallow.Schema):
     swapper_ids = marshmallow.fields.List(marshmallow.fields.UUID())
 
 
+class SectionTimePatchSchema(marshmallow.Schema):
+    start_time = marshmallow.fields.DateTime()
+
+
 class PerchMountsGetSchema(parser.SchemaByRequestParser):
     arguments = (
         reqparse.Argument("project_ids", type=type_funcs.uuid_split, location="args"),

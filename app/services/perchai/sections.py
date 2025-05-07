@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 import sqlalchemy
 import uuid
 
@@ -97,7 +97,7 @@ def delete_section(section_id: uuid.UUID):
             raise
 
 
-def update_section_swappers_by_id(
+def update_section_swappers(
     section_id: uuid.UUID,
     swapper_ids: list[uuid.UUID],
 ):
@@ -117,7 +117,40 @@ def update_section_swappers_by_id(
         try:
             session.execute(delete_stmt)
             session.execute(insert_stmt, insert_data)
+            session.commit()
         except:
             session.rollback()
             raise
     return
+
+
+def shift_section_times(section_id: uuid.UUID, start_time: datetime):
+    with db.session.begin() as session:
+        try:
+            section: model.Sections = (
+                session.query(model.Sections)
+                .filter(model.Sections.id == section_id)
+                .one()
+            )
+            shift: timedelta = start_time - section.start_time
+            session.query(model.Media).filter(
+                model.Media.section_id == section_id
+            ).update(
+                {
+                    model.Media.medium_datetime: model.Media.medium_datetime
+                    + sqlalchemy.literal(shift)
+                },
+                synchronize_session=False,
+            )
+            latest_time: datetime | None = (
+                session.query(sqlalchemy.func.max(model.Media.medium_datetime))
+                .filter(model.Media.section_id == section_id)
+                .scalar()
+            )
+            session.query(model.Sections).filter(
+                model.Sections.id == section_id
+            ).update({"start_time": start_time, "end_time": latest_time})
+            session.commit()
+        except:
+            session.rollback()
+            raise

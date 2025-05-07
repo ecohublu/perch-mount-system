@@ -57,7 +57,14 @@ ROUTES = [
                 route=_section_id.param,
                 resources=[perchai.Section],
                 children=[
-                    routing.Route(route="swappers", resources=[perchai.SectionSwappers])
+                    routing.Route(
+                        route="swappers",
+                        resources=[perchai.SectionSwappers],
+                    ),
+                    routing.Route(
+                        route="time",
+                        resources=[perchai.SectionTime],
+                    ),
                 ],
             ),
         ],
