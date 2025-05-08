@@ -104,19 +104,21 @@ def update_section_swappers(
     delete_stmt = sqlalchemy.delete(model.sections_swappers).where(
         model.sections_swappers.c.section_id == section_id
     )
-    insert_stmt = sqlalchemy.insert(model.sections_swappers)
-    insert_data = [
-        {
-            "section_id": section_id,
-            "swapper_id": swapper_id,
-        }
-        for swapper_id in swapper_ids
-    ]
+    if swapper_ids:
+        insert_stmt = sqlalchemy.insert(model.sections_swappers)
+        insert_data = [
+            {
+                "section_id": section_id,
+                "swapper_id": swapper_id,
+            }
+            for swapper_id in swapper_ids
+        ]
 
     with db.session.begin() as session:
         try:
             session.execute(delete_stmt)
-            session.execute(insert_stmt, insert_data)
+            if swapper_ids:
+                session.execute(insert_stmt, insert_data)
             session.commit()
         except:
             session.rollback()
@@ -132,6 +134,7 @@ def shift_section_times(section_id: uuid.UUID, start_time: datetime):
                 .filter(model.Sections.id == section_id)
                 .one()
             )
+            start_time = start_time.replace(tzinfo=None) + timedelta(hours=8)
             shift: timedelta = start_time - section.start_time
             session.query(model.Media).filter(
                 model.Media.section_id == section_id
