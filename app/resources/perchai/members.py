@@ -10,6 +10,7 @@ from app.error_handler import errors
 from app import model
 from app.auth import admin_authorized
 
+
 class Members(flask_restx.Resource):
     def get(self):
         members = perchai_service.members.get_members()
@@ -17,8 +18,8 @@ class Members(flask_restx.Resource):
 
 
 class Member(flask_restx.Resource):
-    def get(self, perch_mount_id: uuid.UUID):
-        member = perchai_service.members.get_member_by_id(perch_mount_id)
+    def get(self, member_id: uuid.UUID):
+        member = perchai_service.members.get_member_by_id(member_id)
 
         if member is None:
             raise errors.ResourceNotFoundError(model.Members.__name__)
