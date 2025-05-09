@@ -81,3 +81,13 @@ class Behaviors(flask_restx.Resource):
     def post(self, parsed_args):
         new_behavior_id = perchai_service.behaviors.add_behavior(**parsed_args)
         return perchai_utils.id_json(new_behavior_id)
+
+
+class Habitats(flask_restx.Resource):
+    def get(self):
+        return perchai_service.enums.get_habitats()
+
+
+class MountLayers(flask_restx.Resource):
+    def get(self):
+        return perchai_service.enums.get_mount_layers()

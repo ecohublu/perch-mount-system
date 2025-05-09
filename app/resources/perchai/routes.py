@@ -112,6 +112,14 @@ ROUTES = [
         resources=[perchai.Behaviors],
     ),
     routing.Route(
+        route="habitats",
+        resources=[perchai.Habitats],
+    ),
+    routing.Route(
+        route="mount_layers",
+        resources=[perchai.MountLayers],
+    ),
+    routing.Route(
         route="members",
         resources=[perchai.Members],
         children=[
