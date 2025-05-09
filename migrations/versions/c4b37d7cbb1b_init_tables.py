@@ -269,7 +269,7 @@ def upgrade():
                 "UNIDENTIFIED",
                 "NO_PREY",
                 "IDENTIFIED",
-                name="mediastatus",
+                name="preystatus",
             ),
             server_default="UNCHECKED",
             nullable=True,

@@ -134,7 +134,7 @@ def add_reviewed_media(reviewed_media: list[dict]):
                 medium_id=medium.id,
                 reviewed_at=medium.reviewed_at,
                 reviewer_id=medium.reviewer_id,
-                fearured_by_id=medium.featured_by_id,
+                featured_by_id=medium.featured_by_id,
                 event_id=medium.event_id,
                 behavior_id=medium.behavior_id,
             )

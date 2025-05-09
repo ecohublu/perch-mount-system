@@ -16,6 +16,7 @@ ENUMS = (
     "mediastatus",
     "habitats",
     "conservationstatus",
+    "preystatus",
 )
 
 
@@ -93,7 +94,7 @@ def upgrade_ext():
         BEGIN
             IF NEW.has_prey = false THEN
                 UPDATE individuals
-                SET prey_status = 'no_prey'
+                SET prey_status = 'NO_PREY'
                 WHERE id = NEW.individual_id;
             ELSIF NEW.has_prey = true THEN
                 UPDATE individuals
@@ -118,7 +119,7 @@ def upgrade_ext():
         CREATE OR REPLACE FUNCTION update_prey_status_as_identified()
         RETURNS TRIGGER AS $$
         BEGIN
-            UPDATE individuals SET prey_status = 'identified'
+            UPDATE individuals SET prey_status = 'IDENTIDIED'
             WHERE individuals.id = NEW.individual_id;
             RETURN NEW;
         END;

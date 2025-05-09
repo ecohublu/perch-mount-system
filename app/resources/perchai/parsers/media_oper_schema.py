@@ -10,16 +10,16 @@ class DetectedIndividualSchema(marshmallow.Schema):
 
 
 class ReviewedIndividualSchema(marshmallow.Schema):
-    id = marshmallow.fields.UUID()
+    id = marshmallow.fields.UUID(allow_none=True)
     taxon_order_by_human = marshmallow.fields.Integer(required=True)
-    box_xmin = marshmallow.fields.Float()
-    box_xmax = marshmallow.fields.Float()
-    box_ymin = marshmallow.fields.Float()
-    box_ymax = marshmallow.fields.Float()
+    box_xmin = marshmallow.fields.Float(allow_none=True)
+    box_xmax = marshmallow.fields.Float(allow_none=True)
+    box_ymin = marshmallow.fields.Float(allow_none=True)
+    box_ymax = marshmallow.fields.Float(allow_none=True)
     has_prey = marshmallow.fields.Boolean(required=True)
     is_tagged = marshmallow.fields.Boolean(required=True)
     has_ring = marshmallow.fields.Boolean(required=True)
-    ring_number = marshmallow.fields.Boolean()
+    ring_number = marshmallow.fields.Boolean(allow_none=True)
 
 
 class MediumSchema(marshmallow.Schema):
@@ -64,12 +64,12 @@ class CheckedMediumSchema(MediumSchema):
 
 
 class ReviewedMediumSchema(MediumSchema):
-    id = marshmallow.fields.UUID(required=True)
+    id = marshmallow.fields.UUID(required=True, allow_none=True)
     reviewed_at = marshmallow.fields.DateTime(format="iso", required=True)
     reviewer_id = marshmallow.fields.UUID(required=True)
-    featured_by_id = marshmallow.fields.UUID()
-    event_id = marshmallow.fields.UUID()
-    behavior_id = marshmallow.fields.UUID()
+    featured_by_id = marshmallow.fields.UUID(allow_none=True)
+    event_id = marshmallow.fields.UUID(allow_none=True)
+    behavior_id = marshmallow.fields.UUID(allow_none=True)
     individuals = marshmallow.fields.List(
         marshmallow.fields.Nested(ReviewedIndividualSchema), required=True
     )
