@@ -15,6 +15,7 @@ def get_species_by_filter(filter: services_utils.SpeciesFilter) -> list[model.Sp
     with db.session.begin() as session:
         query = session.query(model.Species)
         query = modifier.filter_query(query)
+        query = modifier.order_by_freq(query)
         species_list = query.all()
 
     return species_list

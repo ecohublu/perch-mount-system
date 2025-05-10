@@ -1,10 +1,10 @@
 import sqlalchemy
 import sqlalchemy.orm
+from app.services import db
 
 from app import model
 from app.services.perchai.utils import query_filter
 from app.services import utils as service_utils
-from app.model import enums
 
 
 class PerchMountQueryModifier(service_utils.QueryModifier):
@@ -256,4 +256,28 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
             upper_codes = [code.upper() for code in self.filter.codes]
             query = query.filter(model.Species.codes.overlap(upper_codes))
 
+        return query
+
+    def order_by_freq(
+        self,
+        query: sqlalchemy.orm.Query[model.Species],
+    ) -> sqlalchemy.orm.Query[model.Species]:
+        if self.filter.freq_ordered:
+            with db.session.begin() as session:
+                taxon_orders_with_freq = sqlalchemy.orm.aliased(
+                    session.query(
+                        model.ReviewedIndividualsContents.taxon_order_by_human,
+                        sqlalchemy.func.count(
+                            model.ReviewedIndividualsContents.taxon_order_by_human
+                        ).label("frequency"),
+                    )
+                    .group_by(model.ReviewedIndividualsContents.taxon_order_by_human)
+                    .subquery()
+                )
+                query = query.outerjoin(
+                    taxon_orders_with_freq,
+                    model.Species.taxon_order
+                    == taxon_orders_with_freq.c.taxon_order_by_human,
+                )
+                query = query.order_by(taxon_orders_with_freq.c.frequency)
         return query

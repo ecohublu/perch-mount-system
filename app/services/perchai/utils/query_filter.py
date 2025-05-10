@@ -80,6 +80,7 @@ class SpeciesFilter(service_utils.QueryFilter):
         orders: list[str] = None,
         families: list[str] = None,
         codes: list[str] = None,
+        freq_ordered: bool = False,
     ) -> None:
         super().__init__()
         self.taxon_orders = taxon_orders
@@ -92,3 +93,4 @@ class SpeciesFilter(service_utils.QueryFilter):
         self.orders = orders
         self.families = families
         self.codes = codes
+        self.freq_ordered = freq_ordered

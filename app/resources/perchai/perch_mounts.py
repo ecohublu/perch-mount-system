@@ -4,7 +4,6 @@ import uuid
 
 from app.services import perchai as perchai_service
 from app.resources.perchai import parsers
-import app.resources.perchai.utils as perchai_utils
 import app.resources.utils as resource_utils
 from app.error_handler import errors
 from app import model

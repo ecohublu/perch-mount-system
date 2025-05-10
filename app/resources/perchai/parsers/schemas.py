@@ -230,6 +230,12 @@ class SpeciesGetSchema(parser.SchemaByRequestParser):
         reqparse.Argument("orders", type=type_funcs.str_split, location="args"),
         reqparse.Argument("families", type=type_funcs.str_split, location="args"),
         reqparse.Argument("codes", type=type_funcs.str_split, location="args"),
+        reqparse.Argument(
+            "freq_ordered",
+            type=type_funcs.bool_,
+            location="args",
+            default=False,
+        ),
     )
 
 
