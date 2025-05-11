@@ -39,21 +39,25 @@ class Individuals(extensions.db.Model, SerializerMixin):
         "ReviewedIndividualsContents",
         uselist=False,
         lazy="selectin",
+        cascade="all, delete-orphan",
     )
     marked_prey_contents = sqlalchemy.orm.relationship(
         "MarkedPreyIndividualsContents",
         uselist=False,
         lazy="selectin",
+        cascade="all, delete-orphan",
     )
     identified_prey_contents = sqlalchemy.orm.relationship(
         "IdentifiedPreyIndividualsContents",
         uselist=False,
         lazy="selectin",
+        cascade="all, delete-orphan",
     )
     tagged_contents = sqlalchemy.orm.relationship(
         "TaggedIndividualsContents",
         uselist=False,
         lazy="selectin",
+        cascade="all, delete-orphan",
     )
 
 

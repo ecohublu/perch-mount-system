@@ -72,7 +72,18 @@ ROUTES = [
     routing.Route(
         route="media",
         resources=[perchai.Media],
-        children=[routing.Route(route=_medium_id.param, resources=[perchai.Medium])],
+        children=[
+            routing.Route(
+                route=_medium_id.param,
+                resources=[perchai.Medium],
+                children=[
+                    routing.Route(
+                        route="status",
+                        resources=[perchai.MediumStatus],
+                    )
+                ],
+            )
+        ],
     ),
     routing.Route(
         route="individuals",

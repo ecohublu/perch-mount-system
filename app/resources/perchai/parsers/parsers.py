@@ -46,6 +46,14 @@ class Media(parser.Parser):
     get = schemas.MediaGetSchema()
 
 
+class Medium(parser.Parser):
+    patch = schemas.MediumPatchSchema()
+
+
+class MediumStatus(parser.Parser):
+    patch = schemas.MediumStatusPatchSchema()
+
+
 class MediumFeature(parser.Parser):
     patch = schemas.MediumFeaturePatchSchema()
 
@@ -55,8 +63,8 @@ class Individual(parser.Parser):
 
 
 class IndividualPrey(parser.Parser):
-    post = schemas.IndividualPreyPatchSchema()
-    patch = schemas.IndividualPreyPostSchema()
+    post = schemas.IndividualPreyPostSchema()
+    patch = schemas.IndividualPreyPatchSchema()
 
 
 class IdentifiedPreys(parser.Parser):

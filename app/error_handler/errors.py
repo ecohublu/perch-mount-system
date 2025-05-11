@@ -64,8 +64,12 @@ class UploadMediaCanNotBeEmptyError(BadRequestError):
 
 
 class SuperAdminUnpatchableError(BadRequestError):
-    def __init__(self, message):
-        message = "attributes of super admin is not able to be updated."
+    def __init__(self, message="attributes of super admin is not able to be updated."):
+        super().__init__(message)
+
+
+class MediaStatusRollbackError(BadRequestError):
+    def __init__(self, message="Status rollback only form reviewed to unreviewed."):
         super().__init__(message)
 
 

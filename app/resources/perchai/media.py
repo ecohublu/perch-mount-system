@@ -5,6 +5,7 @@ import uuid
 from app.services import perchai as perchai_service
 from app.resources.perchai import parsers
 import app.resources.utils as resource_utils
+from app.auth import admin_authorized
 from app.error_handler import errors
 from app import model
 
@@ -24,6 +25,24 @@ class Medium(flask_restx.Resource):
         if medium is None:
             raise errors.ResourceNotFoundError(model.Media.__name__)
 
+        return medium.to_dict()
+
+
+class MediumStatus(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
+    @resource_utils.parse_args(parsers.MediumStatus.patch)
+    def patch(self, medium_id: uuid.UUID, parsed_args):
+        medium = perchai_service.media.get_medium_by_id(medium_id)
+        print(medium.status)
+        if (
+            parsed_args["status"] != model.enums.MediaStatus.UNREVIEWED.value
+            or medium.status != model.enums.MediaStatus.REVIEWED
+        ):
+            raise errors.MediaStatusRollbackError()
+
+        perchai_service.media_operation.rollback_reviewed_medium_status(medium_id)
+        medium = perchai_service.media.get_medium_by_id(medium_id)
         return medium.to_dict()
 
 

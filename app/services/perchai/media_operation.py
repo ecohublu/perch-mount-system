@@ -241,3 +241,36 @@ def _add_reviewed_insist_individuals(
     session.add_all(reviewed_individuals)
     session.add_all(marked_prey_individuals)
     session.add_all(tagged_individuals)
+
+
+def rollback_reviewed_medium_status(medium_id: uuid.UUID):
+    with db.session.begin() as session:
+        try:
+            medium_query = session.query(model.Media).filter(
+                model.Media.id == medium_id
+            )
+            medium = medium_query.one()
+            medium_query.update({"status": "UNREVIEWED"})
+            individual_ids = [individual_id.id for individual_id in medium.individuals]
+            session.query(model.Individuals).filter(
+                model.Individuals.id.in_(individual_ids)
+            ).update({"prey_status": "UNCHECKED"})
+            individuals = (
+                session.query(model.Individuals)
+                .filter(model.Individuals.id.in_(individual_ids))
+                .all()
+            )
+            for individual in individuals:
+                individual.reviewed_contents = None
+                individual.marked_prey_contents = None
+                individual.identified_prey_contents = None
+                individual.tagged_contents = None
+
+            session.query(model.ReviewedMediaContents).filter(
+                model.ReviewedMediaContents.medium_id == medium_id
+            ).delete()
+
+            session.commit()
+        except:
+            session.rollback()
+            raise
