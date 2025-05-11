@@ -113,6 +113,7 @@ def _perch_mounts_pending_counts_query(
             model.PerchMounts.id,
             model.PerchMounts.perch_mount_name,
             model.PerchMounts.claim_by_id,
+            model.PerchMounts.is_priority,
             sqlalchemy.func.coalesce(
                 sqlalchemy.func.sum(model.Sections.undetected_count), 0
             ).label("undetected_count"),
@@ -145,6 +146,7 @@ def _perch_mounts_pending_counts_query(
         pending_counts_query.c.id,
         pending_counts_query.c.perch_mount_name,
         pending_counts_query.c.claim_by_id,
+        pending_counts_query.c.is_priority,
         model.Members.display_name.label("claimer_name"),
         model.Members.profile_picture_url.label("claim_picture_url"),
         pending_counts_query.c.undetected_count,

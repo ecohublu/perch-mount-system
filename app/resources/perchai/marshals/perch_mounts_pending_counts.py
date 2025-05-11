@@ -4,6 +4,7 @@ from flask_restx import fields
 COUNTS_MODEL = {
     "id": fields.String,
     "perch_mount_name": fields.String,
+    "is_priority": fields.Boolean,
     "claimer_name": fields.String,
     "claim_by_id": fields.String,
     "claim_picture_url": fields.String,
