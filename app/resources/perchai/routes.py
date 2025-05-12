@@ -111,7 +111,7 @@ ROUTES = [
         resources=[perchai.Cameras],
     ),
     routing.Route(
-        route="event",
+        route="events",
         resources=[perchai.Events],
     ),
     routing.Route(

@@ -31,3 +31,11 @@ def update_media_feature(medium_id: uuid.UUID, args: dict):
             model.ReviewedMediaContents.medium_id == medium_id
         ).update(args)
         session.commit()
+
+
+def update_medium_by_id(medium_id: uuid.UUID, args: dict):
+    with db.session.begin() as session:
+        session.query(model.ReviewedMediaContents).filter(
+            model.ReviewedMediaContents.medium_id == medium_id
+        ).update(args)
+        session.commit()

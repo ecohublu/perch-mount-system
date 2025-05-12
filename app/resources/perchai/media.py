@@ -27,6 +27,14 @@ class Medium(flask_restx.Resource):
 
         return medium.to_dict()
 
+    @flask_jwt_extended.jwt_required()
+    @resource_utils.parse_args(parsers.Medium.patch)
+    def patch(self, medium_id: uuid.UUID, parsed_args):
+        medium = perchai_service.media.get_medium_by_id(medium_id)
+        if medium.status != model.enums.MediaStatus.REVIEWED:
+            raise errors.MediaStatusError()
+        perchai_service.media.update_medium_by_id(medium_id, parsed_args)
+
 
 class MediumStatus(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
@@ -34,7 +42,6 @@ class MediumStatus(flask_restx.Resource):
     @resource_utils.parse_args(parsers.MediumStatus.patch)
     def patch(self, medium_id: uuid.UUID, parsed_args):
         medium = perchai_service.media.get_medium_by_id(medium_id)
-        print(medium.status)
         if (
             parsed_args["status"] != model.enums.MediaStatus.UNREVIEWED.value
             or medium.status != model.enums.MediaStatus.REVIEWED

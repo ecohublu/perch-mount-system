@@ -3,8 +3,6 @@ from flask_restx import reqparse
 import marshmallow
 import uuid
 
-import marshmallow.decorators
-
 from app.resources.utils import parser
 from app.resources.utils import type_funcs
 
@@ -164,9 +162,9 @@ class MediaGetSchema(parser.SchemaByRequestParser):
 
 
 class MediumPatchSchema(marshmallow.Schema):
-    fearured_by_id = marshmallow.fields.UUID()
-    behavior_id = marshmallow.fields.UUID()
-    event_id = marshmallow.fields.UUID()
+    fearured_by_id = marshmallow.fields.UUID(allow_none=True)
+    behavior_id = marshmallow.fields.UUID(allow_none=True)
+    event_id = marshmallow.fields.UUID(allow_none=True)
 
 
 class MediumStatusPatchSchema(marshmallow.Schema):
@@ -174,8 +172,8 @@ class MediumStatusPatchSchema(marshmallow.Schema):
 
 
 class MediumFeaturePatchSchema(marshmallow.Schema):
-    featured_by = marshmallow.fields.UUID()
-    event_id = marshmallow.fields.UUID()
+    featured_by = marshmallow.fields.UUID(allow_none=True)
+    event_id = marshmallow.fields.UUID(allow_none=True)
 
 
 class IndividualPatchSchema(marshmallow.Schema):
@@ -187,12 +185,12 @@ class IndividualPatchSchema(marshmallow.Schema):
 
 
 class IndividualNotePatchSchema(marshmallow.Schema):
-    note = marshmallow.fields.String()
+    note = marshmallow.fields.String(allow_none=True)
 
 
 class IndividualPreyPatchSchema(marshmallow.Schema):
-    inaturalist_taxa_id = marshmallow.fields.Integer()
-    identifier_id = marshmallow.fields.Integer()
+    inaturalist_taxa_id = marshmallow.fields.Integer(allow_none=True)
+    identifier_id = marshmallow.fields.Integer(allow_none=True)
 
 
 class IndividualPreyPostSchema(marshmallow.Schema):
@@ -207,7 +205,7 @@ class IndividualNotePutSchema(marshmallow.Schema):
 class IndividualTagPatchSchema(marshmallow.Schema):
     is_tagged = marshmallow.fields.Boolean()
     has_ring = marshmallow.fields.Boolean()
-    ring_number = marshmallow.fields.String()
+    ring_number = marshmallow.fields.String(allow_none=True)
 
 
 class SpeciesGetSchema(parser.SchemaByRequestParser):

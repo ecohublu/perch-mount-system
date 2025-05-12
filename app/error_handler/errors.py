@@ -68,6 +68,11 @@ class SuperAdminUnpatchableError(BadRequestError):
         super().__init__(message)
 
 
+class MediaStatusError(BadRequestError):
+    def __init__(self, message="this status now allow this operation."):
+        super().__init__(message)
+
+
 class MediaStatusRollbackError(BadRequestError):
     def __init__(self, message="Status rollback only form reviewed to unreviewed."):
         super().__init__(message)
