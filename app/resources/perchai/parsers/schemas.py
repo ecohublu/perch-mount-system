@@ -162,7 +162,7 @@ class MediaGetSchema(parser.SchemaByRequestParser):
 
 
 class MediumPatchSchema(marshmallow.Schema):
-    fearured_by_id = marshmallow.fields.UUID(allow_none=True)
+    featured_by_id = marshmallow.fields.UUID(allow_none=True)
     behavior_id = marshmallow.fields.UUID(allow_none=True)
     event_id = marshmallow.fields.UUID(allow_none=True)
 
