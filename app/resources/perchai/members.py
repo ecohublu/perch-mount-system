@@ -65,3 +65,12 @@ class MemberActivation(flask_restx.Resource):
         perchai_service.members.deactivate_member(member_id)
         member = perchai_service.members.get_member_by_id(member_id)
         return member.to_dict()
+
+
+class MemberClaimedPerchMouns(flask_restx.Resource):
+    def get(self, member_id: uuid.UUID):
+        filter = perchai_service.utils.query_filter.PerchMountFilter(
+            claim_by_ids=[member_id]
+        )
+        perch_mounts = perchai_service.perch_mounts.get_perch_mounts_by_filter(filter)
+        return [perch_mount.to_dict() for perch_mount in perch_mounts]

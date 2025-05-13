@@ -146,6 +146,9 @@ ROUTES = [
                         route="activation",
                         resources=[perchai.MemberActivation],
                     ),
+                    routing.Route(
+                        route="claims", resources=[perchai.MemberClaimedPerchMouns]
+                    ),
                 ],
             ),
         ],
