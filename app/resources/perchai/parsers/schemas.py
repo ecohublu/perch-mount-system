@@ -241,17 +241,17 @@ class SpeciesGetSchema(parser.SchemaByRequestParser):
     )
 
 
-class CamerasPostSchema(parser.SchemaByRequestParser):
-    arguments = (reqparse.Argument("name", required=True, type=str),)
+class CamerasPostSchema(marshmallow.Schema):
+    model_name = marshmallow.fields.String(required=True)
 
 
-class EventsPostSchema(parser.SchemaByRequestParser):
-    arguments = (reqparse.Argument("name", required=True, type=str),)
+class EventsPostSchema(marshmallow.Schema):
+    name = marshmallow.fields.String(required=True)
 
 
-class MountTypesPostSchema(parser.SchemaByRequestParser):
-    arguments = (reqparse.Argument("name", required=True, type=str),)
+class MountTypesPostSchema(marshmallow.Schema):
+    name = marshmallow.fields.String(required=True)
 
 
-class BehaviorsPostSchema(parser.SchemaByRequestParser):
-    arguments = (reqparse.Argument("name", required=True, type=str),)
+class BehaviorsPostSchema(marshmallow.Schema):
+    name = marshmallow.fields.String(required=True)
