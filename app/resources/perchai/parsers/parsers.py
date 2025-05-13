@@ -121,3 +121,11 @@ class MountTypes(parser.Parser):
 
 class Behaviors(parser.Parser):
     post = schemas.BehaviorsPostSchema()
+
+
+class Contributions(parser.Parser):
+    get = schemas.ContributionsGetSchema()
+
+
+class MemberContributions(parser.Parser):
+    get = schemas.MemberContributionsGetSchema()

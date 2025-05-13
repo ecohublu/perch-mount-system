@@ -9,6 +9,7 @@ from app.resources.perchai.options import *
 from app.resources.perchai.members import *
 from app.resources.perchai.media import *
 from app.resources.perchai.individuals import *
+from app.resources.perchai.contributions import *
 from app.resources.perchai.routes import ROUTES
 
 blueprint = flask.Blueprint("perchai", __name__)

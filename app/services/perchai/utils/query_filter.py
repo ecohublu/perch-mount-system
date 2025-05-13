@@ -94,3 +94,18 @@ class SpeciesFilter(service_utils.QueryFilter):
         self.families = families
         self.codes = codes
         self.freq_ordered = freq_ordered
+
+
+class ContributionFilter(service_utils.QueryFilter):
+    def __init__(
+        self,
+        contributor_id: uuid.UUID,
+        contribution_type: enums.ContributionType,
+        contributed_from: datetime = None,
+        contributed_to: datetime = None,
+    ):
+        super().__init__()
+        self.contributor_id = contributor_id
+        self.contributed_from = contributed_from
+        self.contributed_to = contributed_to
+        self.contribution_type = contribution_type

@@ -281,3 +281,29 @@ class SpeciesQueryModifier(service_utils.QueryModifier):
                 )
                 query = query.order_by(taxon_orders_with_freq.c.frequency)
         return query
+
+
+class ContributionsQueryModifier(service_utils.QueryModifier):
+    def __init__(self, filter: query_filter.ContributionFilter):
+        super().__init__(filter)
+        self.filter = filter
+
+    def filter_query(
+        self,
+        query: sqlalchemy.orm.Query[model.Contributions],
+    ) -> sqlalchemy.orm.Query[model.Contributions]:
+        query = query.filter(
+            model.Contributions.contributor_id == self.filter.contributor_id
+        )
+        query = query.filter(
+            model.Contributions.contribution_type == self.filter.contribution_type
+        )
+        if self.filter.contributed_from:
+            query = query.filter(
+                model.Contributions.contribute_time >= self.filter.contributed_from
+            )
+        if self.filter.contributed_to:
+            query = query.filter(
+                model.Contributions.contribute_time < self.filter.contributed_to
+            )
+        return query

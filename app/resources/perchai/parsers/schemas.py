@@ -255,3 +255,51 @@ class MountTypesPostSchema(marshmallow.Schema):
 
 class BehaviorsPostSchema(marshmallow.Schema):
     name = marshmallow.fields.String(required=True)
+
+
+class ContributionsGetSchema(parser.SchemaByRequestParser):
+    arguments = (
+        reqparse.Argument(
+            "contributor_id",
+            type=uuid.UUID,
+            location="args",
+            required=True,
+        ),
+        reqparse.Argument(
+            "contribution_type",
+            type=type_funcs.uuid_split,
+            location="args",
+            required=True,
+        ),
+        reqparse.Argument(
+            "contributed_from",
+            type=datetime.fromisoformat,
+            location="args",
+        ),
+        reqparse.Argument(
+            "contributed_to",
+            type=datetime.fromisoformat,
+            location="args",
+        ),
+    )
+
+
+class MemberContributionsGetSchema(parser.SchemaByRequestParser):
+    arguments = (
+        reqparse.Argument(
+            "contribution_type",
+            type=type_funcs.uuid_split,
+            location="args",
+            required=True,
+        ),
+        reqparse.Argument(
+            "contributed_from",
+            type=datetime.fromisoformat,
+            location="args",
+        ),
+        reqparse.Argument(
+            "contributed_to",
+            type=datetime.fromisoformat,
+            location="args",
+        ),
+    )

@@ -109,10 +109,16 @@ def add_checked_media(checked_media: list[dict]):
         model.AccidentalMediaContents(medium_id=medium.id)
         for medium in media.media_to_accidenal
     ]
+    contribution = model.Contributions(
+        contributor_id=media[0].empty_checker_id,
+        contribution_type=model.enums.ContributionType.EMPTY_CHECK,
+        counts=len(media),
+    )
     with db.session.begin() as session:
         try:
             session.add_all(unreviewed_media)
             session.add_all(accidental_media)
+            session.add(contribution)
             session.commit()
         except:
             session.rollback()
@@ -127,7 +133,11 @@ def add_reviewed_media(reviewed_media: list[dict]):
         for medium in media.media_to_accidenal
     ]
     reviewed_media: list[model.ReviewedMediaContents] = []
-
+    contribution = model.Contributions(
+        contributor_id=media[0].reviewer_id,
+        contribution_type=model.enums.ContributionType.REVIEW,
+        counts=len(media),
+    )
     for medium in media.media_to_reviewed:
         reviewed_media.append(
             model.ReviewedMediaContents(
@@ -142,6 +152,7 @@ def add_reviewed_media(reviewed_media: list[dict]):
 
     with db.session.begin() as session:
         try:
+            session.add(contribution)
             session.add_all(accidental_media)
             session.add_all(reviewed_media)
             _add_reviewed_insist_individuals(session, media)

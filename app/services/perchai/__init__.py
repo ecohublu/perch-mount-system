@@ -16,4 +16,5 @@ from app.services.perchai import (
     members,
     media_operation,
     individuals,
+    contributions,
 )

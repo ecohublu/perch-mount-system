@@ -147,7 +147,12 @@ ROUTES = [
                         resources=[perchai.MemberActivation],
                     ),
                     routing.Route(
-                        route="claims", resources=[perchai.MemberClaimedPerchMouns]
+                        route="claims",
+                        resources=[perchai.MemberClaimedPerchMouns],
+                    ),
+                    routing.Route(
+                        route="contributions",
+                        resources=[perchai.MemberContributions],
                     ),
                 ],
             ),
@@ -179,5 +184,9 @@ ROUTES = [
     routing.Route(
         route="identified_preys",
         resources=[perchai.IdentifiedPreys],
+    ),
+    routing.Route(
+        route="contributions",
+        resources=[perchai.Contributions],
     ),
 ]

@@ -44,6 +44,12 @@ class Positions(enum.Enum):
     PART_TIME = "part_time"
 
 
+class ContributionType(enum.Enum):
+    REVIEW = "review"
+    EMPTY_CHECK = "empty_check"
+    IDENTIFY_PREY = "identify_prey"
+
+
 class ConservationStatus(enum.Enum):
     I = "I"
     II = "II"
