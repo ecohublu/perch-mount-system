@@ -47,7 +47,7 @@ class MemberBlock(flask_restx.Resource):
     @admin_authorized.super_admin_required()
     def delete(self, member_id: uuid.UUID):
         member = perchai_service.members.get_member_by_id(member_id)
-        perchai_service.members.block_member(member_id)
+        perchai_service.members.unblock_member(member_id)
         return member.to_dict()
 
 
