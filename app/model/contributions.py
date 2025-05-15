@@ -22,7 +22,7 @@ class Contributions(extensions.db.Model, SerializerMixin):
     )
     counts = extensions.db.Column(
         sqlalchemy.Integer,
-        ullable=False,
+        nullable=False,
     )
     contributor_id = extensions.db.Column(
         postgresql.UUID(as_uuid=True),
