@@ -17,7 +17,7 @@ class Contributions(extensions.db.Model, SerializerMixin):
         nullable=False,
     )
     contribution_type = extensions.db.Column(
-        sqlalchemy.Enum(enums.ConservationStatus),
+        sqlalchemy.Enum(enums.ContributionType),
         nullable=False,
     )
     counts = extensions.db.Column(
