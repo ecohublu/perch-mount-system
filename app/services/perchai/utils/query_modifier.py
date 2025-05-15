@@ -292,12 +292,14 @@ class ContributionsQueryModifier(service_utils.QueryModifier):
         self,
         query: sqlalchemy.orm.Query[model.Contributions],
     ) -> sqlalchemy.orm.Query[model.Contributions]:
-        query = query.filter(
-            model.Contributions.contributor_id == self.filter.contributor_id
-        )
-        query = query.filter(
-            model.Contributions.contribution_type == self.filter.contribution_type
-        )
+        if self.filter.contributor_ids:
+            query = query.filter(
+                model.Contributions.contributor_id.in_(self.filter.contributor_ids)
+            )
+        if self.filter.contribution_type:
+            query = query.filter(
+                model.Contributions.contribution_type == self.filter.contribution_type
+            )
         if self.filter.contributed_from:
             query = query.filter(
                 model.Contributions.contribute_time >= self.filter.contributed_from

@@ -114,6 +114,7 @@ def add_checked_media(checked_media: list[dict]):
         contribution_type=model.enums.ContributionType.EMPTY_CHECK,
         counts=len(media),
     )
+    print(contribution)
     with db.session.begin() as session:
         try:
             session.add_all(unreviewed_media)

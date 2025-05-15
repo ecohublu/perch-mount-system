@@ -260,8 +260,8 @@ class BehaviorsPostSchema(marshmallow.Schema):
 class ContributionsGetSchema(parser.SchemaByRequestParser):
     arguments = (
         reqparse.Argument(
-            "contributor_id",
-            type=uuid.UUID,
+            "contributor_ids",
+            type=type_funcs.uuid_split,
             location="args",
             required=True,
         ),
@@ -290,7 +290,6 @@ class MemberContributionsGetSchema(parser.SchemaByRequestParser):
             "contribution_type",
             type=type_funcs.uuid_split,
             location="args",
-            required=True,
         ),
         reqparse.Argument(
             "contributed_from",

@@ -22,7 +22,8 @@ class MemberContributions(flask_restx.Resource):
     def get(self, member_id: uuid.UUID, parsed_args):
 
         filter = perchai_service.utils.query_filter.ContributionFilter(
-            member_id, **parsed_args
+            contributor_ids=[member_id],
+            **parsed_args,
         )
         contributions = perchai_service.contributions.get_contributions_by_filter(
             filter

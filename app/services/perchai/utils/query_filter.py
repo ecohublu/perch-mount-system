@@ -99,13 +99,13 @@ class SpeciesFilter(service_utils.QueryFilter):
 class ContributionFilter(service_utils.QueryFilter):
     def __init__(
         self,
-        contributor_id: uuid.UUID,
+        contributor_ids: list[uuid.UUID],
         contribution_type: enums.ContributionType,
         contributed_from: datetime = None,
         contributed_to: datetime = None,
     ):
         super().__init__()
-        self.contributor_id = contributor_id
+        self.contributor_ids = contributor_ids
         self.contributed_from = contributed_from
         self.contributed_to = contributed_to
         self.contribution_type = contribution_type
