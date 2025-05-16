@@ -269,7 +269,6 @@ class ContributionsGetSchema(parser.SchemaByRequestParser):
             "contribution_type",
             type=type_funcs.uuid_split,
             location="args",
-            required=True,
         ),
         reqparse.Argument(
             "contributed_from",
