@@ -8,6 +8,7 @@ from app.auth import blueprint as login_blueprint
 from app.taxa import blueprint as taxa_blueprint
 from app.resources.perchai import blueprint as perchai_blueprint
 from app.resources.data_export import blueprint as data_export_blueprint
+from app.resources.features import blueprint as features_blueprint
 
 
 def create_app(config_object="config.Config") -> Flask:
@@ -24,5 +25,6 @@ def create_app(config_object="config.Config") -> Flask:
     app.register_blueprint(taxa_blueprint, url_prefix="/api/taxa")
     app.register_blueprint(error_handler_blueprint)
     app.register_blueprint(login_blueprint)
+    app.register_blueprint(features_blueprint, url_prefix="/api/features")
 
     return app
