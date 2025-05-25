@@ -158,6 +158,7 @@ class MediaGetSchema(parser.SchemaByRequestParser):
             type=type_funcs.int_split,
             location="args",
         ),
+        reqparse.Argument("limit", type=int, location="args"),
     )
 
 

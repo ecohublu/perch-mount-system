@@ -129,6 +129,7 @@ def add_checked_media(checked_media: list[dict]):
 def add_reviewed_media(reviewed_media: list[dict]):
     media = [services_utils.ReviewedMedium(**medium) for medium in reviewed_media]
     media = services_utils.ReviewedMedia(media)
+
     accidental_media = [
         model.AccidentalMediaContents(medium_id=medium.id)
         for medium in media.media_to_accidenal
@@ -175,8 +176,9 @@ def _add_reviewed_new_individuals(
     for medium in media:
         medium: services_utils.ReviewedMedium = medium
         for individual in medium.individuals:
-            if not individual.is_ai_detected:
+            if individual.is_ai_detected:
                 continue
+            print(individual, not individual.is_ai_detected)
             new_individuals.append(model.Individuals(medium_id=medium.id))
             new_reviewed_individuals.append(
                 model.ReviewedIndividualsContents(
@@ -199,6 +201,7 @@ def _add_reviewed_new_individuals(
             )
 
     session.add_all(new_individuals)
+    print(new_individuals)
     session.flush()
     for i, r, m, t in zip(
         new_individuals,

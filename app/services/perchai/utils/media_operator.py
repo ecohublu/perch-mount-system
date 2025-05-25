@@ -58,6 +58,25 @@ class ReviewedIndividual:
     def is_to_tagged_contents(self) -> bool:
         return self.is_tagged
 
+    def __str__(self):
+        return (
+            f"ReviewedIndividual(\n"
+            f"  id={self.id},\n"
+            f"  taxon_order_by_human={self.taxon_order_by_human},\n"
+            f"  box_xmin={self.box_xmin},\n"
+            f"  box_xmax={self.box_xmax},\n"
+            f"  box_ymin={self.box_ymin},\n"
+            f"  box_ymax={self.box_ymax},\n"
+            f"  has_prey={self.has_prey},\n"
+            f"  is_tagged={self.is_tagged},\n"
+            f"  has_ring={self.has_ring},\n"
+            f"  ring_number={self.ring_number},\n"
+            f"  is_ai_detected={self.is_ai_detected},\n"
+            f"  is_to_marked_prey_contents={self.is_to_marked_prey_contents},\n"
+            f"  is_to_tagged_contents={self.is_to_tagged_contents}\n"
+            f")"
+        )
+
 
 class UploadedMedium:
     def __init__(

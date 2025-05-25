@@ -174,6 +174,9 @@ class MediaQueryModifier(service_utils.QueryModifier):
                 )
             )
 
+        if self.filter.limit:
+            query = query.limit(self.filter.limit)
+
         return query
 
 
