@@ -136,3 +136,10 @@ class PerchMountPendingCounts(flask_restx.Resource):
             perch_mount_id
         )
         return count._asdict()
+
+
+class PerchMountMonthlyCounts(flask_restx.Resource):
+    def get(sef, perch_mount_id: uuid.UUID):
+        return perchai_service.perch_mounts.get_perch_mount_monthly_counts(
+            perch_mount_id
+        )

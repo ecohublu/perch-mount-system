@@ -1,7 +1,7 @@
+import collections
 from datetime import date, datetime, timedelta
 import sqlalchemy
 import uuid
-
 from app.services import db
 import app.services.perchai.utils as services_utils
 from app import model

@@ -41,6 +41,10 @@ ROUTES = [
                             )
                         ],
                     ),
+                    routing.Route(
+                        route="monthly_counts",
+                        resources=[perchai.PerchMountMonthlyCounts],
+                    ),
                 ],
             ),
             routing.Route(
