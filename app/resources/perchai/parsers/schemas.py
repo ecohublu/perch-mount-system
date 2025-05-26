@@ -159,6 +159,8 @@ class MediaGetSchema(parser.SchemaByRequestParser):
             location="args",
         ),
         reqparse.Argument("limit", type=int, location="args"),
+        reqparse.Argument("year", type=int, location="args"),
+        reqparse.Argument("month", type=int, location="args"),
     )
 
 

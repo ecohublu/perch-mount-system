@@ -170,39 +170,52 @@ def _perch_mounts_pending_counts_query(
 def get_perch_mount_monthly_counts(perch_mount_id: uuid.UUID):
     # 1. 撈分組統計
     with db.session.begin() as session:
+        year_expr = sqlalchemy.extract("year", model.Media.medium_datetime).label(
+            "year"
+        )
+        month_expr = sqlalchemy.extract("month", model.Media.medium_datetime).label(
+            "month"
+        )
         year_month_expr = sqlalchemy.func.to_char(
             model.Media.medium_datetime, "YYYYMM"
         ).label("year_month")
 
         rows = (
             session.query(
+                year_expr,
+                month_expr,
                 year_month_expr,
                 model.Media.status,
                 sqlalchemy.func.count().label("cnt"),
             )
+            .join(model.Sections, model.Sections.id == model.Media.section_id)
             .filter(model.Sections.perch_mount_id == perch_mount_id)
-            .join(
-                model.Sections,
-                model.Sections.id == model.Media.section_id,
-                isouter=False,
-            )
-            .group_by(year_month_expr, model.Media.status)
+            .group_by(year_expr, month_expr, year_month_expr, model.Media.status)
             .all()
         )
 
-    # 2. 整理成 {year_month: {status: cnt, ...}}
-    stats: dict[str, dict[str, int]] = collections.defaultdict(
-        lambda: {s.value: 0 for s in model.enums.MediaStatus}
-    )
+    # 2. 整理成 {(year_month): (year, month, {status: count, ...})}
+    stats: dict[str, tuple[int, int, dict[str, int]]] = {}
 
-    for year_month, status, cnt in rows:
-        stats[year_month][status.value] = cnt
+    for year, month, year_month, status, cnt in rows:
+        if year_month not in stats:
+            stats[year_month] = (
+                int(year),
+                int(month),
+                {s.value: 0 for s in model.enums.MediaStatus},
+            )
+        stats[year_month][2][status.value] = cnt
 
-    # 3. 轉成排序後的 list[dict]
+    # 3. 組合成 list[dict] 並排序
     counts: list[dict] = []
     for ym in sorted(stats.keys()):
-        record = {"year_month": ym}
-        record.update(stats[ym])  # 加入各狀態的計數
+        year, month, status_counts = stats[ym]
+        record = {
+            "year_month": ym,
+            "year": year,
+            "month": month,
+            **status_counts,
+        }
         counts.append(record)
 
     return counts

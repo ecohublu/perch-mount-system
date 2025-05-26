@@ -54,6 +54,8 @@ class MediaFilter(service_utils.QueryFilter):
         taxon_orders_by_human: list[int] = None,
         taxon_orders_by_ai: list[int] = None,
         limit: int = None,
+        year: int = None,
+        month: int = None,
     ):
         super().__init__()
         self.status = status
@@ -67,6 +69,8 @@ class MediaFilter(service_utils.QueryFilter):
         self.taxon_orders_by_human = taxon_orders_by_human
         self.taxon_orders_by_ai = taxon_orders_by_ai
         self.limit = limit
+        self.year = year
+        self.month = month
 
 
 class SpeciesFilter(service_utils.QueryFilter):

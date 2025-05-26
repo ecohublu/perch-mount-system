@@ -174,6 +174,17 @@ class MediaQueryModifier(service_utils.QueryModifier):
                 )
             )
 
+        if self.filter.year:
+            query = query.filter(
+                sqlalchemy.extract("year", model.Media.medium_datetime)
+                == self.filter.year
+            )
+        if self.filter.month:
+            query = query.filter(
+                sqlalchemy.extract("month", model.Media.medium_datetime)
+                == self.filter.month
+            )
+
         if self.filter.limit:
             query = query.limit(self.filter.limit)
 
