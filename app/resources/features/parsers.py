@@ -39,7 +39,7 @@ class FeaturesGetSchema(parser.SchemaByRequestParser):
         reqparse.Argument(
             "taxon_orders",
             type=type_funcs.int_split,
-            location="arg",
+            location="args",
         ),
         # 3. 單一 UUID
         reqparse.Argument(

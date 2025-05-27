@@ -23,7 +23,6 @@ def get_featrues_media(
             .filter(model.Media.status == model.enums.MediaStatus.REVIEWED)
             .filter(model.ReviewedMediaContents.featured_by_id == featured_by_id)
         )
-
         if medium_datetime_from:
             query = query.filter(model.Media.medium_datetime >= medium_datetime_from)
         if medium_datetime_to:
