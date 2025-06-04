@@ -8,6 +8,14 @@ from app.resources.perchai import parsers
 import app.resources.utils as resource_utils
 
 
+class Individuals(flask_restx.Resource):
+    @resource_utils.parse_args(parsers.Individuals.get)
+    def get(self, parsed_args):
+        filter = perchai_service.utils.query_filter.IndividualsFilter(**parsed_args)
+        individuals = perchai_service.individuals.get_individuals_by_filter(filter)
+        return [individual.to_dict() for individual in individuals]
+
+
 class Individual(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.Individual.patch)

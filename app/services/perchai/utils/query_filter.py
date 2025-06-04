@@ -73,6 +73,27 @@ class MediaFilter(service_utils.QueryFilter):
         self.month = month
 
 
+class IndividualsFilter(service_utils.QueryFilter):
+    def __init__(
+        self,
+        prey_status: enums.PreyStatus,
+        perch_mount_ids: list[uuid.UUID] = [],
+        section_ids: list[uuid.UUID] = [],
+        year: int = None,
+        month: int = None,
+        offset=0,
+        limit=50,
+    ):
+        super().__init__(offset, limit)
+        self.prey_status = prey_status
+        self.perch_mount_ids = perch_mount_ids
+        self.section_ids = section_ids
+        self.year = year
+        self.month = month
+        self.offset = offset
+        self.limit = limit
+
+
 class SpeciesFilter(service_utils.QueryFilter):
     def __init__(
         self,

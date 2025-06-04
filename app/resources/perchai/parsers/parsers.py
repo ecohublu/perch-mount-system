@@ -62,6 +62,10 @@ class Individual(parser.Parser):
     patch = schemas.IndividualPatchSchema()
 
 
+class Individuals(parser.Parser):
+    get = schemas.IndividualsGetSchema()
+
+
 class IndividualPrey(parser.Parser):
     post = schemas.IndividualPreyPostSchema()
     patch = schemas.IndividualPreyPatchSchema()

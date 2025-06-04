@@ -179,6 +179,21 @@ class MediumFeaturePatchSchema(marshmallow.Schema):
     event_id = marshmallow.fields.UUID(allow_none=True)
 
 
+class IndividualsGetSchema(marshmallow.Schema):
+    arguments = (
+        reqparse.Argument("prey_status", type=str, location="args"),
+        reqparse.Argument(
+            "perch_mount_ids",
+            type=type_funcs.uuid_split,
+            location="args",
+        ),
+        reqparse.Argument("section_ids", type=type_funcs.uuid_split, location="args"),
+        reqparse.Argument("year", type=int, location="args"),
+        reqparse.Argument("month", type=int, location="args"),
+        reqparse.Argument("limit", type=int, location="args"),
+    )
+
+
 class IndividualPatchSchema(marshmallow.Schema):
     taxon_order_by_human = marshmallow.fields.Integer()
     box_xmin = marshmallow.fields.Float()

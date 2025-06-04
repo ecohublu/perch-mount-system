@@ -323,3 +323,50 @@ class ContributionsQueryModifier(service_utils.QueryModifier):
                 model.Contributions.contribute_time < self.filter.contributed_to
             )
         return query
+
+
+class IndividualsQueryModifier(service_utils.QueryModifier):
+    def __init__(self, filter: query_filter.IndividualsFilter):
+        super().__init__(filter)
+        self.filter = filter
+
+    def options(
+        self, query: sqlalchemy.orm.Query[model.Individuals]
+    ) -> sqlalchemy.orm.Query:
+        query = query.options(
+            sqlalchemy.orm.joinedload(model.Individuals.reviewed_contents)
+        )
+        return query
+
+    def filter_query(self, query: sqlalchemy.orm.Query[model.Individuals]):
+        query = query.join(
+            model.Media,
+            model.Media.id == model.Individuals.medium_id,
+            isouter=True,
+        ).join(
+            model.Sections,
+            model.Sections.id == model.Media.section_id,
+            isouter=True,
+        )
+        if self.filter.prey_status:
+            query = query.filter(
+                model.Individuals.prey_status == self.filter.prey_status
+            )
+        if self.filter.perch_mount_ids:
+            query = query.filter(
+                model.Sections.perch_mount_id.in_(self.filter.perch_mount_ids)
+            )
+        if self.filter.section_ids:
+            query = query.filter(model.Sections.id.in_(self.filter.section_ids))
+        if self.filter.year:
+            query = query.filter(
+                sqlalchemy.extract("year", model.Media.medium_datetime)
+                == self.filter.year
+            )
+        if self.filter.month:
+            query = query.filter(
+                sqlalchemy.extract("month", model.Media.medium_datetime)
+                == self.filter.month
+            )
+
+        return query

@@ -199,3 +199,16 @@ def add_identified_preys(identified_preys: list[dict]):
         except:
             session.rollback()
             raise
+
+
+def get_individuals_by_filter(
+    filter: services_utils.IndividualsFilter,
+) -> list[model.Individuals]:
+    modifier = services_utils.IndividualsQueryModifier(filter)
+    with db.session.begin() as session:
+        query = session.query(model.Individuals)
+        query = modifier.filter_query(query)
+        query = modifier.limit_query(query)
+        query = modifier.offset_query(query)
+        individuals = query.all()
+    return individuals

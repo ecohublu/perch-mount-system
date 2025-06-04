@@ -21,8 +21,12 @@ def get_featrues_media(
         query = (
             session.query(model.Media)
             .filter(model.Media.status == model.enums.MediaStatus.REVIEWED)
-            .filter(model.ReviewedMediaContents.featured_by_id == featured_by_id)
+            .filter(model.ReviewedMediaContents.behavior_id != None)
         )
+        if featured_by_id:
+            query = query.filter(
+                model.ReviewedMediaContents.featured_by_id == featured_by_id
+            )
         if medium_datetime_from:
             query = query.filter(model.Media.medium_datetime >= medium_datetime_from)
         if medium_datetime_to:
@@ -39,7 +43,6 @@ def get_featrues_media(
             query = query.filter(
                 model.ReviewedIndividualsContents.taxon_order_by_human.in_(taxon_orders)
             )
-
         query = query.join(
             model.ReviewedMediaContents,
             model.ReviewedMediaContents.medium_id == model.Media.id,
