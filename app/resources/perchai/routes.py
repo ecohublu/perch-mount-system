@@ -91,7 +91,7 @@ ROUTES = [
     ),
     routing.Route(
         route="individuals",
-        resources=[],
+        resources=[perchai.Individuals],
         children=[
             routing.Route(
                 route=_individual_id.param,

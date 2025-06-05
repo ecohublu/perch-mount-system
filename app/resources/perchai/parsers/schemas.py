@@ -179,9 +179,9 @@ class MediumFeaturePatchSchema(marshmallow.Schema):
     event_id = marshmallow.fields.UUID(allow_none=True)
 
 
-class IndividualsGetSchema(marshmallow.Schema):
+class IndividualsGetSchema(parser.SchemaByRequestParser):
     arguments = (
-        reqparse.Argument("prey_status", type=str, location="args"),
+        reqparse.Argument("prey_status", required=True, type=str, location="args"),
         reqparse.Argument(
             "perch_mount_ids",
             type=type_funcs.uuid_split,

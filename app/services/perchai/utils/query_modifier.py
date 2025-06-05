@@ -350,7 +350,7 @@ class IndividualsQueryModifier(service_utils.QueryModifier):
         )
         if self.filter.prey_status:
             query = query.filter(
-                model.Individuals.prey_status == self.filter.prey_status
+                model.Individuals.prey_status == self.filter.prey_status.upper()
             )
         if self.filter.perch_mount_ids:
             query = query.filter(
