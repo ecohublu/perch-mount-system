@@ -98,7 +98,7 @@ def upgrade_ext():
                 WHERE id = NEW.individual_id;
             ELSIF NEW.has_prey = true THEN
                 UPDATE individuals
-                SET prey_status = 'unidentified'
+                SET prey_status = 'UNIDENTIFIED'
                 WHERE id = NEW.individual_id;
             END IF;
 
