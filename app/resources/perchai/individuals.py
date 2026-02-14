@@ -46,6 +46,12 @@ class IndividualPrey(flask_restx.Resource):
         return perchai_utils.delete_successed(individual_id)
 
 
+class IndividualPreyIds(flask_restx.Resource):
+    def get(self):
+        ids = perchai_service.individuals.get_all_distinct_prey_inat_ids()
+        return [indi.inaturalist_taxa_id for indi in ids]
+
+
 class IdentifiedPreys(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.IdentifiedPreys.post)

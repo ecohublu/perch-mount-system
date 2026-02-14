@@ -97,8 +97,21 @@ ROUTES = [
                 route=_individual_id.param,
                 resources=[perchai.Individual],
                 children=[
-                    routing.Route(route="prey", resources=[perchai.IndividualPrey]),
-                    routing.Route(route="note", resources=[perchai.IndividualNote]),
+                    routing.Route(
+                        route="prey",
+                        resources=[perchai.IndividualPrey],
+                    ),
+                    routing.Route(
+                        route="note",
+                        resources=[perchai.IndividualNote],
+                    ),
+                ],
+            ),
+            routing.Route(
+                route="preys",
+                resources=[],
+                children=[
+                    routing.Route(route="ids", resources=[perchai.IndividualPreyIds])
                 ],
             ),
         ],
@@ -188,6 +201,7 @@ ROUTES = [
     routing.Route(
         route="identified_preys",
         resources=[perchai.IdentifiedPreys],
+        children=[routing.Route(route="ids", resources=[perchai.IndividualPreyIds])],
     ),
     routing.Route(
         route="contributions",

@@ -212,3 +212,11 @@ def get_individuals_by_filter(
         query = modifier.offset_query(query)
         individuals = query.all()
     return individuals
+
+
+def get_all_distinct_prey_inat_ids():
+    with db.session.begin() as session:
+        query = session.query(
+            model.IdentifiedPreyIndividualsContents.inaturalist_taxa_id
+        ).distinct()
+    return query.all()
