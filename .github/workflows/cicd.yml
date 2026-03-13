@@ -5,12 +5,10 @@ on:
     branches:
       - main
       - dev
-      - dev-refact
   pull_request:
     branches:
       - main
       - dev
-      - dev-refact
 
 permissions:
   contents: read
